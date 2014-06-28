@@ -1,6 +1,3 @@
-* auto-gen TOC:
-{:toc}
-
 Module Integration Simulator
 ============================
 
