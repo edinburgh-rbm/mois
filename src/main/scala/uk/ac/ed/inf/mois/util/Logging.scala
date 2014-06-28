@@ -1,4 +1,4 @@
-package ed.mois.util
+package uk.ac.ed.inf.mois.util
 
 import org.apache.log4j.BasicConfigurator
 import org.apache.log4j.{Level, Logger}

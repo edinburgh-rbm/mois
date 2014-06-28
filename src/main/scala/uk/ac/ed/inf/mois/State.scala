@@ -1,4 +1,4 @@
-package ed.mois
+package uk.ac.ed.inf.mois
 
 import scala.collection.mutable.Map
 

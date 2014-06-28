@@ -1,4 +1,4 @@
-package ed.mois
+package uk.ac.ed.inf.mois
 
 case class BoundsViolation(s: String) extends Exception(s) {
 }

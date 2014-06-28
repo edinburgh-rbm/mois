@@ -1,8 +1,9 @@
-package ed.mois.test
+package uk.ac.ed.inf.mois.test
 
-import ed.mois.{Resource, State}
-import ed.mois.ResourceConversions._
 import org.scalatest.FlatSpec
+
+import uk.ac.ed.inf.mois.{Resource, State}
+import uk.ac.ed.inf.mois.ResourceConversions._
 
 class StateTest extends FlatSpec {
   "a state" should "support adding and retrieving resources" in {

@@ -1,9 +1,10 @@
-package ed.mois.test
+package uk.ac.ed.inf.mois.test
 
 import java.lang.Math.PI
 import org.scalatest.FlatSpec
-import ed.mois.ProcessODE
-import ed.mois.ResourceConversions._
+
+import uk.ac.ed.inf.mois.ProcessODE
+import uk.ac.ed.inf.mois.ResourceConversions._
 
 object exode extends ProcessODE("exode") {
   integral(

@@ -1,4 +1,4 @@
-package ed.mois
+package uk.ac.ed.inf.mois
 
 import org.apache.commons.math3.ode.{FirstOrderIntegrator, FirstOrderDifferentialEquations}
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator

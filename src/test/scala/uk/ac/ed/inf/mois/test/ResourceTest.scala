@@ -1,8 +1,9 @@
-package ed.mois.test
+package uk.ac.ed.inf.mois.test
 
-import ed.mois.{Resource, BoundsViolation}
-import ed.mois.ResourceConversions._
 import org.scalatest.FlatSpec
+
+import uk.ac.ed.inf.mois.{Resource, BoundsViolation}
+import uk.ac.ed.inf.mois.ResourceConversions._
 
 class ResourceTest extends FlatSpec {
   "a resource" should "support arithmetic operations" in {

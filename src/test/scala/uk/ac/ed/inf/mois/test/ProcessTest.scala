@@ -1,8 +1,9 @@
-package ed.mois.test
+package uk.ac.ed.inf.mois.test
+
+import uk.ac.ed.inf.mois.Process
+import uk.ac.ed.inf.mois.ResourceConversions._
 
 import org.scalatest.FlatSpec
-import ed.mois.Process
-import ed.mois.ResourceConversions._
 
 class ProcessTest extends FlatSpec {
   object p extends Process("p") {

@@ -1,4 +1,4 @@
-package ed.mois
+package uk.ac.ed.inf.mois
 
 abstract class Process(val name: String) {
   var state = new State
