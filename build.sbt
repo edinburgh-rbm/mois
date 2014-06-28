@@ -1,5 +1,7 @@
 name := "mois"
 
+organization := "uk.ac.ed.inf"
+
 version := "1.99.0"
 
 scalaVersion := "2.11.1"
@@ -22,3 +24,13 @@ libraryDependencies += "log4j" % "log4j" % "1.2.17"
 libraryDependencies += "commons-logging" % "commons-logging" % "1.1.3"
 
 libraryDependencies += "org.apache.commons" % "commons-math3" % "3.3"
+
+publishTo := {
+  val nexus = "https://oss.sonatype.org/"
+  if (version.value.trim.endsWith("SNAPSHOT"))
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
+}
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
