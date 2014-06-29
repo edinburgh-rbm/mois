@@ -22,6 +22,9 @@ object sampleODE extends ProcessODE("sample") {
 
 class ODEProcessTest extends FlatSpec {
   "sample ode" should "give dominik's expected results" in {
+
+    val initialConditions = sampleODE.state.copy
+
     //println(sampleODE)
     sampleODE(0, 50.0)
     //println(sampleODE)
@@ -36,12 +39,8 @@ class ODEProcessTest extends FlatSpec {
     assert(abs(sampleODE.y(0) + 0.0032) < 0.0001)
     assert(abs(sampleODE.y(1) + (-0.0021)) < 0.0001)
 
-    // reset the initial conditions through the state table
-    // tabarnac de conversion de type!
-    val x1 = sampleODE.state(Var(0.0, "ex:x1")).asInstanceOf[Var[Double]]
-    val x2 = sampleODE.state(Var(0.0, "ex:x2")).asInstanceOf[Var[Double]]
-    x1 := 25.0
-    x2 := 50.0
+    // reset the initial conditions
+    sampleODE.state <<< initialConditions
 
     // make sure we get the same results
     //println(sampleODE)
