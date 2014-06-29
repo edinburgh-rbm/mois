@@ -37,7 +37,7 @@ class ODEProcessTest extends FlatSpec {
     assert(abs(sampleODE.y(1) + (-0.0021)) < 0.0001)
 
     // reset the initial conditions through the state table
-    // tabarnac de conversion d'etat!
+    // tabarnac de conversion de type!
     val x1 = sampleODE.state(Var(0.0, "ex:x1")).asInstanceOf[Var[Double]]
     val x2 = sampleODE.state(Var(0.0, "ex:x2")).asInstanceOf[Var[Double]]
     x1 := 25.0
