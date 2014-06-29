@@ -61,6 +61,18 @@ class Var[T](var value: T, val identifier: String, val scope: String) {
 	    throw new BoundsViolation(s"$identifier - $newValue > $bound")
 	}
       }
+      case i: Long => {
+	if (geq.isDefined) {
+	  val bound = geq.get.asInstanceOf[Long]
+	  if (i < bound) 
+	    throw new BoundsViolation(s"$identifier($newValue < $bound)")
+	}
+	if (leq.isDefined) {
+	  val bound = leq.get.asInstanceOf[Long]
+	  if (i > bound)
+	    throw new BoundsViolation(s"$identifier - $newValue > $bound")
+	}
+      }
       case i: Int => {
 	if (geq.isDefined) {
 	  val bound = geq.get.asInstanceOf[Int]
@@ -139,6 +151,10 @@ class Var[T](var value: T, val identifier: String, val scope: String) {
 	val o = that.asInstanceOf[Var[Double]].value
 	new Delta(d - o, identifier, scope).asInstanceOf[Delta[T]]
       }
+      case i: Long => {
+	val o = that.asInstanceOf[Var[Long]].value
+	new Delta(i - o, identifier, scope).asInstanceOf[Delta[T]]
+      }
       case i: Int => {
 	val o = that.asInstanceOf[Var[Int]].value
 	new Delta(i - o, identifier, scope).asInstanceOf[Delta[T]]
@@ -156,6 +172,12 @@ class Var[T](var value: T, val identifier: String, val scope: String) {
   def /=(that: Double) = update ((value.asInstanceOf[Double] / that).asInstanceOf[T])
   def %=(that: Double) = update ((value.asInstanceOf[Double] % that).asInstanceOf[T])
 
+  def +=(that: Long) = update ((value.asInstanceOf[Long] + that).asInstanceOf[T])
+  def -=(that: Long) = update ((value.asInstanceOf[Long] - that).asInstanceOf[T])
+  def *=(that: Long) = update ((value.asInstanceOf[Long] * that).asInstanceOf[T])
+  def /=(that: Long) = update ((value.asInstanceOf[Long] / that).asInstanceOf[T])
+  def %=(that: Long) = update ((value.asInstanceOf[Long] % that).asInstanceOf[T])
+
   def +=(that: Int) = update ((value.asInstanceOf[Int] + that).asInstanceOf[T])
   def -=(that: Int) = update ((value.asInstanceOf[Int] - that).asInstanceOf[T])
   def *=(that: Int) = update ((value.asInstanceOf[Int] * that).asInstanceOf[T])
@@ -163,8 +185,12 @@ class Var[T](var value: T, val identifier: String, val scope: String) {
   def %=(that: Int) = update ((value.asInstanceOf[Int] % that).asInstanceOf[T])
 }
 
-object VarConversions {
+/*
+ * Methods for converting between Var and fundamental types
+ */
+object Conversions {
   implicit def Var2Double(r: Var[Double]) = r.value
+  implicit def Var2Long(r: Var[Long]) = r.value
   implicit def Var2Int(r: Var[Int]) = r.value
   implicit def Var2Boolean(r: Var[Boolean]) = r.value
 }
@@ -173,3 +199,4 @@ object VarConversions {
 class Delta[T](v: T, i: String, s: String) extends Var[T](v, i, s) {
   override def toString =  s"Δ($identifier) = $value"
 }
+

@@ -3,7 +3,7 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.FlatSpec
 
 import uk.ac.ed.inf.mois.{Var, BoundsViolation}
-import uk.ac.ed.inf.mois.VarConversions._
+import uk.ac.ed.inf.mois.Conversions._
 
 class VarTest extends FlatSpec {
   "state variables" should "support arithmetic operations" in {

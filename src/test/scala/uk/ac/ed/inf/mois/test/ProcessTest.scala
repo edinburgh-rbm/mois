@@ -1,7 +1,7 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.Process
-import uk.ac.ed.inf.mois.VarConversions._
+import uk.ac.ed.inf.mois.Conversions._
 
 import org.scalatest.FlatSpec
 

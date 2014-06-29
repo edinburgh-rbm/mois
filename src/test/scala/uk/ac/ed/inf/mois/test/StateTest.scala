@@ -3,7 +3,7 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.FlatSpec
 
 import uk.ac.ed.inf.mois.{Var, VarKey, State}
-import uk.ac.ed.inf.mois.VarConversions._
+import uk.ac.ed.inf.mois.Conversions._
 
 class StateTest extends FlatSpec {
   "a state" should "support adding and retrieving variables" in {

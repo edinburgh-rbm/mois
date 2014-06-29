@@ -4,7 +4,7 @@ import java.lang.Math.{abs, PI}
 import org.scalatest.FlatSpec
 
 import uk.ac.ed.inf.mois.{ProcessODE, Var}
-import uk.ac.ed.inf.mois.VarConversions._
+import uk.ac.ed.inf.mois.Conversions._
 
 object exode extends ProcessODE("exode") {
   integral(
