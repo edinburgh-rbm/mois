@@ -12,12 +12,12 @@ abstract class ProcessODE(name: String) extends Process(name) with FirstOrderDif
 
   // An array holding resources of type Double that are used by the
   // ODE solver.
-  var y: Array[Var[Double]] = null
+  var y: Array[VarH[Double]] = null
 
   // This method must be called once and only once to set the list of
   // resources that are going to be integrated by the ODE solver. It
   // populates the `y` array.
-  def integral(ys: Var[Double]*) {
+  def integral(ys: VarH[Double]*) {
     assert(y eq null)
     y = ys.toArray
   }
@@ -25,14 +25,14 @@ abstract class ProcessODE(name: String) extends Process(name) with FirstOrderDif
   def step(t: Double, tau: Double) {
     // construct array of doubles corresponding to the integral resources
     // which is what the ODE solver will actually use
-    val doubleY = (for (resY <- y) yield resY.value).toArray
+    val doubleY = (for (resY <- y) yield resY().value).toArray
 
     // conduct the integration
     integrator().integrate(this, t, doubleY, t+tau, doubleY)
 
     // put the results of the integration into the resources
     for ( i <- 0 to (y.size - 1) )
-      y(i) := doubleY(i)
+      y(i)() := doubleY(i)
   }
 
   // This is required by the ODE solver and gives the dimension of

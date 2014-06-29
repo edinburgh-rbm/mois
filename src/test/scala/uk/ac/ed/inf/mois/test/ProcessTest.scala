@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.Process
+import uk.ac.ed.inf.mois.{Process, Var}
 import uk.ac.ed.inf.mois.Conversions._
 
 import org.scalatest.FlatSpec
@@ -27,6 +27,16 @@ class ProcessTest extends FlatSpec {
     assert(dx[Double](p.x1)() == 49.0)
     assert(dx[Double](p.x2)() == 0.0)
     assert(dx[Boolean](p.x3)() == true)
+  }
+
+  it should "keep referring to same variables" in {
+    val x1 = Var(1.0, "ex:x1")
+
+    assert(p.x1().value.asInstanceOf[Double] == 55.0)
+
+    // put a new reference into the state
+    p.state += x1
+    assert(p.x1().value.asInstanceOf[Double] == 1.0)
   }
 }
 

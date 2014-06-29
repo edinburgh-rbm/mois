@@ -43,6 +43,11 @@ object Var {
     new Var(value, identifier, scope)
 }
 
+abstract class VarH[T] {
+  def apply(): Var[T]
+}
+
+
 class Var[T](var value: T, val identifier: String, val scope: String) {
   type R = Var[T]
 
@@ -202,10 +207,14 @@ class Var[T](var value: T, val identifier: String, val scope: String) {
  * Methods for converting between Var and fundamental types
  */
 object Conversions {
-  implicit def Var2Double(r: Var[Double]) = r.value
-  implicit def Var2Long(r: Var[Long]) = r.value
-  implicit def Var2Int(r: Var[Int]) = r.value
-  implicit def Var2Boolean(r: Var[Boolean]) = r.value
+  implicit def Var2X[T](v: Var[T]) = v.value
+
+  implicit def VarH2Double(v: VarH[Double]) = v().value
+  implicit def VarH2Long(v: VarH[Long]) = v().value
+  implicit def VarH2Int(v: VarH[Int]) = v().value
+  implicit def VarH2Boolean(v: VarH[Boolean]) = v().value
+
+  implicit def VarH2Var[T](v: VarH[T]) = v()
 }
 
 // kludgy initialisation

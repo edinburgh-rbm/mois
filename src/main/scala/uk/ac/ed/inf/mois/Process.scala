@@ -1,18 +1,25 @@
 package uk.ac.ed.inf.mois
 
 import uk.ac.ed.inf.mois.{Var => V}
+import uk.ac.ed.inf.mois.Conversions._
 
 abstract class Process(val name: String) {
   var state = new State
 
   /*
    * Helper function used in "preamble" to declare a resource
-   * variable and add it to this process' state table
+   * variable and add it to this process' state table. It returns
+   * not the variable itself but a function that pulls it out of
+   * the state table because this is necessary to merge references
+   * from different processes that share some state
    */ 
-  def Var[T](value: T, identifier: String, scope: String = "default"): V[T] = {
+  def Var[T](value: T, identifier: String, scope: String = "default"): VarH[T] = {
     val p = V[T](value, identifier, scope)
     state += p
-    p
+    object vp extends VarH[T] {
+      def apply() = state(p.key)
+    }
+    vp
   }
 
   /*
