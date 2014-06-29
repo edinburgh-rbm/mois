@@ -13,10 +13,14 @@ abstract class ProcessGroup(name: String) extends Process(name) {
    */
   def +=(proc: Process) = {
     processes = proc :: processes
+    // this loop unifies the underlying state variables between
+    // the process and the process group
     for ((k,v) <- proc.state) {
       if (state contains k)
+	// the group already has this variable, give it to the process
 	proc.state += state(k)
       else
+	// add to the group state
 	state += v
     }
     this
