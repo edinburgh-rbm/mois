@@ -7,7 +7,7 @@ import uk.ac.ed.inf.mois.NaiveScheduler
 import uk.ac.ed.inf.mois.Conversions._
 
 /*
- * Directly copied ODE system from Dominik's stuff
+ * Directly transcribed ODE system from Dominik's stuff
  */ 
 object sampleEuler1 extends Process("sampleEuler1") {
   val x1 = Var(25.0, "ex:x1")
@@ -53,8 +53,11 @@ object sampleApache2 extends ProcessODE("sampleApache2") {
   }
 }
 
+/*
+ * Run the two versions of the system of ODEs with the NaiveScheduler
+ */
 class NaiveSchedulerTest extends FlatSpec {
-  "sample ode processes (euler)" should "integrate" in {
+  "sample ode system" should "integrate using Euler's method" in {
     val pg = new ProcessGroup("naive euler") {
       val scheduler = new NaiveScheduler(0.0001)
     }
@@ -67,7 +70,7 @@ class NaiveSchedulerTest extends FlatSpec {
     println(pg)
   }
 
-  "sample ode processes (apache)" should "integrate with apache ODE library too" in {
+  it should "integrate using the apache ODE library too" in {
     val pg = new ProcessGroup("naive apache") {
       val scheduler = new NaiveScheduler(0.01)
     }
