@@ -79,5 +79,4 @@ class NaiveSchedulerTest extends FlatSpec {
 
     println(pg)
   }
-
 }
