@@ -1,5 +1,7 @@
 package uk.ac.ed.inf.mois
 
+import uk.ac.ed.inf.mois.{Var => V}
+
 abstract class Process(val name: String) {
   var state = new State
 
@@ -7,8 +9,8 @@ abstract class Process(val name: String) {
    * Helper function used in "preamble" to declare a resource
    * variable and add it to this process' state table
    */ 
-  def resource[T](value: T, identifier: String, scope: String = "default"): Resource[T] = {
-    val p = new Resource[T](value, identifier, scope)
+  def Var[T](value: T, identifier: String, scope: String = "default"): V[T] = {
+    val p = V[T](value, identifier, scope)
     state += p
     p
   }

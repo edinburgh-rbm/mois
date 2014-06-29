@@ -2,8 +2,15 @@ package uk.ac.ed.inf.mois
 
 case class BoundsViolation(s: String) extends Exception(s) {
 }
+
 /*
- * A Resource is basically a named value of a certain type. It is operated
+ * This class is to abstract away the details of uniquely identifying a
+ * state variable.
+ */
+class VarKey(s: String, i: String) extends Tuple2[String, String](s, i) {}
+
+/*
+ * A Var is basically a named value of a certain type. It is operated
  * on by a Process. The value given in the initialisation can be retrieved
  * and manipulated in the usual way.
  *
@@ -28,8 +35,16 @@ case class BoundsViolation(s: String) extends Exception(s) {
  * scopes match.
  * 
  */ 
-class Resource[T](var value: T, val identifier: String, val scope: String = "default") {
-  type R = Resource[T]
+object Var {
+  def apply[T](value: T, identifier: String, scope: String = "default") =
+    new Var(value, identifier, scope)
+}
+
+class Var[T](var value: T, val identifier: String, val scope: String) {
+  type R = Var[T]
+
+  def key() = new VarKey(scope, identifier)
+
   def apply(): T = value
   
   def update(newValue: T): T = {
@@ -73,7 +88,7 @@ class Resource[T](var value: T, val identifier: String, val scope: String = "def
    * Is it necessary to override the clone method?
    */ 
   override def clone() = {
-    val copy = new Resource[T](value, identifier, scope)
+    val copy = new Var[T](value, identifier, scope)
     copy.geq = geq
     copy.leq = leq
     copy
@@ -85,7 +100,7 @@ class Resource[T](var value: T, val identifier: String, val scope: String = "def
    * Determines if this resource is the same as another by comparing
    * identifier and scope.
    */ 
-  def sameAs(other: Resource[T]): Boolean = {
+  def sameAs(other: Var[T]): Boolean = {
     identifier == other.identifier && scope == other.scope
   }
   /*
@@ -117,15 +132,15 @@ class Resource[T](var value: T, val identifier: String, val scope: String = "def
   def -[R](that: R): Delta[T] = {
     value match {
       case d: Double => {
-	val o = that.asInstanceOf[Resource[Double]].value
+	val o = that.asInstanceOf[Var[Double]].value
 	new Delta(d - o, identifier, scope).asInstanceOf[Delta[T]]
       }
       case i: Int => {
-	val o = that.asInstanceOf[Resource[Int]].value
+	val o = that.asInstanceOf[Var[Int]].value
 	new Delta(i - o, identifier, scope).asInstanceOf[Delta[T]]
       }
       case b: Boolean => {
-	val o = that.asInstanceOf[Resource[Boolean]].value
+	val o = that.asInstanceOf[Var[Boolean]].value
 	new Delta(b != o, identifier, scope).asInstanceOf[Delta[T]]
       }
     }
@@ -144,13 +159,13 @@ class Resource[T](var value: T, val identifier: String, val scope: String = "def
   def %=(that: Int) = update ((value.asInstanceOf[Int] % that).asInstanceOf[T])
 }
 
-object ResourceConversions {
-  implicit def Resource2Double(r: Resource[Double]) = r.value
-  implicit def Resource2Int(r: Resource[Int]) = r.value
-  implicit def Resource2Boolean(r: Resource[Boolean]) = r.value
+object VarConversions {
+  implicit def Var2Double(r: Var[Double]) = r.value
+  implicit def Var2Int(r: Var[Int]) = r.value
+  implicit def Var2Boolean(r: Var[Boolean]) = r.value
 }
 
 // kludgy initialisation
-class Delta[T](v: T, i: String, s: String) extends Resource[T](v, i, s) {
+class Delta[T](v: T, i: String, s: String) extends Var[T](v, i, s) {
   override def toString =  s"Δ($identifier) = $value"
 }

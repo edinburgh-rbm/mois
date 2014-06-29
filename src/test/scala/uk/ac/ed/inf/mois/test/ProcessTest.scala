@@ -1,15 +1,15 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.Process
-import uk.ac.ed.inf.mois.ResourceConversions._
+import uk.ac.ed.inf.mois.VarConversions._
 
 import org.scalatest.FlatSpec
 
 class ProcessTest extends FlatSpec {
   object p extends Process("p") {
-    val x1 = resource(2.0, "ex:x1")
-    val x2 = resource(3.0, "ex:x2")
-    val x3 = resource(true, "ex:x3")
+    val x1 = Var(2.0, "ex:x1")
+    val x2 = Var(3.0, "ex:x2")
+    val x3 = Var(true, "ex:x3")
     def step(t: Double, tau: Double) {
       x1 := t + x1 * x2 * tau
       if (t % 2 != 0) x3 := !x3

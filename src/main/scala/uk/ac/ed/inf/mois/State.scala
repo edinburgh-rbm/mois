@@ -3,14 +3,15 @@ package uk.ac.ed.inf.mois
 import scala.collection.mutable.Map
 
 class State {
-  val table = Map[(String, String), Resource[_]]()
-  def apply[T](r: Resource[_]) = table.apply((r.identifier, r.scope)).asInstanceOf[Resource[T]]
-  def apply[T](i: (String, String)) = table.apply(i).asInstanceOf[Resource[T]]
+  val table = Map[VarKey, Var[_]]()
+
+  def apply[T](v: Var[_]) = table.apply(v.key).asInstanceOf[Var[T]]
+  def apply[T](k: VarKey) = table.apply(k).asInstanceOf[Var[T]]
 
   def filter = table.filter _
 
-  def +=(r: Resource[_]) = {
-    table update ((r.identifier, r.scope), r)
+  def +=(v: Var[_]) = {
+    table += v.key -> v
   }
 
   def ++=(s: State) = {
