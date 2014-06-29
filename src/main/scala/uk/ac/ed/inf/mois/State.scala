@@ -25,19 +25,39 @@ class State {
   def filter = table.filter _
 
   /*
+   * Syntax sugar: s contains v -- contains predicate for a particular variable
+   */
+  def contains(v: Var[_]) = table contains v.key
+  /*
+   * Syntax sugar: s contains k -- contains predicate for a particular key
+   */
+  def contains(k: Key) = table contains k
+
+  /*
    * The += operator adds a `Var` to the state
    */
   def +=(v: Var[_]) = {
     table += v.key -> v
+    this
   }
 
   /*
-   * The ++= operator updates this state with the entirety of the other
+   * The <<< operator updates this state with the entirety of the other
    */
-  def ++=(other: State) = {
+  def <<<(other: State) = {
     for ((_,v) <- other.table)
       this += v
     this
+  }
+
+  /*
+   * The := operator updates the state for the given variable
+   */
+  def :=(v: Var[_]) = {
+    if (this contains v)
+      this(v) := v.value
+    else
+      this += v
   }
 
   /*

@@ -15,6 +15,10 @@ class StateTest extends FlatSpec {
     s += r1
     s += r2
 
+    assert(s contains r1)
+    assert(s contains r1.key)
+    assert(s contains r2)
+    assert(s contains r2.key)
     assert(s(r1) == r1)
     assert(s(r2) == r2)
     assert(s(r1.key) == r1)
@@ -54,7 +58,21 @@ class StateTest extends FlatSpec {
     assert(s(r1)().asInstanceOf[Int] == 5)
   }
 
-  "two states" should "merge with ++=" in {
+  it should "update but not replace a state variable with :=" in {
+    var s = new State
+    val a = Var(1, "ex:_")
+    val b = Var(2, "ex:_")
+
+    s += a
+    s := b
+
+    assert(s(a) eq a)
+    assert(s(b) eq a)
+    assert(!(s(a) eq b))
+    assert(a.value == 2)
+  }
+
+  "two states" should "merge with <<<" in {
     val s1 = new State
     val s2 = new State
 
@@ -65,7 +83,7 @@ class StateTest extends FlatSpec {
     s2 += r2
 
     // merge states is done like this
-    s1 ++= s2
+    s1 <<< s2
 
     assert(s1(r2) == r2)
   }

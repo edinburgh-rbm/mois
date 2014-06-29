@@ -63,7 +63,7 @@ class ODEProcessTest extends FlatSpec {
     // make sure we get the same results
     //println(sampleODE)
     sampleODE(0, 50.0)
-    //println(sampleODE)
+    println(s"known good ODE $sampleODE")
 
     assert(abs(sampleODE.y(0) + 0.1398) < 0.0001)
     assert(abs(sampleODE.y(1) + (-0.0916)) < 0.0001)

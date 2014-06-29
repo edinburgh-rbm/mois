@@ -15,7 +15,8 @@ abstract class Process(val name: String) {
    */ 
   def Var[T](value: T, identifier: String, scope: String = "default"): VarH[T] = {
     val p = V[T](value, identifier, scope)
-    state += p
+    if (!(state contains p))
+      state += p
     object vp extends VarH[T] {
       def apply() = state(p.key)
     }
