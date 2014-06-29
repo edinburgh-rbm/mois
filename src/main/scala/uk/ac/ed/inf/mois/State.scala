@@ -39,6 +39,12 @@ class State {
 
   override def toString = "(" + (for ((_,v) <- table) yield v).mkString(", ") + ")"
 
+  /*
+   * The primary purpose of this method is to deep copy a state dictionary
+   * so that vector subtraction can be done between states. This is used by
+   * `Process.apply` to construct the state difference before and after an
+   * iteration of a process has run.
+   */
   def copy = {
     val ns = new State
     for ((_, v) <- table) {

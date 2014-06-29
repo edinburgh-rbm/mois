@@ -84,6 +84,13 @@ class Var[T](var value: T, val identifier: String, val scope: String) {
    */ 
   val := = update _
  
+  /*
+   * The `copy` method is primarily to support deep copy of a state
+   * dictionary. The deep copy of a state dictionary is primarily to
+   * support doing vector subtraction on states (e.g. diffs). It is not
+   * recommended to make use of this for other purposes otherwise
+   * unexpected things may or may not happen.
+   */
   def copy = {
     val nv = new Var[T](value, identifier, scope)
     nv.geq = geq
