@@ -39,10 +39,10 @@ class State {
 
   override def toString = "(" + (for ((_,v) <- table) yield v).mkString(", ") + ")"
 
-  def deepCopy = {
+  def copy = {
     val ns = new State
     for ((_, v) <- table) {
-      ns += v.clone
+      ns += v.copy
     }
     ns
   }

@@ -84,14 +84,11 @@ class Var[T](var value: T, val identifier: String, val scope: String) {
    */ 
   val := = update _
  
-  /*
-   * Is it necessary to override the clone method?
-   */ 
-  override def clone() = {
-    val copy = new Var[T](value, identifier, scope)
-    copy.geq = geq
-    copy.leq = leq
-    copy
+  def copy = {
+    val nv = new Var[T](value, identifier, scope)
+    nv.geq = geq
+    nv.leq = leq
+    nv
   }
 
   override def toString = identifier + " = " + value.toString

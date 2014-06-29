@@ -26,7 +26,7 @@ abstract class Process(val name: String) {
    * A wrapper around the user defined step function to calculate changes
    */
   def apply(t: Double, tau: Double): State = {
-    val start = state.deepCopy
+    val start = state.copy
     step(t, tau)
     state - start
   }
