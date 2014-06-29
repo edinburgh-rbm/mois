@@ -2,7 +2,7 @@ package uk.ac.ed.inf.mois.test
 
 import org.scalatest.FlatSpec
 
-import uk.ac.ed.inf.mois.{Var, VarKey, State}
+import uk.ac.ed.inf.mois.{Var, State}
 import uk.ac.ed.inf.mois.Conversions._
 
 class StateTest extends FlatSpec {
@@ -88,8 +88,11 @@ class StateTest extends FlatSpec {
     // diff states is done like this
     val ds = s2 - s1
 
+    println(s1)
+    println(s2)
+    println(ds)
     assert(ds[Int](s1r1)() == 2)
-    assert(ds[Int](s1r2)() == 0)
+    assert(ds[Int](s1r2)() == -2)
     assert(ds[Int](s2r3)() == 4)
   }
 }

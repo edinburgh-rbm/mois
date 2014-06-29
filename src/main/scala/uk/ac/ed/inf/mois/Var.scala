@@ -1,5 +1,8 @@
 package uk.ac.ed.inf.mois
 
+/*
+ * A `BoundsViolation` is raised when a restriction on a `Var` is violated
+ */
 case class BoundsViolation(s: String) extends Exception(s) {
 }
 
@@ -7,10 +10,10 @@ case class BoundsViolation(s: String) extends Exception(s) {
  * This class is to abstract away the details of uniquely identifying a
  * state variable.
  */
-class VarKey(s: String, i: String) extends Tuple2[String, String](s, i) {}
+class Key(s: String, i: String) extends Tuple2[String, String](s, i) {}
 
 /*
- * A Var is basically a named value of a certain type. It is operated
+ * A `Var` is basically a named value of a certain type. It is operated
  * on by a Process. The value given in the initialisation can be retrieved
  * and manipulated in the usual way.
  *
@@ -43,10 +46,20 @@ object Var {
 class Var[T](var value: T, val identifier: String, val scope: String) {
   type R = Var[T]
 
-  def key() = new VarKey(scope, identifier)
+  /*
+   * Return a Key that will identify this variable by its metadata regardless
+   * of its actual value. This is intended to be used as an indexinto dictionaries.
+   */
+  def key() = new Key(scope, identifier)
 
+  /*
+   * When a Variable is applied or called, what is expected is its value
+   */
   def apply(): T = value
   
+  /*
+   * Assignment to a Variable is expected to set the underlying value
+   */
   def update(newValue: T): T = {
     newValue match {
       case d: Double => {
@@ -114,10 +127,10 @@ class Var[T](var value: T, val identifier: String, val scope: String) {
 
   /*
    * Determines if this resource is the same as another by comparing
-   * identifier and scope.
+   * metadata
    */ 
   def sameAs(other: Var[T]): Boolean = {
-    identifier == other.identifier && scope == other.scope
+    key == other.key
   }
   /*
    * Syntax Sugar for sameAs
