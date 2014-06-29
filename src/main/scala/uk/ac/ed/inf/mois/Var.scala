@@ -43,11 +43,22 @@ object Var {
     new Var(value, identifier, scope)
 }
 
+/*
+ * A `Var` Handle or pointer. This is used mostly by `Process` to enable
+ * variables to be defined in process scope, and to be referred to by a name
+ * in that scope, but at the same time have the underlying variable be mutable
+ * so that when it is replaced -- perhaps when adding to a `ProcessGroup` --
+ * the reference remains useable.
+ */
 abstract class VarH[T] {
   def apply(): Var[T]
 }
 
-
+/*
+ * The class implementing variables (or values with metadata). This could
+ * use some attention, there is far too much introspecting of types going
+ * on and there is probably a lot that isn't idiomatic scala.
+ */
 class Var[T](var value: T, val identifier: String, val scope: String) {
   type R = Var[T]
 
@@ -217,6 +228,11 @@ object Conversions {
   implicit def VarH2Var[T](v: VarH[T]) = v()
 }
 
+/*
+ * A Delta represents the difference between two variables. The main purpose
+ * is to put a fancy unicode triangle before the name. It might be useful for
+ * other purposes as well.
+ */
 // kludgy initialisation
 class Delta[T](v: T, i: String, s: String) extends Var[T](v, i, s) {
   override def toString =  s"Δ($identifier) = $value"
