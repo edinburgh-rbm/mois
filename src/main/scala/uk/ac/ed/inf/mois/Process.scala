@@ -3,11 +3,15 @@ package uk.ac.ed.inf.mois
 import uk.ac.ed.inf.mois.{Var => V}
 import uk.ac.ed.inf.mois.Conversions._
 
+/*
+ * A `Process` is basically a `State` and a function that operates
+ * upon it parametrised by time.
+ */
 abstract class Process(val name: String) {
   var state = new State
 
   /*
-   * Helper function used in "preamble" to declare a resource
+   * Helper function used in "preamble" to declare a variable
    * variable and add it to this process' state table. It returns
    * not the variable itself but a function that pulls it out of
    * the state table because this is necessary to merge references

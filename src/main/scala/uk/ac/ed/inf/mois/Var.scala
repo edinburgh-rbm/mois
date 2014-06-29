@@ -20,7 +20,7 @@ class Key(s: String, i: String) extends Tuple2[String, String](s, i) {}
  * Some things need to be said about the identifier and the scope. The
  * identifier is meant to be globally unique and could sensibly be an RDF
  * resource, perhaps in shortened curie notation though this is not
- * enforced. This identifier is used to find out if a resource is the
+ * enforced. This identifier is used to find out if a variable is the
  * same across two or more processes. So an example might be to use
  *
  *     InChi:ZKHQWZAMYRWXGA-KQYNXXCUSA-N
@@ -28,13 +28,13 @@ class Key(s: String, i: String) extends Tuple2[String, String](s, i) {}
  * for our friend ATP.
  * 
  * Scope is used to create exclusive buckets that contain the same
- * resource. For example a simulation of two cells might have the same
+ * variable. For example a simulation of two cells might have the same
  * substance in both cells but it doesn't make sense to pool it as a
- * resource. Therefore these cells would have different scopes.
+ * variable. Therefore these cells would have different scopes.
  *
  * The effect of this is that when a global state table is derived from
  * the individual states of several processes, their individual state
- * variables or resources are merged only if the identifiers and the
+ * variables or variables are merged only if the identifiers and the
  * scopes match.
  * 
  */ 
@@ -142,7 +142,7 @@ class Var[T](var value: T, val identifier: String, val scope: String) {
   override def toString = identifier + " = " + value.toString
 
   /*
-   * Determines if this resource is the same as another by comparing
+   * Determines if this variable is the same as another by comparing
    * metadata
    */ 
   def sameAs(other: Var[T]): Boolean = {
