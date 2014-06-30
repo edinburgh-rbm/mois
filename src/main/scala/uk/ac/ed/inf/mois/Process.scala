@@ -18,7 +18,7 @@ abstract class Process(val name: String) {
    * from different processes that share some state
    */ 
   def Var[T](value: T, identifier: String, scope: String = "default"): VarH[T] = {
-    val p = V[T](value, identifier, scope)
+    val p = V(value, identifier, scope)
     if (!(state contains p))
       state += p
     object vp extends VarH[T] {
