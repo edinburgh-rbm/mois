@@ -43,9 +43,24 @@ class State {
 
   /*
    * The <<< operator updates this state with the entirety of the other
+   * This is a deep copy and does not keep actual references to the
+   * other state's variables. If references must be preserved use ++=
    */
   def <<<(other: State) = {
     for ((_,v) <- other.table)
+      if (this contains v)
+	this(v) := v.value
+      else
+        this += v.copy
+    this
+  }
+
+  /*
+   * The ++= operator is a shallow copy by reference that can be used
+   * to merge states
+   */
+  def ++=(other: State) = {
+    for ((_, v) <- other.table)
       this += v
     this
   }

@@ -72,7 +72,7 @@ class StateTest extends FlatSpec {
     assert(a.value == 2)
   }
 
-  "two states" should "merge with <<<" in {
+  "two states" should "update with <<<" in {
     val s1 = new State
     val s2 = new State
 
@@ -85,7 +85,25 @@ class StateTest extends FlatSpec {
     // merge states is done like this
     s1 <<< s2
 
+    assert(s1(r2).value.asInstanceOf[Int] == r2.value)
+    assert(!(s1(r2) eq r2))
+  }
+
+  it should "merge with ++=" in {
+    val s1 = new State
+    val s2 = new State
+
+    val r1 = Var(1, "ex:r1")
+    val r2 = Var(2, "ex:r2")
+
+    s1 += r1
+    s2 += r2
+
+    // merge states is done like this
+    s1 ++= s2
+
     assert(s1(r2) == r2)
+    assert(s1(r2) eq r2)
   }
 
   it should "diff with -" in {
