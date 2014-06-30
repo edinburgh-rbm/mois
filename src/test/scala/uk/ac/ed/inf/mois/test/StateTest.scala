@@ -82,7 +82,7 @@ class StateTest extends FlatSpec {
     s1 += r1
     s2 += r2
 
-    // merge states is done like this
+    // update state from other is done like this
     s1 <<< s2
 
     assert(s1(r2).value.asInstanceOf[Int] == r2.value)
@@ -99,7 +99,7 @@ class StateTest extends FlatSpec {
     s1 += r1
     s2 += r2
 
-    // merge states is done like this
+    // left merge states is done like this
     s1 ++= s2
 
     assert(s1(r2) == r2)
