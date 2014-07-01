@@ -8,7 +8,9 @@ import uk.ac.ed.inf.mois.Conversions._
  * upon it parametrised by time.
  */
 abstract class Process(val name: String) {
-  var state = new State
+  val state = new State
+
+  var stepHandler: StepHandler = null
 
   /*
    * Helper function used in "preamble" to declare a variable
@@ -40,6 +42,8 @@ abstract class Process(val name: String) {
   def apply(t: Double, tau: Double): State = {
     val start = state.copy
     step(t, tau)
+    if (stepHandler != null)
+      stepHandler.handleStep(t+tau, state)
     state - start
   }
 
