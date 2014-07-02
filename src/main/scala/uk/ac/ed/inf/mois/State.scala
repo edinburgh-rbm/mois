@@ -33,9 +33,7 @@ class State {
    */
   def contains(k: Key) = table contains k
 
-  /*
-   * The += operator adds a `Var` to the state
-   */
+  /** The += operator adds a `Var` to the state. */
   def +=(v: Var[_]) = {
     table += v.key -> v
     this
@@ -91,10 +89,9 @@ class State {
 	ns += v
       }
     }
-    for ((k,v) <- s.table) {
+    for ((k,v: NumericVar[_]) <- s.table) {
       if (!(table contains k)) {
-	// umm... would be much better to implement a unary - TODO
-	ns += v - v - v
+	ns += -v
       }
     }
     ns

@@ -39,179 +39,138 @@ class Key(s: String, i: String) extends Tuple2[String, String](s, i) {}
  * 
  */ 
 object Var {
-  def apply[T](value: T, identifier: String, scope: String = "default") =
-    new Var(value, identifier, scope)
+  def apply(value: Boolean, identifier: String, scope: String) =
+    new BooleanVar(value, identifier, scope)
+  def apply(value: Boolean, identifier: String) =
+    new BooleanVar(value, identifier, "default")
+  def apply(value: Float, identifier: String, scope: String) =
+    new NumericVar[Float](value, identifier, scope)
+  def apply(value: Float, identifier: String) =
+    new NumericVar[Float](value, identifier, "default")
+  def apply(value: Double, identifier: String, scope: String) =
+    new NumericVar[Double](value, identifier, scope)
+  def apply(value: Double, identifier: String) =
+    new NumericVar[Double](value, identifier, "default")
+  def apply(value: Int, identifier: String, scope: String) =
+    new NumericVar[Int](value, identifier, scope)
+  def apply(value: Int, identifier: String) =
+    new NumericVar[Int](value, identifier, "default")
+  def apply(value: Long, identifier: String, scope: String) =
+    new NumericVar[Long](value, identifier, scope)
+  def apply(value: Long, identifier: String) =
+    new NumericVar[Long](value, identifier, "default")
 }
 
-/*
- * A `Var` Handle or pointer. This is used mostly by `Process` to enable
- * variables to be defined in process scope, and to be referred to by a name
- * in that scope, but at the same time have the underlying variable be mutable
- * so that when it is replaced -- perhaps when adding to a `ProcessGroup` --
- * the reference remains useable.
- */
+// RHZ: This is what I wanted to call VarProxy
+/** A `Var` Handle or pointer. This is used mostly by `Process` to enable
+  * variables to be defined in process scope, and to be referred to by a name
+  * in that scope, but at the same time have the underlying variable be mutable
+  * so that when it is replaced -- perhaps when adding to a `ProcessGroup` --
+  * the reference remains useable.
+  */
 abstract class VarH[T] {
   def apply(): Var[T]
 }
 
-/*
- * The class implementing variables (or values with metadata). This could
- * use some attention, there is far too much introspecting of types going
- * on and there is probably a lot that isn't idiomatic scala.
- */
-class Var[T](var value: T, val identifier: String, val scope: String) {
-  type R = Var[T]
+// RHZ: I'd like Var to be the supertype of variables in the state and
+// variables "proxies", ie variables in the process state that have to
+// ask to the parent process what the value of the variable is each time.
+/** The class implementing variables (or values with metadata). This could
+  * use some attention, there is far too much introspecting of types going
+  * on and there is probably a lot that isn't idiomatic Scala.
+  */
+abstract class Var[T] {
 
-  /*
-   * Return a Key that will identify this variable by its metadata regardless
-   * of its actual value. This is intended to be used as an indexinto dictionaries.
-   */
-  def key() = new Key(scope, identifier)
+  var value: T
+  val identifier: String
+  val scope: String
 
-  /*
-   * When a Variable is applied or called, what is expected is its value
-   */
+  // It could be a ListBuffer as well
+  val constraints: collection.mutable.ArrayBuffer[Constraint] =
+    collection.mutable.ArrayBuffer.empty[Constraint]
+
+  type Constraint = T => Boolean
+
+  /** Return a Key that will identify this variable by its metadata regardless
+    * of its actual value. This is intended to be used as an indexinto dictionaries.
+    */
+  def key = new Key(scope, identifier)
+
+  /** When a Variable is applied or called, what is expected is its value. */
   def apply(): T = value
-  
-  /*
-   * Assignment to a Variable is expected to set the underlying value
-   */
-  def update(newValue: T): T = {
-    newValue match {
-      case d: Double => {
-	if (geq.isDefined) {
-	  val bound = geq.get.asInstanceOf[Double]
-	  if (d < bound) 
-	    throw new BoundsViolation(s"$identifier($newValue < $bound)")
-	}
-	if (leq.isDefined) {
-	  val bound = leq.get.asInstanceOf[Double]
-	  if (d > bound)
-	    throw new BoundsViolation(s"$identifier - $newValue > $bound")
-	}
-      }
-      case i: Long => {
-	if (geq.isDefined) {
-	  val bound = geq.get.asInstanceOf[Long]
-	  if (i < bound) 
-	    throw new BoundsViolation(s"$identifier($newValue < $bound)")
-	}
-	if (leq.isDefined) {
-	  val bound = leq.get.asInstanceOf[Long]
-	  if (i > bound)
-	    throw new BoundsViolation(s"$identifier - $newValue > $bound")
-	}
-      }
-      case i: Int => {
-	if (geq.isDefined) {
-	  val bound = geq.get.asInstanceOf[Int]
-	  if (i < bound) 
-	    throw new BoundsViolation(s"$identifier($newValue < $bound)")
-	}
-	if (leq.isDefined) {
-	  val bound = leq.get.asInstanceOf[Int]
-	  if (i > bound)
-	    throw new BoundsViolation(s"$identifier - $newValue > $bound")
-	}
-      }
-      case _ => {}
-    } 
-    value = newValue.asInstanceOf[T]
-    value
+
+  /** Assignment to a Variable is expected to set the underlying value. */
+  def update(x: T): this.type = {
+    for (c <- constraints if !c(value))
+      throw new BoundsViolation(s"variable $identifier violated a " +
+        s"constraint by setting its value to $x")
+    this
   }
 
-  /*
-   * Syntax sugar for assignment
-   */ 
-  val := = update _
- 
-  /*
-   * The `copy` method is primarily to support deep copy of a state
-   * dictionary. The deep copy of a state dictionary is primarily to
-   * support doing vector subtraction on states (e.g. diffs). It is not
-   * recommended to make use of this for other purposes otherwise
-   * unexpected things may or may not happen.
-   */
-  def copy = {
-    val nv = new Var[T](value, identifier, scope)
-    nv.geq = geq
-    nv.leq = leq
-    nv
-  }
+  /** Syntax sugar for assignment. */
+  @inline final def :=(x: T): this.type = this.update(x)
+
+  /** The `copy` method is primarily to support deep copy of a state
+    * dictionary. The deep copy of a state dictionary is primarily to
+    * support doing vector subtraction on states (e.g. diffs). It is not
+    * recommended to make use of this for other purposes otherwise
+    * unexpected things may or may not happen.
+    */
+  def copy: Var[T]
 
   override def toString = identifier + " = " + value.toString
 
-  /*
-   * Determines if this variable is the same as another by comparing
-   * metadata
-   */ 
-  def sameAs(other: Var[T]): Boolean = {
-    key == other.key
-  }
-  /*
-   * Syntax Sugar for sameAs
-   */
-  val === = sameAs _
+  /** Determines if this variable is the same as another by comparing
+    * metadata.
+    */
+  def sameType(other: Var[T]): Boolean = key == other.key
 
-  /*
-   * Greater or equals than restriction.
-   */
-  var geq: Option[T] = None
-  def |>=(t: T) = {
-    geq = Some(t)
-    this
+  object AddConstraint {
+    def and(c: Constraint) = should(c)
   }
 
-  /*
-   * Lesser or equals than restriction.
-   */
-  var leq: Option[T] = None
-  def |<=(t: T) = {
-    leq = Some(t)
-    this
+  /** Add a constraint to this variable. */
+  def should(constraint: Constraint) = {
+    constraints += constraint
+    AddConstraint
   }
 
-  /*
-   * Provide an implementation of - for some common types
-   */
-  def -[R](that: R): Delta[T] = {
-    value match {
-      case d: Double => {
-	val o = that.asInstanceOf[Var[Double]].value
-	new Delta(d - o, identifier, scope).asInstanceOf[Delta[T]]
-      }
-      case i: Long => {
-	val o = that.asInstanceOf[Var[Long]].value
-	new Delta(i - o, identifier, scope).asInstanceOf[Delta[T]]
-      }
-      case i: Int => {
-	val o = that.asInstanceOf[Var[Int]].value
-	new Delta(i - o, identifier, scope).asInstanceOf[Delta[T]]
-      }
-      case b: Boolean => {
-	val o = that.asInstanceOf[Var[Boolean]].value
-	new Delta(b != o, identifier, scope).asInstanceOf[Delta[T]]
-      }
-    }
-  }
+  def -(that: Var[T]): Delta[T]
+}
 
-  def +=(that: Double) = update ((value.asInstanceOf[Double] + that).asInstanceOf[T])
-  def -=(that: Double) = update ((value.asInstanceOf[Double] - that).asInstanceOf[T])
-  def *=(that: Double) = update ((value.asInstanceOf[Double] * that).asInstanceOf[T])
-  def /=(that: Double) = update ((value.asInstanceOf[Double] / that).asInstanceOf[T])
-  def %=(that: Double) = update ((value.asInstanceOf[Double] % that).asInstanceOf[T])
+class BooleanVar(
+  var value: Boolean,
+  val identifier: String,
+  val scope: String)
+    extends Var[Boolean] {
 
-  def +=(that: Long) = update ((value.asInstanceOf[Long] + that).asInstanceOf[T])
-  def -=(that: Long) = update ((value.asInstanceOf[Long] - that).asInstanceOf[T])
-  def *=(that: Long) = update ((value.asInstanceOf[Long] * that).asInstanceOf[T])
-  def /=(that: Long) = update ((value.asInstanceOf[Long] / that).asInstanceOf[T])
-  def %=(that: Long) = update ((value.asInstanceOf[Long] % that).asInstanceOf[T])
+  def -(that: Var[Boolean]): Delta[Boolean] =
+    new Delta[Boolean](value != that.value, identifier, scope)
 
-  def +=(that: Int) = update ((value.asInstanceOf[Int] + that).asInstanceOf[T])
-  def -=(that: Int) = update ((value.asInstanceOf[Int] - that).asInstanceOf[T])
-  def *=(that: Int) = update ((value.asInstanceOf[Int] * that).asInstanceOf[T])
-  def /=(that: Int) = update ((value.asInstanceOf[Int] / that).asInstanceOf[T])
-  def %=(that: Int) = update ((value.asInstanceOf[Int] % that).asInstanceOf[T])
+  def copy = new BooleanVar(value, identifier, scope)
+}
+
+class NumericVar[T: Numeric](
+  var value: T,
+  val identifier: String,
+  val scope: String)
+    extends Var[T] {
+
+  def copy = new NumericVar[T](value, identifier, scope)
+
+  /** Provide an implementation of - for some common types. */
+  def -(that: Var[T]): Delta[T] =
+    new Delta[T](implicitly[Numeric[T]].minus(value, that.value),
+      identifier, scope)
+
+  def +=(that: T) = update (implicitly[Numeric[T]].plus(value, that))
+  def -=(that: T) = update (implicitly[Numeric[T]].minus(value, that))
+  def *=(that: T) = update (implicitly[Numeric[T]].times(value, that))
+  // def /=(that: T) = update (value / that)
+  // def %=(that: T) = update (value % that)
+
+  def unary_- = new NumericVar[T](
+    implicitly[Numeric[T]].negate(value), identifier, scope)
 }
 
 /*
@@ -234,7 +193,16 @@ object Conversions {
  * other purposes as well.
  */
 // kludgy initialisation
-class Delta[T](v: T, i: String, s: String) extends Var[T](v, i, s) {
+class Delta[T](v: T, i: String, s: String) extends Var[T] { //(v, i, s) {
+
+  // FIXME
+  var value = v
+  val identifier = i
+  val scope = s
+
   override def toString =  s"Δ($identifier) = $value"
+  def copy = new Delta[T](v, i, s)
+  def -(that: Var[T]): Delta[T] = throw new Exception(
+    "I don't know yet how to substract values to Deltas")
 }
 

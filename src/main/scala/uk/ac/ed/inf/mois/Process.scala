@@ -18,13 +18,20 @@ abstract class Process(val name: String) {
    * from different processes that share some state
    */ 
   def Var[T](value: T, identifier: String, scope: String = "default"): VarH[T] = {
-    val p = V(value, identifier, scope)
-    if (!(state contains p))
-      state += p
-    object vp extends VarH[T] {
-      def apply() = state(p.key)
+    val v: Var[_] = value match {
+      case x: Int => Var(x, identifier, scope)
+      case x: Long => Var(x, identifier, scope)
+      case x: Float => Var(x, identifier, scope)
+      case x: Double => Var(x, identifier, scope)
+      case b: Boolean => new BooleanVar(b, identifier, scope)
+      case _ => throw new IllegalArgumentException(
+        "I don't know how to handle this type")
     }
-    vp
+    if (!(state contains v))
+      state += v
+    new VarH[T] {
+      def apply() = state(v.key)
+    }
   }
 
   /*
