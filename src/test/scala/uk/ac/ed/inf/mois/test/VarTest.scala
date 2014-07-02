@@ -12,6 +12,11 @@ class VarTest extends FlatSpec {
     assert(ir1() + ir2() == 3) 
   }
 
+  it should "not care too much about types for arithmetic" in {
+    val r1 = Var(0.0, "ex:float")
+    r1 += 1
+  }
+
   it should "distinguish different identifiers and scopes" in {
     val r1 = Var(0, "ex:r1")
     var r1a = Var(0, "ex:r1", Some("a"))
