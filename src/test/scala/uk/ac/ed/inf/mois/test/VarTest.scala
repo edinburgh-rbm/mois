@@ -2,7 +2,7 @@ package uk.ac.ed.inf.mois.test
 
 import org.scalatest.FlatSpec
 
-import uk.ac.ed.inf.mois.{Var, BoundsViolation}
+import uk.ac.ed.inf.mois.{Var, ConstraintViolation}
 import uk.ac.ed.inf.mois.Conversions._
 
 class VarTest extends FlatSpec {
@@ -38,13 +38,12 @@ class VarTest extends FlatSpec {
 
   it should "respect constraints" in {
     val r1 = Var(0.0, "ex:r1") should (_ >= 0) should (_ <= 2)
-    var violated = false
 
-    intercept[BoundsViolation] {
+    intercept[ConstraintViolation] {
       r1 -= 1.0
     }
 
-    intercept[BoundsViolation] {
+    intercept[ConstraintViolation] {
       r1 += 3.0
     }
   }

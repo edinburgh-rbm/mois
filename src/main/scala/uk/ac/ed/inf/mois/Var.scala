@@ -1,12 +1,11 @@
 package uk.ac.ed.inf.mois
 
-/*
- * A `BoundsViolation` is raised when a restriction on a `Var` is violated
+/**
+ * A `ConstraintViolation` is raised when a restriction on a `Var` is violated
  */
-case class BoundsViolation(s: String) extends Exception(s) {
-}
+case class ConstraintViolation(s: String) extends Exception(s)
 
-/*
+/**
  * This class is to abstract away the details of uniquely identifying a
  * state variable.
  */
@@ -19,7 +18,7 @@ class Key(s: String, i: String) extends Tuple2[String, String](s, i) with Ordere
   }
 }
 
-/*
+/**
  * A `Var` is basically a named value of a certain type. It is operated
  * on by a Process. The value given in the initialisation can be retrieved
  * and manipulated in the usual way.
@@ -108,9 +107,10 @@ abstract class Var[T] {
 
   /** Assignment to a Variable is expected to set the underlying value. */
   def update(x: T): this.type = {
-    for (c <- constraints if !c(value))
-      throw new BoundsViolation(s"variable $identifier violated a " +
+    for (c <- constraints if c(value))
+      throw new ConstraintViolation(s"variable $identifier violated a " +
         s"constraint by setting its value to $x")
+    value = x
     this
   }
 
@@ -131,6 +131,7 @@ abstract class Var[T] {
     * metadata.
     */
   def sameType(other: Var[T]): Boolean = key == other.key
+  @inline final def ===(other: Var[T]) = sameType(other)
 
   object AddConstraint {
     def and(c: Constraint) = should(c)
@@ -144,6 +145,10 @@ abstract class Var[T] {
   }
 
   def -(that: Var[T]): Delta[T]
+
+  def -=(that: T): Var[T]
+  def +=(that: T): Var[T]
+  def *=(that: T): Var[T]
 }
 
 class BooleanVar(
@@ -156,6 +161,13 @@ class BooleanVar(
     new Delta[Boolean](value != that.value, identifier, scope)
 
   def copy = new BooleanVar(value, identifier, scope)
+
+  def -=(that: Boolean): Var[Boolean] = throw new Exception(
+    "I don't know yet how to do that to Booleans")
+  def +=(that: Boolean): Var[Boolean] = throw new Exception(
+    "I don't know yet how to do that to Booleans")
+  def *=(that: Boolean): Var[Boolean] = throw new Exception(
+    "I don't know yet how to do that to Booleans")
 }
 
 class NumericVar[T: Numeric](
@@ -185,7 +197,7 @@ class NumericVar[T: Numeric](
  * Methods for converting between Var and fundamental types
  */
 object Conversions {
-  implicit def Var2Numeric[T: Numeric](v: Var[T]) = v.value
+  implicit def Var2Value[T](v: Var[T]) = v.value
 
   implicit def VarH2Double(v: VarH[Double]) = v().value
   implicit def VarH2Float(v: VarH[Float]) = v().value
@@ -213,5 +225,11 @@ class Delta[T](v: T, i: String, s: Option[String]) extends Var[T] { //(v, i, s) 
   def copy = new Delta[T](v, i, s)
   def -(that: Var[T]): Delta[T] = throw new Exception(
     "I don't know yet how to substract values to Deltas")
+  def -=(that: T): Delta[T] = throw new Exception(
+    "I don't know yet how to do that to Deltas")
+  def +=(that: T): Delta[T] = throw new Exception(
+    "I don't know yet how to do that to Deltas")
+  def *=(that: T): Delta[T] = throw new Exception(
+    "I don't know yet how to do that to Deltas")
 }
 

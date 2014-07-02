@@ -27,11 +27,11 @@ abstract class Process(val name: String) {
    */ 
   def Var[T](value: T, identifier: String, scope: Option[String] = None): VarH[T] = {
     val v: Var[_] = value match {
-      case x: Int => Var(x, identifier, scope)
-      case x: Long => Var(x, identifier, scope)
-      case x: Float => Var(x, identifier, scope)
-      case x: Double => Var(x, identifier, scope)
-      case b: Boolean => Var(b, identifier, scope)
+      case x: Int => new NumericVar[Int](x, identifier, scope)
+      case x: Long => new NumericVar[Long](x, identifier, scope)
+      case x: Float => new NumericVar[Float](x, identifier, scope)
+      case x: Double => new NumericVar[Double](x, identifier, scope)
+      case b: Boolean => new BooleanVar(b, identifier, scope)
       case _ => throw new IllegalArgumentException(
         "I don't know how to handle this type")
     }
