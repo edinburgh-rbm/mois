@@ -148,4 +148,25 @@ object State {
     }
     state
   }
+  def toJSON(s: State) = {
+    import org.json4s._
+    import org.json4s.JsonDSL._
+    import org.json4s.native.JsonMethods._
+
+    def jval[T](v: Var[T]) = {
+      v.value match {
+	case d: Double => JDouble(d)
+	case l: Long => JInt(l)
+	case i: Int => JInt(i)
+	case b: Boolean => JBool(b)
+      }
+    }
+    val json = (for ((_, v) <- s) yield v).map { v =>
+      ("value" -> jval(v)) ~
+      ("identifier" -> v.identifier) ~
+      ("scope" -> v.scope)
+    }
+    pretty(render(json))
+
+  }
 }
