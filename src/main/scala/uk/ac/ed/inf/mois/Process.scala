@@ -5,7 +5,7 @@ import uk.ac.ed.inf.mois.Conversions._
 
 import scala.collection.mutable.ArrayBuffer
 
-/*
+/**
  * A `Process` is basically a `State` and a function that operates
  * upon it parametrised by time.
  */
@@ -18,7 +18,7 @@ abstract class Process(val name: String) {
     stepHandlers += sh
   }
   
-  /*
+  /**
    * Helper function used in "preamble" to declare a variable
    * variable and add it to this process' state table. It returns
    * not the variable itself but a function that pulls it out of
@@ -35,14 +35,14 @@ abstract class Process(val name: String) {
     vp
   }
 
-  /*
+  /**
    * This function takes the state from where it is at
    * time t to where it is at t + tau. This must be supplied
    * by concrete sub-classes.
    */ 
   def step(t: Double, tau: Double) 
 
-  /*
+  /**
    * A wrapper around the user defined step function to calculate changes
    */
   def apply(t: Double, tau: Double): State = {
