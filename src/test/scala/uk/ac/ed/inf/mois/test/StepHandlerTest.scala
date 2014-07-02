@@ -15,7 +15,7 @@ class StepHandlerTest extends FlatSpec {
 
   "accumulator" should "accumulate state" in {
     val acc = new Accumulator
-    p.stepHandler = acc
+    p.addStepHandler(acc)
 
     acc.handleStep(0, p.state)
 
@@ -45,7 +45,7 @@ class TsvWriterTest extends FlatSpec {
     val buffer = new java.io.StringWriter
     val fout = new TsvWriter(buffer)
 
-    p.stepHandler = fout
+    p.addStepHandler(fout)
 
     fout.handleStep(0, p.state)
 

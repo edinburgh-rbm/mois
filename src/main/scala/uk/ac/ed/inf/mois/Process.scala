@@ -3,6 +3,8 @@ package uk.ac.ed.inf.mois
 import uk.ac.ed.inf.mois.{Var => V}
 import uk.ac.ed.inf.mois.Conversions._
 
+import scala.collection.mutable.ArrayBuffer
+
 /*
  * A `Process` is basically a `State` and a function that operates
  * upon it parametrised by time.
@@ -10,8 +12,12 @@ import uk.ac.ed.inf.mois.Conversions._
 abstract class Process(val name: String) {
   val state = new State
 
-  var stepHandler: StepHandler = null
+  val stepHandlers = ArrayBuffer.empty[StepHandler]
 
+  def addStepHandler(sh: StepHandler) {
+    stepHandlers += sh
+  }
+  
   /*
    * Helper function used in "preamble" to declare a variable
    * variable and add it to this process' state table. It returns
@@ -42,8 +48,8 @@ abstract class Process(val name: String) {
   def apply(t: Double, tau: Double): State = {
     val start = state.copy
     step(t, tau)
-    if (stepHandler != null)
-      stepHandler.handleStep(t+tau, state)
+    for (sh <- stepHandlers)
+      sh.handleStep(t+tau, state)
     state - start
   }
 
