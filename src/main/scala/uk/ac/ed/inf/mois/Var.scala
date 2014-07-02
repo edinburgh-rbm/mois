@@ -47,7 +47,7 @@ class Key(s: String, i: String) extends Tuple2[String, String](s, i) with Ordere
  */ 
 object Var {
   def apply[T](value: T, identifier: String, scope: String = "default") =
-    new Var(value, identifier, scope)
+    new Var(value, identifier, Some(scope))
 }
 
 /*
@@ -66,14 +66,14 @@ abstract class VarH[T] {
  * use some attention, there is far too much introspecting of types going
  * on and there is probably a lot that isn't idiomatic scala.
  */
-class Var[T](var value: T, val identifier: String, val scope: String) {
+class Var[T](var value: T, val identifier: String, val scope: Option[String]) {
   type R = Var[T]
 
   /*
    * Return a Key that will identify this variable by its metadata regardless
    * of its actual value. This is intended to be used as an indexinto dictionaries.
    */
-  def key() = new Key(scope, identifier)
+  def key() = new Key(identifier, if (scope.isDefined) scope.get else "default")
 
   /*
    * When a Variable is applied or called, what is expected is its value
@@ -241,7 +241,7 @@ object Conversions {
  * other purposes as well.
  */
 // kludgy initialisation
-class Delta[T](v: T, i: String, s: String) extends Var[T](v, i, s) {
+class Delta[T](v: T, i: String, s: Option[String]) extends Var[T](v, i, s) {
   override def toString =  s"Δ($identifier) = $value"
 }
 

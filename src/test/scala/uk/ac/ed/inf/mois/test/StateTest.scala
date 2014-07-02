@@ -129,3 +129,15 @@ class StateTest extends FlatSpec {
     assert(ds[Int](s2r3)() == 4)
   }
 }
+
+class StateSerialisationTest extends FlatSpec {
+  "a state" should "serialise and deserialise in JSON" in {
+    var json = """
+[
+    { "value": 1.0, "identifier": "ex:x1" },
+    { "value": false, "identifier": "ex:x2", "scope": "foo" }
+]
+"""
+    println(State.fromJSON(json))
+  }
+}

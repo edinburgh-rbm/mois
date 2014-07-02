@@ -2,38 +2,39 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable.Map
 
-/*
+
+/**
  * A `State` is a collection of `Var`. It is implemented as a map or
  * dictionary from the `Var`'s `Key` to the `Var` itself.
  */
 class State {
   val table = Map[Key, Var[_]]()
 
-  /*
+  /**
    * Syntax sugar: s(v) returns v as it eists in the state. This allows the use of
    * `Var` for querying the state table
    */
   def apply[T](v: Var[_]) = table.apply(v.key).asInstanceOf[Var[T]]
-  /*
+  /**
    * Syntax sugar: s(k) returns the `Var` whose `Key` is k
    */
   def apply[T](k: Key) = table.apply(k).asInstanceOf[Var[T]]
 
-  /*
+  /**
    * Pass through filter operations to the underlying table
    */
   def filter = table.filter _
 
-  /*
+  /**
    * Syntax sugar: s contains v -- contains predicate for a particular variable
    */
   def contains(v: Var[_]) = table contains v.key
-  /*
+  /**
    * Syntax sugar: s contains k -- contains predicate for a particular key
    */
   def contains(k: Key) = table contains k
 
-  /*
+  /**
    * The += operator adds a `Var` to the state
    */
   def +=(v: Var[_]) = {
@@ -41,7 +42,7 @@ class State {
     this
   }
 
-  /*
+  /**
    * The <<< operator updates this state with the entirety of the other
    * This is a deep copy and does not keep actual references to the
    * other state's variables. If references must be preserved use ++=
@@ -55,7 +56,7 @@ class State {
     this
   }
 
-  /*
+  /**
    * The ++= operator is a shallow copy by reference that can be used
    * to merge states
    */
@@ -65,7 +66,7 @@ class State {
     this
   }
 
-  /*
+  /**
    * The := operator updates the state for the given variable
    */
   def :=(v: Var[_]) = {
@@ -75,7 +76,7 @@ class State {
       this += v
   }
 
-  /*
+  /**
    * The - operator means vector subtraction of states. It returns a new
    * state that is the result of subtracting elements pairwise. It is somewhat
    * of an "outer subtraction" in that if there are elements that exist in this
@@ -102,7 +103,7 @@ class State {
 
   override def toString = "(" + (for ((_,v) <- table) yield v).mkString(", ") + ")"
 
-  /*
+  /**
    * The primary purpose of this method is to deep copy a state dictionary
    * so that vector subtraction can be done between states. This is used by
    * `Process.apply` to construct the state difference before and after an
@@ -114,5 +115,37 @@ class State {
       ns += v.copy
     }
     ns
+  }
+}
+
+object State {
+  def apply = new State
+  def fromJSON(s: String) = {
+    import org.json4s._
+    import org.json4s.native.JsonMethods._
+    import Conversions._
+    implicit val formats = DefaultFormats
+
+    val state = new State
+
+    val json = parse(s)
+    var vars = List[Var[_]]()
+    for (jvar <- json.children) {
+      val doubles = for {
+	JObject(jo) <- jvar
+	JField("value", JDouble(value)) <- jo
+      } yield jvar.extract[Var[Double]]
+      val ints = for {
+	JObject(jo) <- jvar
+	JField("value", JInt(value)) <- jo
+      } yield jvar.extract[Var[Int]]
+      val bools = for {
+	JObject(jo) <- jvar
+	JField("value", JBool(value)) <- jo
+      } yield jvar.extract[Var[Boolean]]
+      for (v <- doubles ++ ints ++ bools)
+	state += v
+    }
+    state
   }
 }
