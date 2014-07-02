@@ -10,7 +10,14 @@ case class BoundsViolation(s: String) extends Exception(s) {
  * This class is to abstract away the details of uniquely identifying a
  * state variable.
  */
-class Key(s: String, i: String) extends Tuple2[String, String](s, i) {}
+class Key(s: String, i: String) extends Tuple2[String, String](s, i) with Ordered[Key] {
+  // this is pretty ugly
+  def compare(b: Key): Int = {
+    if (this._1 == b._1 && this._2 == b._2) 0
+    else if (this._1 == b._1) this._2 compare b._2
+    else this._1 compare b._1
+  }
+}
 
 /*
  * A `Var` is basically a named value of a certain type. It is operated
