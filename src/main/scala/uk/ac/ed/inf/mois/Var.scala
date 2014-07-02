@@ -10,7 +10,14 @@ case class BoundsViolation(s: String) extends Exception(s) {
  * This class is to abstract away the details of uniquely identifying a
  * state variable.
  */
-class Key(s: String, i: String) extends Tuple2[String, String](s, i) {}
+class Key(s: String, i: String) extends Tuple2[String, String](s, i) with Ordered[Key] {
+  // this is pretty ugly
+  def compare(b: Key): Int = {
+    if (this._1 == b._1 && this._2 == b._2) 0
+    else if (this._1 == b._1) this._2 compare b._2
+    else this._1 compare b._1
+  }
+}
 
 /*
  * A `Var` is basically a named value of a certain type. It is operated
@@ -39,26 +46,26 @@ class Key(s: String, i: String) extends Tuple2[String, String](s, i) {}
  * 
  */ 
 object Var {
-  def apply(value: Boolean, identifier: String, scope: String) =
+  def apply(value: Boolean, identifier: String, scope: Option[String]) =
     new BooleanVar(value, identifier, scope)
   def apply(value: Boolean, identifier: String) =
-    new BooleanVar(value, identifier, "default")
-  def apply(value: Float, identifier: String, scope: String) =
+    new BooleanVar(value, identifier, None)
+  def apply(value: Float, identifier: String, scope: Option[String]) =
     new NumericVar[Float](value, identifier, scope)
   def apply(value: Float, identifier: String) =
-    new NumericVar[Float](value, identifier, "default")
-  def apply(value: Double, identifier: String, scope: String) =
+    new NumericVar[Float](value, identifier, None)
+  def apply(value: Double, identifier: String, scope: Option[String]) =
     new NumericVar[Double](value, identifier, scope)
   def apply(value: Double, identifier: String) =
-    new NumericVar[Double](value, identifier, "default")
-  def apply(value: Int, identifier: String, scope: String) =
+    new NumericVar[Double](value, identifier, None)
+  def apply(value: Int, identifier: String, scope: Option[String]) =
     new NumericVar[Int](value, identifier, scope)
   def apply(value: Int, identifier: String) =
-    new NumericVar[Int](value, identifier, "default")
-  def apply(value: Long, identifier: String, scope: String) =
+    new NumericVar[Int](value, identifier, None)
+  def apply(value: Long, identifier: String, scope: Option[String]) =
     new NumericVar[Long](value, identifier, scope)
   def apply(value: Long, identifier: String) =
-    new NumericVar[Long](value, identifier, "default")
+    new NumericVar[Long](value, identifier, None)
 }
 
 // RHZ: This is what I wanted to call VarProxy
@@ -83,7 +90,7 @@ abstract class Var[T] {
 
   var value: T
   val identifier: String
-  val scope: String
+  val scope: Option[String]
 
   // It could be a ListBuffer as well
   val constraints: collection.mutable.ArrayBuffer[Constraint] =
@@ -94,7 +101,7 @@ abstract class Var[T] {
   /** Return a Key that will identify this variable by its metadata regardless
     * of its actual value. This is intended to be used as an indexinto dictionaries.
     */
-  def key = new Key(scope, identifier)
+  def key = new Key(if (scope.isDefined) scope.get else "default", identifier)
 
   /** When a Variable is applied or called, what is expected is its value. */
   def apply(): T = value
@@ -132,7 +139,8 @@ abstract class Var[T] {
   /** Add a constraint to this variable. */
   def should(constraint: Constraint) = {
     constraints += constraint
-    AddConstraint
+    //AddConstraint
+    this
   }
 
   def -(that: Var[T]): Delta[T]
@@ -141,7 +149,7 @@ abstract class Var[T] {
 class BooleanVar(
   var value: Boolean,
   val identifier: String,
-  val scope: String)
+  val scope: Option[String])
     extends Var[Boolean] {
 
   def -(that: Var[Boolean]): Delta[Boolean] =
@@ -153,7 +161,7 @@ class BooleanVar(
 class NumericVar[T: Numeric](
   var value: T,
   val identifier: String,
-  val scope: String)
+  val scope: Option[String])
     extends Var[T] {
 
   def copy = new NumericVar[T](value, identifier, scope)
@@ -177,11 +185,12 @@ class NumericVar[T: Numeric](
  * Methods for converting between Var and fundamental types
  */
 object Conversions {
-  implicit def Var2X[T](v: Var[T]) = v.value
+  implicit def Var2Numeric[T: Numeric](v: Var[T]) = v.value
 
   implicit def VarH2Double(v: VarH[Double]) = v().value
-  implicit def VarH2Long(v: VarH[Long]) = v().value
+  implicit def VarH2Float(v: VarH[Float]) = v().value
   implicit def VarH2Int(v: VarH[Int]) = v().value
+  implicit def VarH2Long(v: VarH[Long]) = v().value
   implicit def VarH2Boolean(v: VarH[Boolean]) = v().value
 
   implicit def VarH2Var[T](v: VarH[T]) = v()
@@ -193,7 +202,7 @@ object Conversions {
  * other purposes as well.
  */
 // kludgy initialisation
-class Delta[T](v: T, i: String, s: String) extends Var[T] { //(v, i, s) {
+class Delta[T](v: T, i: String, s: Option[String]) extends Var[T] { //(v, i, s) {
 
   // FIXME
   var value = v

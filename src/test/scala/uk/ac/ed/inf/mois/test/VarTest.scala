@@ -14,7 +14,7 @@ class VarTest extends FlatSpec {
 
   it should "distinguish different identifiers and scopes" in {
     val r1 = Var(0, "ex:r1")
-    var r1a = Var(0, "ex:r1", "a")
+    var r1a = Var(0, "ex:r1", Some("a"))
     var r2 = Var(0, "ex:r2")
     var r3 = Var(100, "ex:r1") 
 
@@ -37,7 +37,7 @@ class VarTest extends FlatSpec {
   }
 
   it should "respect constraints" in {
-    val r1 = Var(0.0, "ex:r1") |>= 0 |<= 2
+    val r1 = Var(0.0, "ex:r1") should (_ >= 0) should (_ <= 2)
     var violated = false
 
     intercept[BoundsViolation] {
@@ -57,7 +57,7 @@ class VarTest extends FlatSpec {
     val v3 = Var(0, "b")
     assert(v1.key != v3.key)
 
-    val v4 = Var(0, "a", "b")
+    val v4 = Var(0, "a", Some("b"))
     assert(v1.key != v4.key)
     assert(v3.key != v4.key)
 
