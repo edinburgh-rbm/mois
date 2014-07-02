@@ -131,7 +131,6 @@ class StateTest extends FlatSpec {
 }
 
 class StateSerialisationTest extends FlatSpec {
-//  "a state" should "serialise and deserialise in JSON" in {
   ignore should "serialise and deserialise in JSON" in {
     var json = """
 [
@@ -143,10 +142,10 @@ class StateSerialisationTest extends FlatSpec {
 
     def cmp(s1: State, s2: State) {
       for ((k, _) <- s1) {
-        assert(s1(k) == s2(k)())
+        assert(s1(k) == s2(k))
       }
       for ((k, _) <- s2) {
-        assert(s1(k) == s2(k)())
+        assert(s1(k) == s2(k))
       }
     }
     cmp(s, State.fromJSON(State.toJSON(s)))

@@ -131,17 +131,17 @@ object State {
     var vars = List[Var[_]]()
     for (jvar <- json.children) {
       val doubles = for {
-	JObject(jo) <- jvar
-	JField("value", JDouble(value)) <- jo
-      } yield jvar.extract[Var[Double]]
+	JObject(jobj) <- jvar
+	JField("value", JDouble(value)) <- jobj
+      } yield jvar.extract[NumericVar[Double]]
       val ints = for {
-	JObject(jo) <- jvar
-	JField("value", JInt(value)) <- jo
-      } yield jvar.extract[Var[Int]]
+	JObject(jobj) <- jvar
+	JField("value", JInt(value)) <- jobj
+      } yield jvar.extract[NumericVar[Int]]
       val bools = for {
-	JObject(jo) <- jvar
-	JField("value", JBool(value)) <- jo
-      } yield jvar.extract[Var[Boolean]]
+	JObject(jobj) <- jvar
+	JField("value", JBool(value)) <- jobj
+      } yield jvar.extract[BooleanVar]
       for (v <- doubles ++ ints ++ bools)
 	state += v
     }

@@ -194,21 +194,6 @@ class NumericVar[T: Numeric](
 }
 
 /*
- * Methods for converting between Var and fundamental types
- */
-object Conversions {
-  implicit def Var2Value[T](v: Var[T]) = v.value
-
-  implicit def VarH2Double(v: VarH[Double]) = v().value
-  implicit def VarH2Float(v: VarH[Float]) = v().value
-  implicit def VarH2Int(v: VarH[Int]) = v().value
-  implicit def VarH2Long(v: VarH[Long]) = v().value
-  implicit def VarH2Boolean(v: VarH[Boolean]) = v().value
-
-  implicit def VarH2Var[T](v: VarH[T]) = v()
-}
-
-/*
  * A Delta represents the difference between two variables. The main purpose
  * is to put a fancy unicode triangle before the name. It might be useful for
  * other purposes as well.
@@ -233,3 +218,17 @@ class Delta[T](v: T, i: String, s: Option[String]) extends Var[T] { //(v, i, s) 
     "I don't know yet how to do that to Deltas")
 }
 
+/*
+ * Methods for converting between Var and fundamental types
+ */
+object Conversions {
+  implicit def Var2Value[T](v: Var[T]) = v.value
+
+  implicit def VarH2Double(v: VarH[Double]) = v().value
+  implicit def VarH2Float(v: VarH[Float]) = v().value
+  implicit def VarH2Int(v: VarH[Int]) = v().value
+  implicit def VarH2Long(v: VarH[Long]) = v().value
+  implicit def VarH2Boolean(v: VarH[Boolean]) = v().value
+
+  implicit def VarH2Var[T](v: VarH[T]) = v()
+}
