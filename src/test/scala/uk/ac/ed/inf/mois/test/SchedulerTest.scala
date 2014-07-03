@@ -1,8 +1,8 @@
 package uk.ac.ed.inf.mois.test
 
-import org.scalatest.FlatSpec
+import org.scalatest.{FlatSpec, Matchers}
 
-import uk.ac.ed.inf.mois.{Process, ProcessGroup, ProcessODE}
+import uk.ac.ed.inf.mois.{Process, ProcessGroup, ProcessODE, Var}
 import uk.ac.ed.inf.mois.NaiveScheduler
 import uk.ac.ed.inf.mois.Conversions._
 
@@ -32,31 +32,32 @@ object sampleEuler2 extends Process("sampleEuler2") {
  * uses whatever the apache commons math suite says is best
  */ 
 object sampleApache1 extends ProcessODE("sampleApache1") {
-  integral(
-    Var(25.0, "ex:x1")
-  )
+  // integral(
+  //   Var(25.0, "ex:x1")
+  // )
+  val x1 = Var(25.0, "ex:x1")
   val x2 = Var(50.0, "ex:x2")
-  
-  def computeDerivatives(t: Double, y: Array[Double], ẏ: Array[Double]) {
-    ẏ(0) = -0.3*y(0) - 0.4*x2
-  }
+  d(x1) := -0.3*x1 - 0.4*x2
+  // def computeDerivatives(t: Double, y: Array[Double], ẏ: Array[Double]) {
+  //   ẏ(0) = -0.3*y(0) - 0.4*x2
+  // }
 }
 
 object sampleApache2 extends ProcessODE("sampleApache2") {
   val x1 = Var(25.0, "ex:x1")
-  integral(
-    Var(50.0, "ex:x2")
-  )
-
-  def computeDerivatives(t: Double, y: Array[Double], ẏ: Array[Double]) {
-    ẏ(0) = -0.5*x1 - 0.8*y(0)
-  }
+  val x2 = Var(50.0, "ex:x2")
+  // integral(
+  //   Var(50.0, "ex:x2")
+  // )
+  d(x2) := -0.5*x1 - 0.8*x2
+  // def computeDerivatives(t: Double, y: Array[Double], ẏ: Array[Double]) {
+  //   ẏ(0) = -0.5*x1 - 0.8*y(0)
+  // }
 }
 
-/*
- * Run the two versions of the system of ODEs with the NaiveScheduler
- */
-class NaiveSchedulerTest extends FlatSpec {
+/** Run the two versions of the system of ODEs with the NaiveScheduler. */
+class NaiveSchedulerTest extends FlatSpec with Matchers {
+
   "sample ode system" should "integrate using Euler's method" in {
     val pg = new ProcessGroup("naive euler") {
       val scheduler = new NaiveScheduler(0.0001)
@@ -65,7 +66,9 @@ class NaiveSchedulerTest extends FlatSpec {
     pg += sampleEuler1
     pg += sampleEuler2
 
-    pg(0, 50)
+    pg.step(0, 50)
+
+    // TODO: missing assertions
 
     println(pg)
   }
@@ -78,7 +81,9 @@ class NaiveSchedulerTest extends FlatSpec {
     pg += sampleApache1
     pg += sampleApache2
 
-    pg(0, 50)
+    pg.step(0, 50)
+
+    // TODO: missing assertions
 
     println(pg)
   }
