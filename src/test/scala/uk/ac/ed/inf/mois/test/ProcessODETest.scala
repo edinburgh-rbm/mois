@@ -3,6 +3,7 @@ package uk.ac.ed.inf.mois.test
 // import java.lang.Math.abs
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
+import uk.ac.ed.inf.mois.Conversions._
 
 import uk.ac.ed.inf.mois.{ProcessODE, Var}
 // FIXME: If Conversions is imported, then the construction of
@@ -19,8 +20,11 @@ object sampleODE extends ProcessODE("sample") {
   // databases of `Var`s (in addition to collections of `Process`es).
   val x1 = Var(25.0, "ex:x1")
   val x2 = Var(50.0, "ex:x2")
+  val x3 = Var(0.0, "ex:x3")
   d(x1) := -0.3*x1 - 0.4*x2
   d(x2) := -0.5*x1 - 0.8*x2
+  // XXXX this is wrong! Obviously it evaluates immediately and gives sin(0) always
+  d(x3) := java.lang.Math.sin(t)
 }
 
 class ODEProcessTest extends FlatSpec with Matchers {
