@@ -54,14 +54,11 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
       state += sampleEuler2.x2
     }
 
-    // pg += sampleEuler1
-    // pg += sampleEuler2
-
     pg.step(0, 50)
 
-    // TODO: missing assertions
-
     println(pg)
+    pg.state(sampleEuler1.x1).value should equal (-0.1398)
+    pg.state(sampleEuler1.x2).value should equal (0.0916)
   }
 
   it should "integrate using the apache ODE library too" in {
@@ -75,13 +72,10 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
       state += sampleApache2.x2
     }
 
-    // pg += sampleApache1
-    // pg += sampleApache2
-
     pg.step(0, 50)
 
-    // TODO: missing assertions
-
     println(pg)
+    pg.state(sampleApache1.x1).value should equal (-0.1398)
+    pg.state(sampleApache1.x2).value should equal (0.0916)
   }
 }
