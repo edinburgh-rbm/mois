@@ -74,31 +74,32 @@ class State {
       this += v
   }
 
-  /**
-   * The - operator means vector subtraction of states. It returns a new
-   * state that is the result of subtracting elements pairwise. It is somewhat
-   * of an "outer subtraction" in that if there are elements that exist in this
-   * state but not in the other those are preserved. Similarly if there are those
-   * in the other state but not this one, they are inverted and subtracted.
-   */
-  def -(s: State) = {
-    val ns = new State
-    for ((k,v) <- table) {
-      if (s.table contains k) {
-	ns += v - s(v)
-      } else {
-	ns += v
-      }
-    }
-    for ((k,v: NumericVar[_]) <- s.table) {
-      if (!(table contains k)) {
-	ns += -v
-      }
-    }
-    ns
-  }
+  // /**
+  //  * The - operator means vector subtraction of states. It returns a new
+  //  * state that is the result of subtracting elements pairwise. It is somewhat
+  //  * of an "outer subtraction" in that if there are elements that exist in this
+  //  * state but not in the other those are preserved. Similarly if there are those
+  //  * in the other state but not this one, they are inverted and subtracted.
+  //  */
+  // def -(s: State) = {
+  //   val ns = new State
+  //   for ((k,v) <- table) {
+  //     if (s.table contains k) {
+  //       ns += v - s(v)
+  //     } else {
+  //       ns += v
+  //     }
+  //   }
+  //   for ((k,v: NumericVar[_]) <- s.table) {
+  //     if (!(table contains k)) {
+  //       ns += -v
+  //     }
+  //   }
+  //   ns
+  // }
 
-  override def toString = "(" + (for ((_,v) <- table) yield v).mkString(", ") + ")"
+  override def toString = "State(" +
+    (for ((_,v) <- table) yield v).mkString(", ") + ")"
 
   /**
    * The primary purpose of this method is to deep copy a state dictionary

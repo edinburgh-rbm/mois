@@ -1,10 +1,11 @@
 package uk.ac.ed.inf.mois
 
-/**
- * A `ConstraintViolation` is raised when a restriction on a `Var` is violated
- */
+/** A `ConstraintViolation` is raised when a restriction on a `Var`
+  * is violated.
+  */
 case class ConstraintViolation(s: String) extends Exception(s)
 
+// RHZ: The scope here should be an Option as well right?
 /**
  * This class is to abstract away the details of uniquely identifying a
  * state variable.
@@ -87,7 +88,9 @@ abstract class VarH[T] {
   */
 abstract class Var[T] {
 
-  var value: T
+  def value: T
+  def value_= (x: T)
+
   val identifier: String
   val scope: Option[String]
 
@@ -102,20 +105,45 @@ abstract class Var[T] {
     */
   def key = new Key(if (scope.isDefined) scope.get else "default", identifier)
 
-  /** When a Variable is applied or called, what is expected is its value. */
-  def apply(): T = value
+  // RHZ: I think it's ok to ask for .value
+  // /** When a Variable is applied or called, what is expected is its value. */
+  // def apply(): T = value
 
   /** Assignment to a Variable is expected to set the underlying value. */
   def update(x: T): this.type = {
-    for (c <- constraints if c(value))
-      throw new ConstraintViolation(s"variable $identifier violated a " +
-        s"constraint by setting its value to $x")
+    for (c <- constraints if c(x))
+      throw new ConstraintViolation("variable \"" + identifier +
+        "\" violated a constraint by setting its value to " + x)
     value = x
     this
   }
 
   /** Syntax sugar for assignment. */
   @inline final def :=(x: T): this.type = this.update(x)
+
+  object AddConstraint {
+    def and(c: Constraint) = must(c)
+  }
+
+  /** Adds a constraint to this variable. */
+  def must(constraint: Constraint) = {
+    constraints += constraint
+    AddConstraint
+  }
+
+  // RHZ: Do we use this?
+  // /** Determines if this variable is the same as another by comparing
+  //   * metadata.
+  //   */
+  // def sameType(other: Var[T]): Boolean = key == other.key
+  // @inline final def ===(other: Var[T]) = sameType(other)
+
+  def stringPrefix = "Var"
+
+  override def toString = stringPrefix + "(" +
+    value + ", " + identifier + ", " + scope + ")"
+
+  // -- Abstract members --
 
   /** The `copy` method is primarily to support deep copy of a state
     * dictionary. The deep copy of a state dictionary is primarily to
@@ -125,30 +153,14 @@ abstract class Var[T] {
     */
   def copy: Var[T]
 
-  override def toString = identifier + " = " + value.toString
+  // RHZ: The only place where we are using `-` is in `State.-` and
+  // I'm not really sure we need to compute differences between
+  // `State`s at all... What do we need that for?
+  // def -(that: Var[T]): Delta[T]
 
-  /** Determines if this variable is the same as another by comparing
-    * metadata.
-    */
-  def sameType(other: Var[T]): Boolean = key == other.key
-  @inline final def ===(other: Var[T]) = sameType(other)
-
-  object AddConstraint {
-    def and(c: Constraint) = should(c)
-  }
-
-  /** Add a constraint to this variable. */
-  def should(constraint: Constraint) = {
-    constraints += constraint
-    //AddConstraint
-    this
-  }
-
-  def -(that: Var[T]): Delta[T]
-
-  def -=(that: T): Var[T]
-  def +=(that: T): Var[T]
-  def *=(that: T): Var[T]
+  // def -=(that: T): Var[T]
+  // def +=(that: T): Var[T]
+  // def *=(that: T): Var[T]
 }
 
 class BooleanVar(
@@ -162,12 +174,14 @@ class BooleanVar(
 
   def copy = new BooleanVar(value, identifier, scope)
 
-  def -=(that: Boolean): Var[Boolean] = throw new Exception(
-    "I don't know yet how to do that to Booleans")
-  def +=(that: Boolean): Var[Boolean] = throw new Exception(
-    "I don't know yet how to do that to Booleans")
-  def *=(that: Boolean): Var[Boolean] = throw new Exception(
-    "I don't know yet how to do that to Booleans")
+  override def stringPrefix = "BooleanVar"
+
+  // def -=(that: Boolean): Var[Boolean] = throw new Exception(
+  //   "I don't know yet how to do that to Booleans")
+  // def +=(that: Boolean): Var[Boolean] = throw new Exception(
+  //   "I don't know yet how to do that to Booleans")
+  // def *=(that: Boolean): Var[Boolean] = throw new Exception(
+  //   "I don't know yet how to do that to Booleans")
 }
 
 class NumericVar[T: Numeric](
@@ -175,6 +189,8 @@ class NumericVar[T: Numeric](
   val identifier: String,
   val scope: Option[String])
     extends Var[T] {
+
+  override def stringPrefix = "NumericVar"
 
   def copy = new NumericVar[T](value, identifier, scope)
 
@@ -193,42 +209,42 @@ class NumericVar[T: Numeric](
     implicitly[Numeric[T]].negate(value), identifier, scope)
 }
 
-/*
- * A Delta represents the difference between two variables. The main purpose
- * is to put a fancy unicode triangle before the name. It might be useful for
- * other purposes as well.
- */
+/** A Delta represents the difference between two variables.  The main
+  * purpose is to put a fancy unicode triangle before the name.  It
+  * might be useful for other purposes as well.
+  */
 // kludgy initialisation
-class Delta[T](v: T, i: String, s: Option[String]) extends Var[T] { //(v, i, s) {
+class Delta[T](v: T, i: String, s: Option[String]) extends Var[T] {
 
-  // FIXME
-  var value = v
+  def value = v
+  def value_= (x: T) = throw new UnsupportedOperationException(
+    "Delta is read-only")
   val identifier = i
   val scope = s
 
   override def toString =  s"Δ($identifier) = $value"
+
   def copy = new Delta[T](v, i, s)
+
   def -(that: Var[T]): Delta[T] = throw new Exception(
     "I don't know yet how to substract values to Deltas")
-  def -=(that: T): Delta[T] = throw new Exception(
-    "I don't know yet how to do that to Deltas")
-  def +=(that: T): Delta[T] = throw new Exception(
-    "I don't know yet how to do that to Deltas")
-  def *=(that: T): Delta[T] = throw new Exception(
-    "I don't know yet how to do that to Deltas")
+
+  // def -=(that: T): Delta[T] = throw new Exception(
+  //   "I don't know yet how to do that to Deltas")
+  // def +=(that: T): Delta[T] = throw new Exception(
+  //   "I don't know yet how to do that to Deltas")
+  // def *=(that: T): Delta[T] = throw new Exception(
+  //   "I don't know yet how to do that to Deltas")
 }
 
-/*
- * Methods for converting between Var and fundamental types
- */
+/** Methods for converting between Var and fundamental types. */
 object Conversions {
   implicit def Var2Value[T](v: Var[T]) = v.value
 
-  implicit def VarH2Double(v: VarH[Double]) = v().value
-  implicit def VarH2Float(v: VarH[Float]) = v().value
-  implicit def VarH2Int(v: VarH[Int]) = v().value
-  implicit def VarH2Long(v: VarH[Long]) = v().value
-  implicit def VarH2Boolean(v: VarH[Boolean]) = v().value
-
-  implicit def VarH2Var[T](v: VarH[T]) = v()
+  // implicit def VarH2Double(v: VarH[Double]) = v().value
+  // implicit def VarH2Float(v: VarH[Float]) = v().value
+  // implicit def VarH2Int(v: VarH[Int]) = v().value
+  // implicit def VarH2Long(v: VarH[Long]) = v().value
+  // implicit def VarH2Boolean(v: VarH[Boolean]) = v().value
+  // implicit def VarH2Var[T](v: VarH[T]) = v()
 }
