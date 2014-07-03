@@ -73,6 +73,6 @@ abstract class Process(val name: String) {
     // state - start
   }
 
-  override def toString = name + state.toString
+  override def toString = "Process(" + name + ", " + state.toString + ")"
 }  
 

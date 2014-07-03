@@ -123,7 +123,7 @@ object State {
   def fromJSON(s: String) = {
     import org.json4s._
     import org.json4s.native.JsonMethods._
-    import Conversions._
+    // import Conversions._
     implicit val formats = DefaultFormats
 
     val state = new State

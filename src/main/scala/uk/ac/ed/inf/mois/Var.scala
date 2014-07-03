@@ -131,7 +131,10 @@ abstract class Var[T] {
     AddConstraint
   }
 
-  // RHZ: Do we use this?
+  // RHZ: Do we use this? Why not just write v1.key == v2.key instead
+  // of v1 === v2 or v1 sameAs v2 or v1 sameType v2... I think the
+  // former is cleaner.
+  //
   // /** Determines if this variable is the same as another by comparing
   //   * metadata.
   //   */
@@ -240,7 +243,6 @@ class Delta[T](v: T, i: String, s: Option[String]) extends Var[T] {
 /** Methods for converting between Var and fundamental types. */
 object Conversions {
   implicit def Var2Value[T](v: Var[T]) = v.value
-
   // implicit def VarH2Double(v: VarH[Double]) = v().value
   // implicit def VarH2Float(v: VarH[Float]) = v().value
   // implicit def VarH2Int(v: VarH[Int]) = v().value

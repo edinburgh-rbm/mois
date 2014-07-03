@@ -45,10 +45,15 @@ abstract class ProcessODE(name: String) extends Process(name) with FirstOrderDif
       factors ++ m.factors, divisors ++ m.divisors)
     def / (m: Monomial) = Monomial(coef / m.coef,
       factors ++ m.divisors, divisors ++ m.factors)
+    def unary_- = Monomial(-coef, factors, divisors)
+
+    def eval(v: NumericVar[Double], ys: Array[Double]): Double =
+      // if (indices contains v) ys(indices(v)) else v.value
+      indices get v map ys getOrElse v.value
 
     def apply(ys: Array[Double]): Double = coef *
-      (for (v <- factors ) yield if (indices contains v) ys(indices(v)) else v.value).product /
-      (for (v <- divisors) yield if (indices contains v) ys(indices(v)) else v.value).product
+      (for (v <- factors ) yield eval(v, ys)).product /
+      (for (v <- divisors) yield eval(v, ys)).product
 
     override def toString = coef +
       (if (factors.isEmpty) ""

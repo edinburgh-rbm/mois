@@ -3,7 +3,6 @@ package uk.ac.ed.inf.mois.test
 // import java.lang.Math.abs
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
-import uk.ac.ed.inf.mois.Conversions._
 
 import uk.ac.ed.inf.mois.{ProcessODE, Var}
 // FIXME: If Conversions is imported, then the construction of
@@ -15,7 +14,7 @@ object sampleODE extends ProcessODE("sample") {
   // RHZ: This should look like this:
   // val x1 = Var("ex:x1")
   // val x2 = Var("ex:x2")
-  // and that should construct `VarProxy`s that get their value from
+  // and that should construct `VarH`s that get their value from
   // the model that contains `sampleODE`.  In a way, models are like
   // databases of `Var`s (in addition to collections of `Process`es).
   val x1 = Var(25.0, "ex:x1")
@@ -24,7 +23,11 @@ object sampleODE extends ProcessODE("sample") {
   d(x1) := -0.3*x1 - 0.4*x2
   d(x2) := -0.5*x1 - 0.8*x2
   // XXXX this is wrong! Obviously it evaluates immediately and gives sin(0) always
-  d(x3) := java.lang.Math.sin(t)
+  // RHZ: Yes, it doesn't work because we only support polynomial
+  // functions on the rhs for now and sin(t) is not a polynomial.
+  // The best way to realise something is wrong is by not importing
+  // uk.ac.ed.inf.mois.Conversions._, the compiler error says it all.
+  // d(x3) := java.lang.Math.sin(t)
 }
 
 class ODEProcessTest extends FlatSpec with Matchers {
@@ -44,19 +47,14 @@ class ODEProcessTest extends FlatSpec with Matchers {
 
     sampleODE.x1.value should equal (-0.1398)
     sampleODE.x2.value should equal (0.0916)
-    // assert(abs(sampleODE.y(0) + 0.1398) < 0.0001)
-    // assert(abs(sampleODE.y(1) + (-0.0916)) < 0.0001)
 
     // Integrate from t1 = 50 to t2 = 150
     sampleODE.step(50, 100)
 
     sampleODE.x1.value should equal (-0.0032)
     sampleODE.x2.value should equal (0.0021)
-    // assert(abs(sampleODE.y(0) + 0.0032) < 0.0001)
-    // assert(abs(sampleODE.y(1) + (-0.0021)) < 0.0001)
 
     // reset the initial conditions
-    // sampleODE.state <<< initialConditions
     sampleODE.x1 := 25.0
     sampleODE.x2 := 50.0
 
@@ -64,8 +62,6 @@ class ODEProcessTest extends FlatSpec with Matchers {
     sampleODE.step(0, 50.0)
     sampleODE.x1.value should equal (-0.1398)
     sampleODE.x2.value should equal (0.0916)
-    // assert(abs(sampleODE.y(0) + 0.1398) < 0.0001)
-    // assert(abs(sampleODE.y(1) + (-0.0916)) < 0.0001)
 
     println(s"known good ODE $sampleODE")
   }
