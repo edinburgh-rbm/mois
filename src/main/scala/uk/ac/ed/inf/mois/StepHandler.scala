@@ -19,6 +19,7 @@ class Accumulator extends StepHandler {
   def handleStep(t: Double, state: State) {
     history += t -> state.copy
   }
+  // TODO: Should the Accumulator interpolate?
   def apply(t: Double) = history(t)
 }
 
@@ -29,11 +30,11 @@ class Accumulator extends StepHandler {
  * The implementation is naive and doesn't attempt to do any buffering
  * of writes itself.
  */
-class TsvWriter(fp: java.io.Writer) extends StepHandler {
+class TsvWriter(fp: java.io.Writer, sep: String = "\t")
+    extends StepHandler {
   def handleStep(t: Double, state: State) {
     // apply a predictable ordering
-    val vars = (for ((_, v) <- state) yield v)
-      .toList.sortWith((a, b) => a.key < b.key)
-    fp.write(t.toString + "\t" + vars.map(x => x.value).mkString("\t") + "\n")
+    val vars = (for ((_, v) <- state) yield v).toSeq.sortBy(_.key)
+    fp.write(t.toString + sep + vars.map(x => x.value).mkString(sep) + "\n")
   }
 }
