@@ -1,11 +1,12 @@
 package uk.ac.ed.inf.mois.test
 
-import org.scalatest.FlatSpec
+import org.scalatest.{FlatSpec, Matchers}
 
-import uk.ac.ed.inf.mois.{Var, State}
+import uk.ac.ed.inf.mois.{Var, State, BooleanVar}
 import uk.ac.ed.inf.mois.Conversions._
 
-class StateTest extends FlatSpec {
+class StateTest extends FlatSpec with Matchers {
+
   "a state" should "support adding and retrieving variables" in {
     val s = new State
     val r1 = Var(1, "ex:r1")
@@ -15,14 +16,21 @@ class StateTest extends FlatSpec {
     s += r1
     s += r2
 
+    // RHZ: If State extends Map, we could write this like
+    // `s should contain r1` and maybe that would give us a more
+    // descriptive error in case the test fails (not sure).
     assert(s contains r1)
     assert(s contains r1.key)
     assert(s contains r2)
     assert(s contains r2.key)
-    assert(s(r1) == r1)
-    assert(s(r2) == r2)
-    assert(s(r1.key) == r1)
-    assert(s(r2.key) == r2)
+    // assert(s(r1) == r1)
+    // assert(s(r2) == r2)
+    // assert(s(r1.key) == r1)
+    // assert(s(r2.key) == r2)
+    s(r1) should be (r1)
+    s(r2) should be (r2)
+    s(r1.key) should be (r1)
+    s(r2.key) should be (r2)
   }
 
   it should "not return variables that aren't there" in {
@@ -69,7 +77,8 @@ class StateTest extends FlatSpec {
     assert(s(a) eq a)
     assert(s(b) eq a)
     assert(!(s(a) eq b))
-    assert(a.value == 2)
+    // assert(a.value == 2)
+    a.value should be (2)
   }
 
   "two states" should "update with <<<" in {
@@ -85,7 +94,8 @@ class StateTest extends FlatSpec {
     // update state from other is done like this
     s1 <<< s2
 
-    assert(s1(r2).value.asInstanceOf[Int] == r2.value)
+    // assert(s1(r2).value.asInstanceOf[Int] == r2.value)
+    s1(r2).value should be (r2.value)
     assert(!(s1(r2) eq r2))
   }
 
@@ -102,7 +112,8 @@ class StateTest extends FlatSpec {
     // left merge states is done like this
     s1 ++= s2
 
-    assert(s1(r2) == r2)
+    // assert(s1(r2) == r2)
+    s1(r2).value should be (r2.value)
     assert(s1(r2) eq r2)
   }
 
@@ -131,23 +142,33 @@ class StateTest extends FlatSpec {
 }
 
 class StateSerialisationTest extends FlatSpec {
-  ignore should "serialise and deserialise in JSON" in {
+  "A state" should "serialise and deserialise in JSON" in {
     var json = """
 [
     { "value": 1.0, "identifier": "ex:x1" },
     { "value": false, "identifier": "ex:x2", "scope": "foo" }
 ]
 """
-    val s = State.fromJSON(json)
+    val s1 = State.fromJSON(json)
+    val s2 = State.fromJSON(State.toJSON(s1))
 
-    def cmp(s1: State, s2: State) {
-      for ((k, _) <- s1) {
-        assert(s1(k) == s2(k))
+    assert(s1.table.keySet == s2.table.keySet)
+    for (k <- s1.table.keySet) {
+      assert(s1(k).key == s2(k).key)
+      // RHZ: The problem here seems to be that State.table
+      // contains references to `Var[_]`s and we don't know the
+      // type of `Var[_].value`.  However, I haven't been able to
+      // construct a minimal working example that reproduces this
+      // behaviour in the REPL.
+      // assert(s1(k).value == s2(k).value)
+      // Something like this can be done instead for `BooleanVar`s
+      if (s1(k).isInstanceOf[BooleanVar] &&
+          s2(k).isInstanceOf[BooleanVar]) {
+        println(s1(k) + " == " + s2(k))
+        assert(s1(k).value.asInstanceOf[Boolean] ==
+               s2(k).value.asInstanceOf[Boolean])
       }
-      for ((k, _) <- s2) {
-        assert(s1(k) == s2(k))
-      }
+      // But it's of no help for NumericVar because of type erasure
     }
-    cmp(s, State.fromJSON(State.toJSON(s)))
   }
 }

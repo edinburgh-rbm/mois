@@ -1,28 +1,30 @@
 package uk.ac.ed.inf.mois
 
-import scala.collection.mutable.Map
+// RHZ: To remember that we are working we a mutable Map I prefer
+// to write mutable.Map
+import scala.collection.mutable //.Map
 
-
-/**
- * A `State` is a collection of `Var`. It is implemented as a map or
- * dictionary from the `Var`'s `Key` to the `Var` itself.
- */
+// RHZ: Perhaps State should extend Map?  I know that's painful
+/** A `State` is a collection of `Var`. It is implemented as a map or
+  * dictionary from the `Var`'s `Key` to the `Var` itself.
+  */
 class State {
-  val table = Map[Key, Var[_]]()
+
+  // RHZ: Maybe it would be better to store `BooleanVar`s and
+  // `NumericVar`s in different tables, so we don't have to skip
+  // the type-checker with asInstanceOf later.
+  val table = mutable.Map.empty[Key, Var[_]]
 
   /**
    * Syntax sugar: s(v) returns v as it eists in the state. This allows the use of
    * `Var` for querying the state table
    */
   def apply[T](v: Var[_]) = table.apply(v.key).asInstanceOf[Var[T]]
-  /**
-   * Syntax sugar: s(k) returns the `Var` whose `Key` is k
-   */
+
+  /** Syntax sugar: `s(k)` returns the `Var` whose `Key` is `k`. */
   def apply[T](k: Key) = table.apply(k).asInstanceOf[Var[T]]
 
-  /**
-   * Pass through filter operations to the underlying table
-   */
+  /** Pass through filter operations to the underlying table. */
   def filter = table.filter _
 
   /**
@@ -34,9 +36,7 @@ class State {
    */
   def contains(k: Key) = table contains k
 
-  /**
-   * The += operator adds a `Var` to the state
-   */
+  /** The += operator adds a `Var` to the state. */
   def +=(v: Var[_]) = {
     table += v.key -> v
     this
@@ -58,7 +58,7 @@ class State {
 
   /**
    * The ++= operator is a shallow copy by reference that can be used
-   * to merge states
+   * to merge states.
    */
   def ++=(other: State) = {
     for ((_, v) <- other.table)
@@ -66,9 +66,7 @@ class State {
     this
   }
 
-  /**
-   * The := operator updates the state for the given variable
-   */
+  /** The := operator updates the state for the given variable. */
   def :=(v: Var[_]) = {
     if (this contains v)
       this(v) := v.value
@@ -118,7 +116,9 @@ class State {
 }
 
 object State {
-  def apply = new State
+
+  def apply() = new State
+
   def fromJSON(s: String) = {
     import org.json4s._
     import org.json4s.native.JsonMethods._
@@ -128,25 +128,35 @@ object State {
     val state = new State
 
     val json = parse(s)
-    var vars = List[Var[_]]()
+
+    def scope(fields: Seq[JField]): Option[String] = fields find {
+      case (name, _) => name == "scope" } collect {
+      case (_, JString(scope)) => scope }
+
     for (jvar <- json.children) {
       val doubles = for {
-	JObject(jobj) <- jvar
-	JField("value", JDouble(value)) <- jobj
-      } yield jvar.extract[NumericVar[Double]]
+        JObject(fields) <- jvar
+        ("value", JDouble(value)) <- fields
+        ("identifier", JString(identifier)) <- fields
+      } yield Var(value, identifier, scope(fields))
       val ints = for {
-	JObject(jobj) <- jvar
-	JField("value", JInt(value)) <- jobj
-      } yield jvar.extract[NumericVar[Int]]
+        JObject(fields) <- jvar
+        ("value", JInt(value)) <- fields
+        if value.isValidInt
+        ("identifier", JString(identifier)) <- fields
+      } yield Var(value.toInt, identifier, scope(fields))
       val bools = for {
-	JObject(jobj) <- jvar
-	JField("value", JBool(value)) <- jobj
-      } yield jvar.extract[BooleanVar]
+        JObject(fields) <- jvar
+        ("value", JBool(value)) <- fields
+        ("identifier", JString(identifier)) <- fields
+      } yield Var(value, identifier, scope(fields))
       for (v <- doubles ++ ints ++ bools)
-	state += v
+        state += v
     }
     state
   }
+  // RHZ: toJSON should perhaps be a method in the class (instead of
+  // the companion object)
   def toJSON(s: State) = {
     import org.json4s._
     import org.json4s.JsonDSL._
