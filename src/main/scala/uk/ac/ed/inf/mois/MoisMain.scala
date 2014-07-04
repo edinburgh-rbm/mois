@@ -1,6 +1,9 @@
 package uk.ac.ed.inf.mois
 
-
+/**
+ * `MoisMain` is the entry point for command line programs that
+ * run models. For how to use this, see the mois-examples repository
+ */
 abstract class MoisMain {
   val process: Process
   val state: State
