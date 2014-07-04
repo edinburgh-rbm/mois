@@ -1,8 +1,9 @@
 package uk.ac.ed.inf.mois.test
 
-import org.scalatest.FlatSpec
+import org.scalatest.{FlatSpec, Matchers}
+import java.lang.Math.abs
 
-import uk.ac.ed.inf.mois.{Process, ProcessGroup, ProcessODE}
+import uk.ac.ed.inf.mois.{Process, ProcessGroup, ProcessODE, Var}
 import uk.ac.ed.inf.mois.NaiveScheduler
 import uk.ac.ed.inf.mois.Conversions._
 
@@ -56,7 +57,9 @@ object sampleApache2 extends ProcessODE("sampleApache2") {
 /*
  * Run the two versions of the system of ODEs with the NaiveScheduler
  */
-class NaiveSchedulerTest extends FlatSpec {
+class NaiveSchedulerTest extends FlatSpec with Matchers {
+  val precision = 1e-4
+
   "sample ode system" should "integrate using Euler's method" in {
     val pg = new ProcessGroup("naive euler") {
       val scheduler = new NaiveScheduler(0.0001)
@@ -67,7 +70,11 @@ class NaiveSchedulerTest extends FlatSpec {
 
     pg(0, 50)
 
-    println(pg)
+    val x1 = Var(0.0, "ex:x1")
+    val x2 = Var(0.0, "ex:x2")
+
+    assert(abs(pg.state(x1).value.asInstanceOf[Double] + 0.14) < 0.01)
+    assert(abs(pg.state(x2).value.asInstanceOf[Double] - 0.092) < 0.001)
   }
 
   it should "integrate using the apache ODE library too" in {
@@ -80,6 +87,9 @@ class NaiveSchedulerTest extends FlatSpec {
 
     pg(0, 50)
 
-    println(pg)
+    val x1 = Var(0.0, "ex:x1")
+    val x2 = Var(0.0, "ex:x2")
+    assert(abs(pg.state(x1).value.asInstanceOf[Double] + 0.14) < 0.01)
+    assert(abs(pg.state(x2).value.asInstanceOf[Double] - 0.092) < 0.001)
   }
 }

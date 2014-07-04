@@ -7,6 +7,7 @@ import scala.collection.mutable.Map
  * the conclusion of each step with the end time and the state.
  */
 abstract class StepHandler {
+  def init(t: Double, state: State)
   def handleStep(t: Double, state: State)
 }
 
@@ -19,6 +20,9 @@ class Accumulator extends StepHandler {
   def handleStep(t: Double, state: State) {
     history += t -> state.copy
   }
+  def init(t: Double, state:State) {
+    handleStep(t, state)
+  }
   def apply(t: Double) = history(t)
 }
 
@@ -30,6 +34,11 @@ class Accumulator extends StepHandler {
  * of writes itself.
  */
 class TsvWriter(fp: java.io.Writer) extends StepHandler {
+  def init(t: Double, state: State) {
+    val vars = (for ((_, v) <- state) yield v)
+      .toList.sortWith((a, b) => a.key < b.key)
+    fp.write("t" + "\t" + vars.map(x => x.identifier).mkString("\t") + "\n")
+  }
   def handleStep(t: Double, state: State) {
     // apply a predictable ordering
     val vars = (for ((_, v) <- state) yield v)
