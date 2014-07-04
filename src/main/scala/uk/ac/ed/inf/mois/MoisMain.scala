@@ -77,9 +77,9 @@ abstract class MoisMain {
       }
 
       // clean up output
-      cfg.output.flush
+      cfg.output.flush()
       if (cfg.outfile != null) {
-	cfg.output.close
+	cfg.output.close()
       }
 
     } getOrElse {
