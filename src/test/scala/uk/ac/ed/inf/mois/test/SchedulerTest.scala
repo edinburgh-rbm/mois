@@ -4,7 +4,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import java.lang.Math.abs
 
 import uk.ac.ed.inf.mois.{Process, ProcessGroup, ProcessODE, Var}
-import uk.ac.ed.inf.mois.NaiveScheduler
+import uk.ac.ed.inf.mois.sched.NaiveScheduler
 import uk.ac.ed.inf.mois.Conversions._
 
 /*
