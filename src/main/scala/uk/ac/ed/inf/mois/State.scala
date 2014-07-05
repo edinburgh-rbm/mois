@@ -26,6 +26,13 @@ class State {
   def filter = table.filter _
 
   /**
+   * foreach iterates over the variables
+   */
+  def foreach(f: Var[_] => Unit) = {
+    for ((_, v) <- table) f(v)
+  }
+
+  /**
    * Syntax sugar: s contains v -- contains predicate for a particular variable
    */
   def contains(v: Var[_]) = table contains v.key
