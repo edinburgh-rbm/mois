@@ -59,7 +59,7 @@ abstract class Model(name: String) extends ProcessGroup(name) with VarContainer 
       val fp = scala.io.Source.fromFile(filename)
       val json = fp.mkString
       fp.close()
-      state <<< State.fromJSON(json)
+      //state <<< State.fromJSON(json)
       c
     } text("Initial conditions filename (JSON)")
 
@@ -80,7 +80,7 @@ abstract class Model(name: String) extends ProcessGroup(name) with VarContainer 
 	case "tsv" =>
 	  val handler = new TsvWriter(cfg.output)
 	  addStepHandler(handler)
-	  handler.init(cfg.begin, state)
+	  handler.init(cfg.begin, this)
 	case _ =>
       }
 

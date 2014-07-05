@@ -17,14 +17,11 @@ class ProcessGroup(name: String) extends Process(name) {
     processes += proc
     // this loop unifies the underlying state variables between
     // the process and the process group
-    for ((k,v) <- proc.state) {
-      if (state contains k)
-	// the group already has this variable, give it to the process
-	proc.state += state(k)
-      else
-	// add to the group state
-	state += v
-    }
+    proc.ints map { v => this.ints += v }
+    proc.longs map { v => this.longs += v }
+    proc.floats map { v => this.floats += v }
+    proc.doubles map { v => this.doubles += v }
+    proc.bools map { v => this.bools += v }
     this
   }
 
@@ -43,6 +40,6 @@ class ProcessGroup(name: String) extends Process(name) {
    * parameters
    */
   def step(t: Double, tau: Double) {
-    scheduler(t, tau, state, processes:_*)
+    scheduler(t, tau, this, processes:_*)
   }
 }

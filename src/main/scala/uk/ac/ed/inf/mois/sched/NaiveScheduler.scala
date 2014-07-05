@@ -2,14 +2,14 @@ package uk.ac.ed.inf.mois.sched
 
 import scala.util.Random
 
-import uk.ac.ed.inf.mois.{Process, State, Scheduler}
+import uk.ac.ed.inf.mois.{Process, Scheduler}
 
 class NaiveScheduler(step: Double) extends Scheduler {
-  def apply(t: Double, tau: Double, state: State, procs: Process*) {
+  def apply(t: Double, tau: Double, parent: Process, children: Process*) {
     var dt = 0.0
     while (dt < tau) {
-      for (proc <- Random.shuffle(procs)) {
-	proc.step(t + dt, step)
+      for (child <- Random.shuffle(children)) {
+	child.step(t + dt, step)
       }
       dt += step
     }

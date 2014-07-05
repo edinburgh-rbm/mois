@@ -83,7 +83,8 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
 
     // construct the integrator
     val i = integrator()
-   
+
+    val proc = this
     // only add step handlers if we have them
     if (stepHandlers.size > 0) {
       object SH extends sampling.StepHandler {
@@ -94,7 +95,7 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
           for (i <- 0 until vars.size)
             vars(i) := ydot(i)
           for (sh <- stepHandlers)
-            sh.handleStep(t, state)
+            sh.handleStep(t, proc)
         }
       }
       i.addStepHandler(SH)

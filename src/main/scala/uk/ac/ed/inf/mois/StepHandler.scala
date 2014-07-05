@@ -1,14 +1,14 @@
 package uk.ac.ed.inf.mois
 
-import scala.collection.mutable.Map
+import scala.collection.mutable
 
 /**
  * A StepHandler may be added to a `Process`. It then gets called at
  * the conclusion of each step with the end time and the state.
  */
 abstract class StepHandler {
-  def init(t: Double, state: State)
-  def handleStep(t: Double, state: State)
+  def init(t: Double, proc: Process)
+  def handleStep(t: Double, proc: Process)
 }
 
 /**
@@ -16,12 +16,12 @@ abstract class StepHandler {
  * all state in a time-indexed dictionary in memory
  */
 class Accumulator extends StepHandler {
-  var history = Map.empty[Double, State]
-  def handleStep(t: Double, state: State) {
-    history += t -> state.copy
+  var history = mutable.Map.empty[Double, mutable.ArrayBuffer[Var[_]]]
+  def handleStep(t: Double, proc: Process) {
+    history += t -> proc.state
   }
-  def init(t: Double, state:State) {
-    handleStep(t, state)
+  def init(t: Double, proc: Process) {
+    handleStep(t, proc)
   }
   // TODO: Should the Accumulator interpolate?
   def apply(t: Double) = history(t)
@@ -36,14 +36,14 @@ class Accumulator extends StepHandler {
  */
 class TsvWriter(fp: java.io.Writer, sep: String = "\t")
     extends StepHandler {
-  def init(t: Double, state: State) {
-    val vars = (for ((_, v) <- state) yield v)
-      .toList.sortWith((a, b) => a.key < b.key)
-    fp.write("t" + sep + vars.map(x => x.identifier).mkString(sep) + "\n")
+  def init(t: Double, proc: Process) {
+    val vars = (for (v <- proc.state) yield v).toSeq.sortBy(_.meta)
+    fp.write("t" + sep + vars.map(x => x.meta.identifier).mkString(sep) + "\n")
+    fp.write(t.toString + sep + vars.map(x => x.value).mkString(sep) + "\n")
   }
-  def handleStep(t: Double, state: State) {
+  def handleStep(t: Double, proc: Process) {
     // apply a predictable ordering
-    val vars = (for ((_, v) <- state) yield v).toSeq.sortBy(_.key)
+    val vars = (for (v <- proc.state) yield v).toSeq.sortBy(_.meta)
     fp.write(t.toString + sep + vars.map(x => x.value).mkString(sep) + "\n")
   }
 }
