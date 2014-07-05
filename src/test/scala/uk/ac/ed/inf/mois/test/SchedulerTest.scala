@@ -61,9 +61,8 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
   val precision = 1e-4
 
   "sample ode system" should "integrate using Euler's method" in {
-    val pg = new ProcessGroup("naive euler") {
-      val scheduler = new NaiveScheduler(0.0001)
-    }
+    val pg = new ProcessGroup("naive euler")
+    pg.scheduler = new NaiveScheduler(0.0001)
 
     pg += sampleEuler1
     pg += sampleEuler2
@@ -78,9 +77,8 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
   }
 
   it should "integrate using the apache ODE library too" in {
-    val pg = new ProcessGroup("naive apache") {
-      val scheduler = new NaiveScheduler(0.01)
-    }
+    val pg = new ProcessGroup("naive apache")
+    pg.scheduler = new NaiveScheduler(0.01)
 
     pg += sampleApache1
     pg += sampleApache2

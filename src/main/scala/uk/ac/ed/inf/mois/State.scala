@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.mois
 
-import scala.collection.mutable.Map
+import scala.collection.mutable
 
 
 /**
@@ -8,7 +8,7 @@ import scala.collection.mutable.Map
  * dictionary from the `Var`'s `Key` to the `Var` itself.
  */
 class State {
-  val table = Map[Key, Var[_]]()
+  val table = mutable.Map.empty[Key, Var[_]]
 
   /**
    * Syntax sugar: s(v) returns v as it eists in the state. This allows the use of

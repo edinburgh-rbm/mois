@@ -6,9 +6,9 @@ import scala.collection.mutable
  * A `ProcessGroup` is a list of `Process`es and a `Scheduler`. It presents the
  * same interface as a `Process` and so hierarchies of them can be built.
  */
-abstract class ProcessGroup(name: String) extends Process(name) {
+class ProcessGroup(name: String) extends Process(name) {
   var processes = mutable.ArrayBuffer.empty[Process]
-  val scheduler: Scheduler
+  var scheduler: Scheduler = null
 
   /*
    * The += operator adds a process to the group
