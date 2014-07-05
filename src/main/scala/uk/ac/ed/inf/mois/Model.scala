@@ -4,12 +4,9 @@ package uk.ac.ed.inf.mois
  * `MoisMain` is the entry point for command line programs that
  * run models. For how to use this, see the mois-examples repository
  */
-abstract class MoisMain {
-  val process: Process
-  val state: State
-  val name: String
+abstract class Model(name: String) extends ProcessGroup(name) {
 
-  case class Config(
+  private case class Config(
     val begin: Double = 0.0,
     val end: Double = 50.0,
     val step: Double = 10.0,
@@ -19,7 +16,7 @@ abstract class MoisMain {
     val outfile: java.io.File = null
   )
 
-  val parser = new scopt.OptionParser[Config](name) {
+  private val parser = new scopt.OptionParser[Config](name) {
     val p = getClass.getPackage
     val name = p.getImplementationTitle
     val version = p.getImplementationVersion
@@ -57,22 +54,19 @@ abstract class MoisMain {
 
   def main(args: Array[String]) {
     parser.parse(args, Config()) map { cfg =>
-      // set up initial state
-      process.state <<< state
-
       // set up output
       cfg.format match {
 	case "tsv" =>
 	  val handler = new TsvWriter(cfg.output)
-	  process.addStepHandler(handler)
-	  handler.init(cfg.begin, process.state)
+	  addStepHandler(handler)
+	  handler.init(cfg.begin, state)
 	case _ =>
       }
 
       // run the simulation
       var t = cfg.begin
       while(t < cfg.end) {
-	process(t, cfg.step)
+	this(t, cfg.step)
 	t += cfg.step
       }
 
