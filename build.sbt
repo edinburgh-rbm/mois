@@ -17,6 +17,8 @@ libraryDependencies += "org.apache.commons" % "commons-math3" % "3.3"
 
 libraryDependencies += "org.json4s" %% "json4s-native" % "3.2.10"
 
+libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
+
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (version.value.trim.endsWith("SNAPSHOT"))

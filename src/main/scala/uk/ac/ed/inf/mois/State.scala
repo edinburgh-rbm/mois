@@ -1,19 +1,18 @@
 package uk.ac.ed.inf.mois
 
-// RHZ: To remember that we are working we a mutable Map I prefer
-// to write mutable.Map
-import scala.collection.mutable //.Map
+import scala.collection.mutable
 
 // RHZ: Perhaps State should extend Map?  I know that's painful
+
 /** A `State` is a collection of `Var`. It is implemented as a map or
-  * dictionary from the `Var`'s `Key` to the `Var` itself.
+  * dictionary from the `Var`'s `VarMeta` to the `Var` itself.
   */
 class State {
 
   // RHZ: Maybe it would be better to store `BooleanVar`s and
   // `NumericVar`s in different tables, so we don't have to skip
   // the type-checker with asInstanceOf later.
-  val table = mutable.Map.empty[Key, Var[_]]
+  val table = mutable.Map.empty[VarMeta, Var[_]]
 
   /**
    * Syntax sugar: s(v) returns v as it eists in the state. This allows the use of
@@ -21,11 +20,18 @@ class State {
    */
   def apply[T](v: Var[_]) = table.apply(v.key).asInstanceOf[Var[T]]
 
-  /** Syntax sugar: `s(k)` returns the `Var` whose `Key` is `k`. */
-  def apply[T](k: Key) = table.apply(k).asInstanceOf[Var[T]]
+  /** Syntax sugar: `s(k)` returns the `Var` whose `VarMeta` is `k`. */
+  def apply[T](k: VarMeta) = table.apply(k).asInstanceOf[Var[T]]
 
   /** Pass through filter operations to the underlying table. */
   def filter = table.filter _
+
+  /**
+   * foreach iterates over the variables
+   */
+  def foreach(f: Var[_] => Unit) = {
+    for ((_, v) <- table) f(v)
+  }
 
   /**
    * Syntax sugar: s contains v -- contains predicate for a particular variable
@@ -34,7 +40,7 @@ class State {
   /**
    * Syntax sugar: s contains k -- contains predicate for a particular key
    */
-  def contains(k: Key) = table contains k
+  def contains(k: VarMeta) = table contains k
 
   /** The += operator adds a `Var` to the state. */
   def +=(v: Var[_]) = {
