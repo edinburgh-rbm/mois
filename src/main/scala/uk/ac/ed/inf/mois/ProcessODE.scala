@@ -108,10 +108,12 @@ abstract class ProcessODE(name: String) extends Process(name) with FirstOrderDif
 object Macros {
   def createFun(c: Context)(e: c.Expr[Double]): c.Expr[Unit] = {
     import c.universe._
+    // v is the variable for which we are defining the ODE
     // this is just to make the generated code nicer, it could be
     // just val v = q"${c.prefix.tree}.v" as well
     val v = c.prefix.tree match {
       case q"$x.this.d($v)" => v
+      case q"$x.this.d($v)./($y.this.dt)" => v
       case _ => q"${c.prefix.tree}.v"
     }
     // transformer to replace Vars by a call to ProcessODE.eval
