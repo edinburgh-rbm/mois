@@ -4,7 +4,6 @@ import org.scalatest.{FlatSpec, Matchers}
 
 import uk.ac.ed.inf.mois.{Process, ProcessGroup, ProcessODE, Var}
 import uk.ac.ed.inf.mois.NaiveScheduler
-import uk.ac.ed.inf.mois.Conversions._
 
 /** Directly transcribed ODE system from Dominik's stuff. */
 object sampleEuler1 extends Process("sampleEuler1") {
@@ -42,39 +41,28 @@ object sampleApache2 extends ProcessODE("sampleApache2") {
 
 /** Run the two versions of the system of ODEs with the NaiveScheduler. */
 class NaiveSchedulerTest extends FlatSpec with Matchers {
+  val precision = 1e-4
 
   "sample ode system" should "integrate using Euler's method" in {
-    val pg = new ProcessGroup("naive euler") {
-      val scheduler = new NaiveScheduler(0.0001)
-      this += sampleEuler1
-      this += sampleEuler2
-      state += sampleEuler1.x1
-      state += sampleEuler1.x2
-      state += sampleEuler2.x1
-      state += sampleEuler2.x2
-    }
+    val pg = new ProcessGroup("naive euler")
+    pg.scheduler = new NaiveScheduler(0.0001)
+    val x1 = Var(0.0, "ex:x1")
+    val x2 = Var(0.0, "ex:x2")
 
     pg.step(0, 50)
 
-    println(pg)
     pg.state(sampleEuler1.x1).value should equal (-0.1398)
     pg.state(sampleEuler1.x2).value should equal (0.0916)
   }
 
   it should "integrate using the apache ODE library too" in {
-    val pg = new ProcessGroup("naive apache") {
-      val scheduler = new NaiveScheduler(0.01)
-      this += sampleApache1
-      this += sampleApache2
-      state += sampleApache1.x1
-      state += sampleApache1.x2
-      state += sampleApache2.x1
-      state += sampleApache2.x2
-    }
+    val pg = new ProcessGroup("naive apache")
+    pg.scheduler = new NaiveScheduler(0.01)
+    val x1 = Var(0.0, "ex:x1")
+    val x2 = Var(0.0, "ex:x2")
 
     pg.step(0, 50)
 
-    println(pg)
     pg.state(sampleApache1.x1).value should equal (-0.1398)
     pg.state(sampleApache1.x2).value should equal (0.0916)
   }

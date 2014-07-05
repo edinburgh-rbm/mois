@@ -3,7 +3,8 @@ package uk.ac.ed.inf.mois
 import language.experimental.macros
 import reflect.macros.Context
 
-import org.apache.commons.math3.ode.{FirstOrderIntegrator, FirstOrderDifferentialEquations}
+import org.apache.commons.math3.ode
+import org.apache.commons.math3.ode.sampling
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator
 
 import collection.mutable
@@ -15,7 +16,7 @@ import collection.mutable
   * Math ODE library to implement its `step` method. The `computeDerivatives`
   * method must be filled out to describe the system of differential equations
   */
-abstract class ProcessODE(name: String) extends Process(name) with FirstOrderDifferentialEquations {
+abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrderDifferentialEquations {
 
   /** A class to define derivatives of `Var`s. */
   class ODE(val v: NumericVar[Double]) {
@@ -68,7 +69,7 @@ abstract class ProcessODE(name: String) extends Process(name) with FirstOrderDif
     * subclasses. By default we use the Dormand Prince 8,5,3 integrator
     * from their example documentation.
     */
-  val integrator: () => FirstOrderIntegrator = () =>
+  val integrator: () => ode.FirstOrderIntegrator = () =>
     new DormandPrince853Integrator(1e-8, 100.0, 1e-10, 1e-10)
 
   /** Main function implementing the `Process` interface. */
@@ -79,6 +80,25 @@ abstract class ProcessODE(name: String) extends Process(name) with FirstOrderDif
 
     // set time
     t := time
+
+    // construct the integrator
+    val i = integrator()
+   
+    // only add step handlers if we have them
+    if (stepHandlers.size > 0) {
+      object SH extends sampling.StepHandler {
+        def init(t0: Double, y0: Array[Double], t: Double) {}
+        def handleStep(interp: sampling.StepInterpolator, isLast: Boolean) {
+          val t = interp.getCurrentTime()
+          val ydot = interp.getInterpolatedState()
+          for (i <- 0 until y.size)
+            y(i)() := ydot(i)
+          for (sh <- stepHandlers)
+            sh.handleStep(t, state)
+        }
+      }
+      i.addStepHandler(SH)
+    }
 
     // conduct the integration
     integrator().integrate(this, time, doubleY, time+tau, doubleY)
