@@ -18,7 +18,7 @@ abstract class StepHandler {
 class Accumulator extends StepHandler {
   var history = mutable.Map.empty[Double, Seq[Var[_]]]
   def handleStep(t: Double, proc: Process) {
-    history += t -> proc.state
+    history += t -> proc.state.map(_.copy)
   }
   def init(t: Double, proc: Process) {
     handleStep(t, proc)

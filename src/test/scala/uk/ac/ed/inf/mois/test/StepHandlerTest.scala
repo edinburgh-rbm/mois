@@ -22,10 +22,10 @@ class StepHandlerTest extends FlatSpec with Matchers {
     p(1, 1)
     p(2, 1)
 
-    acc(0.0)(0) should be (0)
-    acc(1.0)(0) should be (1)
-    acc(2.0)(0) should be (2)
-    acc(3.0)(0) should be (3)
+    acc(0.0)(0).value should be (0)
+    acc(1.0)(0).value should be (1)
+    acc(2.0)(0).value should be (2)
+    acc(3.0)(0).value should be (3)
   }
 }
 

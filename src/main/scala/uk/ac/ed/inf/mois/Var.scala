@@ -90,7 +90,7 @@ class BooleanVar(val meta: VarMeta) extends Var[Boolean] {
   override def stringPrefix = "Boolean"
   var value: Boolean = false
   type R = BooleanVar
-  def copy = new BooleanVar(meta)
+  def copy = new BooleanVar(meta) := value
 }
 
 class NumericVar[T: Numeric](val meta: VarMeta)
@@ -103,7 +103,7 @@ class NumericVar[T: Numeric](val meta: VarMeta)
   }
   var value: T = implicitly[Numeric[T]].zero
   type R = NumericVar[T]
-  def copy = new NumericVar[T](meta)
+  def copy = new NumericVar[T](meta) := value
 
   def +=(that: T) = update (implicitly[Numeric[T]].plus(value, that))
   def -=(that: T) = update (implicitly[Numeric[T]].minus(value, that))
