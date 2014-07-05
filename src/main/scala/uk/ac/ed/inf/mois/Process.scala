@@ -9,6 +9,15 @@ abstract class Process(val name: String) extends VarContainer {
 
   implicit def getVarValue[T](v: Var[T]) = v.value
 
+  def state: mutable.ArrayBuffer[Var[_]] = {
+    val s = mutable.ArrayBuffer.empty[Var[_]]
+    for (v <- ints) s += v
+    for (v <- longs) s += v
+    for (v <- floats) s += v
+    for (v <- bools) s += v
+    s
+  }
+
   val stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
 
   def addStepHandler(sh: StepHandler) {
