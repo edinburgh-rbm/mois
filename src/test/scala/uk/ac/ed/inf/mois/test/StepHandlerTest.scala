@@ -1,7 +1,6 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.{Accumulator, Process, StepHandler, TsvWriter, Var}
-import uk.ac.ed.inf.mois.Conversions._
 
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -25,10 +24,6 @@ class StepHandlerTest extends FlatSpec with Matchers {
     p(1, 1)
     p(2, 1)
 
-    // assert(acc(0.0)(p.x1)().asInstanceOf[Int] == 0)
-    // assert(acc(1.0)(p.x1)().asInstanceOf[Int] == 1)
-    // assert(acc(2.0)(p.x1)().asInstanceOf[Int] == 2)
-    // assert(acc(3.0)(p.x1)().asInstanceOf[Int] == 3)
     acc(0.0)(p.x1).value should be (0)
     acc(1.0)(p.x1).value should be (1)
     acc(2.0)(p.x1).value should be (2)
@@ -68,7 +63,6 @@ class TsvWriterTest extends FlatSpec with Matchers {
 2.0	2	4
 3.0	3	6
 """
-    // assert(buffer.toString == expected)
     buffer.toString should be (expected)
   }
 }

@@ -1,6 +1,5 @@
 package uk.ac.ed.inf.mois.test
 
-// import java.lang.Math.abs
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 

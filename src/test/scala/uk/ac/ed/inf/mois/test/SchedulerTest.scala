@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.mois.test
 
 import org.scalatest.{FlatSpec, Matchers}
+import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{Process, ProcessGroup, ProcessODE, Var}
 import uk.ac.ed.inf.mois.NaiveScheduler
@@ -41,7 +42,11 @@ object sampleApache2 extends ProcessODE("sampleApache2") {
 
 /** Run the two versions of the system of ODEs with the NaiveScheduler. */
 class NaiveSchedulerTest extends FlatSpec with Matchers {
+
+  // Use approximate equality in `should equal`
   val precision = 1e-4
+  implicit val doubleEquality =
+    TolerantNumerics.tolerantDoubleEquality(precision)
 
   "sample ode system" should "integrate using Euler's method" in {
     val pg = new ProcessGroup("naive euler")

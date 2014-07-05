@@ -4,7 +4,28 @@ package uk.ac.ed.inf.mois
  * `MoisMain` is the entry point for command line programs that
  * run models. For how to use this, see the mois-examples repository
  */
-abstract class Model(name: String) extends ProcessGroup(name) {
+abstract class Model(name: String) extends ProcessGroup(name) with VarContainer {
+
+  override def Int(meta: VarMeta) = {
+    val v = Int(meta)
+    ints += v
+    v
+  }
+  override def Long(meta: VarMeta) = {
+    val v = Long(meta)
+    longs += v
+    v
+  }
+  override def Float(meta: VarMeta) = {
+    val v = Float(meta)
+    floats += v
+    v
+  }
+  override def Double(meta: VarMeta) = {
+    val v = Double(meta)
+    doubles += v
+    v
+  }
 
   private case class Config(
     val begin: Double = 0.0,

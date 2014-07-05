@@ -33,15 +33,16 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
   /** Object `dt` is used for writing ODEs with syntax: d(v1)/dt = ... */
   object dt
 
-  /** `Var` used to construct derivatives that depend on time. */
-  val t = Var(0.0, "time", Some("ProcessODE:" + name))
+  // /** `Var` used to construct derivatives that depend on time. */
+  val t = Double(name + ":time")
+  t := 0.0
 
   /** Adds an ODE definition to the current `ProcessODE`. */
   def d(v: NumericVar[Double]) = new ODE(v) {
     def / (d: dt.type) = new ODE(v)
   }
 
-  def eval(v: NumericVar[Double], ys: Array[Double]): Double =
+  @inline final def eval(v: NumericVar[Double], ys: Array[Double]): Double =
     // if (indices contains v) ys(indices(v)) else v.value
     indices get v map ys getOrElse v.value
 
@@ -49,8 +50,7 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
   val indices: mutable.Map[NumericVar[Double], Int] =
     mutable.Map.empty[NumericVar[Double], Int] withDefault (v =>
       throw new IllegalArgumentException("No differential equation " +
-        "defined for Var(\"" + v.identifier + "\", \"" + v.scope +
-        "\").  Define one using d(v) := ..."))
+        "defined for " + v + ".  Define one using d(v) := ..."))
 
   /** An array with all `Var`s for which to integrate. */
   val vars: mutable.ArrayBuffer[NumericVar[Double]] =
@@ -91,8 +91,8 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
         def handleStep(interp: sampling.StepInterpolator, isLast: Boolean) {
           val t = interp.getCurrentTime()
           val ydot = interp.getInterpolatedState()
-          for (i <- 0 until y.size)
-            y(i)() := ydot(i)
+          for (i <- 0 until vars.size)
+            vars(i) := ydot(i)
           for (sh <- stepHandlers)
             sh.handleStep(t, state)
         }
@@ -136,10 +136,11 @@ object Macros {
       case q"$x.this.d($v)./($y.this.dt)" => v
       case _ => q"${c.prefix.tree}.v"
     }
+    println(showRaw(e.tree))
     // transformer to replace Vars by a call to ProcessODE.eval
     object transformer extends Transformer {
       override def transform(tree: Tree): Tree = tree match {
-        case q"uk.ac.ed.inf.mois.Conversions.Var2Value[$t]($v)" =>
+        case q"uk.ac.ed.inf.mois.Process.getVarValue[$t]($v)" =>
           q"eval($v, ys)"
         case _ => super.transform(tree)
       }

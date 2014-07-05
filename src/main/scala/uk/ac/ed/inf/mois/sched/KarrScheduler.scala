@@ -1,7 +1,6 @@
 package uk.ac.ed.inf.mois.sched
 
 import uk.ac.ed.inf.mois.{Process, Scheduler, State, NumericVar}
-import uk.ac.ed.inf.mois.Conversions._
 
 import scala.collection.mutable
 
