@@ -67,16 +67,16 @@ class VarTest extends FlatSpec with Matchers with VarContainer {
     val x2 = Double("ex:x2") := 1
 
     x1 := 2
-    x1 should be (2)
+    x1.value should be (2)
 
     x2 := 2 + 2*x1
-    x2 should be (6)
+    x2.value should be (6)
 
     val dx = x2 - x1
     (2 * dx) should be (8)
 
     x1 += dx
-    x1 should be (x2.value)
+    x1.value should be (x2.value)
 
     (x1 - dx) should be (x2 - dx)
   }
