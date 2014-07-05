@@ -16,7 +16,7 @@ abstract class StepHandler {
  * all state in a time-indexed dictionary in memory
  */
 class Accumulator extends StepHandler {
-  var history = mutable.Map.empty[Double, mutable.ArrayBuffer[Var[_]]]
+  var history = mutable.Map.empty[Double, Seq[Var[_]]]
   def handleStep(t: Double, proc: Process) {
     history += t -> proc.state
   }

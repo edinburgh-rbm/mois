@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.mois.test
 
+/*
 import org.scalatest.{FlatSpec, Matchers}
 
 import uk.ac.ed.inf.mois.{Var, State, BooleanVar}
@@ -143,3 +144,4 @@ class StateSerialisationTest extends FlatSpec {
     }
   }
 }
+*/

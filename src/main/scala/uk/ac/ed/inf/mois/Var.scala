@@ -41,6 +41,9 @@ class VarMeta(val identifier: String) extends Ordered[VarMeta] {
   */
 abstract class Var[T] {
 
+  type Val = T
+  type R >: this.type <: Var[T]
+
   protected[mois] def value: T
   protected[mois] def value_= (x: T)
 
@@ -56,21 +59,51 @@ abstract class Var[T] {
 
   // -- Abstract members --
 
+  def copy: R
+
+  val constraints: mutable.ArrayBuffer[Constraint] =
+    mutable.ArrayBuffer.empty[Constraint]
+
+  type Constraint = T => Boolean
+
   /** Assignment to a Variable is expected to set the underlying value. */
-  def update(x: T): this.type
+  def update(x: T): this.type = {
+    for (c <- constraints if c(x))
+    throw new ConstraintViolation("variable " + this +
+				  " violated a constraint by setting its value to " + x)
+    value = x
+    this
+  }
+
+  object AddConstraint {
+    def and(c: Constraint) = must(c)
+  }
+  
+  /** Adds a constraint to this variable. */
+  def must(constraint: Constraint) = {
+    constraints += constraint
+    AddConstraint
+  }
 }
 
-abstract class BooleanVar extends Var[Boolean] {
+class BooleanVar(val meta: VarMeta) extends Var[Boolean] {
   override def stringPrefix = "Boolean"
+  var value: Boolean = false
+  type R = BooleanVar
+  def copy = new BooleanVar(meta)
 }
 
-abstract class NumericVar[T: Numeric] extends Var[T] {
+class NumericVar[T: Numeric](val meta: VarMeta)
+	 extends Var[T] {
   override def stringPrefix = value match {
     case _: Int => "Int"
     case _: Long => "Long"
     case _: Float => "Float"
     case _: Double => "Double"
   }
+  var value: T = implicitly[Numeric[T]].zero
+  type R = NumericVar[T]
+  def copy = new NumericVar[T](meta)
 
   def +=(that: T) = update (implicitly[Numeric[T]].plus(value, that))
   def -=(that: T) = update (implicitly[Numeric[T]].minus(value, that))
@@ -79,105 +112,40 @@ abstract class NumericVar[T: Numeric] extends Var[T] {
   // def %=(that: T) = update (value % that)
 }
 
-/** A `Var` Handle or pointer. This is used mostly by `Process` to enable
- * variables to be defined in process scope, and to be referred to by a name
- * in that scope, but at the same time have the underlying variable be mutable
- * so that when it is replaced -- perhaps when adding to a `ProcessGroup` --
- * the reference remains useable.
- */
-trait VarRef[T] extends Var[T] {
-  //type V <: VarContainer#VarVal[T]
-  //var ref: V
-  val ref: Var[T]
-
-  protected[mois] def value = ref.value
-  protected[mois] def value_= (x: T) = ref.value = x
-  
-  /** Assignment to a Variable is expected to set the underlying value. */
-  def update(x: T): this.type = { ref.update(x); this }
-}
-
-abstract class BooleanVarRef(val meta: VarMeta)
-	 extends BooleanVar with VarRef[Boolean]
-abstract class NumericVarRef[T: Numeric](val meta: VarMeta)
-	 extends NumericVar[T] with VarRef[T]
-
 trait VarContainer {
+  val ints = mutable.ArrayBuffer.empty[NumericVar[Int]]
+  val longs = mutable.ArrayBuffer.empty[NumericVar[Long]]
+  val floats = mutable.ArrayBuffer.empty[NumericVar[Float]]
+  val doubles = mutable.ArrayBuffer.empty[NumericVar[Double]]
+  val bools = mutable.ArrayBuffer.empty[BooleanVar]
 
-  trait VarVal[T] extends Var[T] {
-    // It could be a ListBuffer as well
-    val constraints: mutable.ArrayBuffer[Constraint] =
-      mutable.ArrayBuffer.empty[Constraint]
-
-    type Constraint = T => Boolean
-
-    /** Assignment to a Variable is expected to set the underlying value. */
-    override def update(x: T): this.type = {
-      for (c <- constraints if c(x))
-        throw new ConstraintViolation("variable " + this +
-          " violated a constraint by setting its value to " + x)
-      value = x
-      this
-    }
-
-    object AddConstraint {
-      def and(c: Constraint) = must(c)
-    }
-
-    /** Adds a constraint to this variable. */
-    def must(constraint: Constraint) = {
-      constraints += constraint
-      AddConstraint
-    }
-  }
-
-  class BooleanVarVal(val meta: VarMeta)
-        extends BooleanVar with VarVal[Boolean] {
-    var value: Boolean = false
-  }
-
-  // TODO: We probably want to split this class into 4 classes for
-  // each Numeric type.
-  class NumericVarVal[T: Numeric](val meta: VarMeta)
-        extends NumericVar[T] with VarVal[T] {
-    var value: T = implicitly[Numeric[T]].zero
-  }
-
-  val ints = mutable.ArrayBuffer.empty[NumericVarRef[Int]]
-  val longs = mutable.ArrayBuffer.empty[NumericVarRef[Long]]
-  val floats = mutable.ArrayBuffer.empty[NumericVarRef[Float]]
-  val doubles = mutable.ArrayBuffer.empty[NumericVarRef[Double]]
-  val bools = mutable.ArrayBuffer.empty[BooleanVarRef]
-
-  private def numericVarRef[T: Numeric](
-    meta: VarMeta, 
-    pool: mutable.ArrayBuffer[NumericVarRef[T]]) =
-  {
-    object varref extends NumericVarRef[T](meta) {
-      val ref = new NumericVarVal[T](meta)
-    }
-    pool += varref
-    varref
-  }
-
-  private def booleanVarRef(
+  private def numericVar[T: Numeric](
     meta: VarMeta,
-    pool: mutable.ArrayBuffer[BooleanVarRef]) = 
+    pool: mutable.ArrayBuffer[NumericVar[T]]) =
   {
-    object varref extends BooleanVarRef(meta) {
-      val ref = new BooleanVarVal(meta)
-    }
-    pool += varref
-    varref
+    val v = new NumericVar[T](meta)
+    pool += v
+    v
   }
 
-  def Int(meta: VarMeta) = numericVarRef(meta, ints)
-  def Long(meta: VarMeta) = numericVarRef(meta, longs)
-  def Float(meta: VarMeta) = numericVarRef(meta, floats)
-  def Double(meta: VarMeta) = numericVarRef(meta, doubles)
-  def Boolean(meta: VarMeta) = booleanVarRef(meta, bools)
+  private def booleanVar(
+    meta: VarMeta,
+    pool: mutable.ArrayBuffer[BooleanVar]) = 
+  {
+    val v = new BooleanVar(meta)
+    pool += v
+    v
+  }
+
+  def Int(meta: VarMeta) = numericVar(meta, ints)
+  def Long(meta: VarMeta) = numericVar(meta, longs)
+  def Float(meta: VarMeta) = numericVar(meta, floats)
+  def Double(meta: VarMeta) = numericVar(meta, doubles)
+  def Boolean(meta: VarMeta) = booleanVar(meta, bools)
 
   implicit def StringMeta(s: String) = new VarMeta(s)
+
+  implicit def getVarValue[T](v: Var[T]) = v.value
 }
 
 

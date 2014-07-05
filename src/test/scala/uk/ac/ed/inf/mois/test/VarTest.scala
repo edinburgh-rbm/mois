@@ -3,54 +3,41 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{Var, ConstraintViolation}
-import uk.ac.ed.inf.mois.Conversions._
+import uk.ac.ed.inf.mois.{Var, VarContainer, ConstraintViolation}
 
-class VarTest extends FlatSpec with Matchers {
-
-  "state variables" should "support arithmetic operations" in {
-    val ir1 = Var(1, "ex:ir1")
-    val ir2 = Var(2, "ex:ir2")
-    // assert(ir1() + ir2() == 3)
-    (ir1 + ir2) should be (3)
-  }
-
-  it should "not care too much about types for arithmetic" in {
-    val r1 = Var(0.0, "ex:float")
-    r1 += 1
-  }
-
-  it should "distinguish different identifiers and scopes" in {
-    val r1 = Var(0, "ex:r1")
-    var r1a = Var(0, "ex:r1", Some("a"))
-    var r2 = Var(0, "ex:r2")
-    var r3 = Var(100, "ex:r1") 
-
-    r1.key should not be (r1a.key)
-    r1.key should not be (r2.key)
-    r1.key should be (r3.key)
-  } 
-
+class VarTest extends FlatSpec with Matchers with VarContainer {
   // Use approximate equality in `should equal` for doubles
   val precision = 1e-8
   implicit val doubleEquality =
     TolerantNumerics.tolerantDoubleEquality(precision)
 
+  "state variables" should "support arithmetic operations" in {
+    val ir1 = Int("ex:ir1") := 1
+    val ir2 = Int("ex:ir2") := 2
+    (ir1 + ir2) should be (3)
+  }
+
+  it should "not care too much about types for arithmetic" in {
+    val r1 = Float("ex:float")
+    r1 += 1
+  }
+
+
   it should "support difference" in {
-    val r1_0 = Var(0.5, "ex:r1")
-    val r1_1 = Var(0.8, "ex:r1")
+    val r1_0 = Double("ex:r1") := 0.5
+    val r1_1 = Double("ex:r1") := 0.8
 
     val dr1 = r1_1 - r1_0
-    dr1.value should equal (0.3)
+    dr1 should equal (0.3)
   }
 
   it should "support subtraction with doubles" in {
-    val v = Var(0.0, "ex:v")
+    val v = Double("ex:v")
     (v - 1.0) should equal (-1.0)
   }
 
   it should "respect constraints" in {
-    val r1 = Var(0.0, "ex:r1")
+    val r1 = Double("ex:r1")
     r1 must (_ >= 0) and (_ <= 2)
 
     intercept[ConstraintViolation] {
@@ -63,38 +50,34 @@ class VarTest extends FlatSpec with Matchers {
   }
 
   it should "have unambiguous keys" in {
-    val v1 = Var(0, "a")
-    val v2 = Var(0, "a")
-    v1.key should be (v2.key)
+    val v1 = Int("a")
+    val v2 = Int("a")
+    v1.meta should be (v2.meta)
 
-    val v3 = Var(0, "b")
-    v1.key should not be (v3.key)
+    val v3 = Int("b")
+    v1.meta should not be (v3.meta)
 
-    val v4 = Var(0, "a", Some("b"))
-    v1.key should not be (v4.key)
-    v3.key should not be (v4.key)
-
-    val v5 = Var(1, "a")
-    v1.key should be (v5.key)
+    val v4 = Int("a")
+    v4 := 1
+    v1.meta should be (v4.meta)
   }
 
   it should "have natural syntax for numerical operations" in {
-    val x1 = Var(0.0, "ex:x1")
-    val x2 = Var(1.0, "ex:x2")
+    val x1 = Double("ex:x1")
+    val x2 = Double("ex:x2") := 1
 
     x1 := 2
-    x1.value should be (2)
+    x1 should be (2)
 
     x2 := 2 + 2*x1
-    x2.value should be (6)
+    x2 should be (6)
 
     val dx = x2 - x1
     (2 * dx) should be (8)
 
     x1 += dx
-    x1.value should be (x2.value)
+    x1 should be (x2.value)
 
-    (x1 - dx) should not be (x2 - dx)
-    (x1 - dx).value should be ((x2 - dx).value)
+    (x1 - dx) should be (x2 - dx)
   }
 }

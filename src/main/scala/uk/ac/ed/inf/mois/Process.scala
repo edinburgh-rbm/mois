@@ -6,17 +6,7 @@ import scala.collection.mutable
   * upon it parametrised by time.
   */
 abstract class Process(val name: String) extends VarContainer {
-
-  implicit def getVarValue[T](v: Var[T]) = v.value
-
-  def state: mutable.ArrayBuffer[Var[_]] = {
-    val s = mutable.ArrayBuffer.empty[Var[_]]
-    for (v <- ints) s += v
-    for (v <- longs) s += v
-    for (v <- floats) s += v
-    for (v <- bools) s += v
-    s
-  }
+  def state: Seq[Var[_]] = bools ++ ints ++ longs ++ floats ++ doubles
 
   val stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
 
@@ -31,8 +21,8 @@ abstract class Process(val name: String) extends VarContainer {
   def step(t: Double, tau: Double) 
 
   /** A wrapper around the user defined step function to calculate
-    * changes.
-    */
+       * changes.
+       */
   def apply(t: Double, tau: Double) { //: State = {
     // val start = state.copy
     step(t, tau)
