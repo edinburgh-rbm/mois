@@ -28,27 +28,32 @@ class ODEProcessTest extends FlatSpec with Matchers {
 
     sampleODE.x1.value should equal (25.0)
     sampleODE.x2.value should equal (50.0)
+    sampleODE.x3.value should equal (0.0)
 
     // Integrate from t1 = 0 to t2 = 50
     sampleODE.step(0, 50)
 
     sampleODE.x1.value should equal (-0.1398)
     sampleODE.x2.value should equal (0.0916)
+    sampleODE.x3.value should equal (0.0350)
 
     // Integrate from t1 = 50 to t2 = 150
     sampleODE.step(50, 100)
 
     sampleODE.x1.value should equal (-0.0032)
     sampleODE.x2.value should equal (0.0021)
+    sampleODE.x3.value should equal (0.3007)
 
     // reset the initial conditions
     sampleODE.x1 := 25.0
     sampleODE.x2 := 50.0
+    sampleODE.x3 := 0.0
 
     // make sure we get the same results
     sampleODE.step(0, 50.0)
     sampleODE.x1.value should equal (-0.1398)
     sampleODE.x2.value should equal (0.0916)
+    sampleODE.x3.value should equal (0.0350)
 
     println(s"known good ODE $sampleODE")
   }
