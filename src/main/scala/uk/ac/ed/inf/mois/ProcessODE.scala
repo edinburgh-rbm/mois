@@ -55,11 +55,11 @@ abstract class ProcessODE(name: String) extends Process(name) with FirstOrderDif
   val vars: mutable.ArrayBuffer[NumericVar[Double]] =
     mutable.ArrayBuffer.empty[NumericVar[Double]]
 
-  /** Polynomial functions used to define the derivatives. */
-  val polys: mutable.ArrayBuffer[Polynomial] =
-    mutable.ArrayBuffer.empty[Polynomial]
-
   type Derivative = Array[Double] => Double
+
+  /** Functions defining the derivatives of the variables in `vars`.
+    * The two arrays are indexed equally.
+    */
   val funs: mutable.ArrayBuffer[Derivative] =
     mutable.ArrayBuffer.empty[Derivative]
 
