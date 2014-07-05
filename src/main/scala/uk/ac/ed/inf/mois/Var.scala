@@ -223,6 +223,7 @@ class Delta[T](v: T, i: String, s: Option[String]) extends Var[T] { //(v, i, s) 
  */
 object Conversions {
   implicit def Var2Value[T](v: Var[T]) = v.value
+  implicit def Delta2Value[T](v: Delta[T]) = v.value
 
   implicit def VarH2Double(v: VarH[Double]) = v().value
   implicit def VarH2Float(v: VarH[Float]) = v().value
