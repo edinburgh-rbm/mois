@@ -33,9 +33,8 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
   /** Object `dt` is used for writing ODEs with syntax: d(v1)/dt = ... */
   object dt
 
-  // /** `Var` used to construct derivatives that depend on time. */
-  val t = Double(name + ":time")
-  t := 0.0
+  /** `Var` used to construct derivatives that depend on time. */
+  var t = 0.0
 
   /** Adds an ODE definition to the current `ProcessODE`. */
   def d(v: NumericVar[Double]) = new ODE(v) {
@@ -79,7 +78,7 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
     val doubleY = vars.map(_.value).toArray
 
     // set time
-    t := time
+    t = time
 
     // construct the integrator
     val i = integrator()
@@ -114,7 +113,7 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
     * Indexes into the arrays are as defined by `vars`.
     */
   def computeDerivatives(time: Double, ys: Array[Double], ydots: Array[Double]) {
-    t := time
+    t = time
     for (i <- 0 until ydots.size)
       ydots(i) = funs(i)(ys)
   }
