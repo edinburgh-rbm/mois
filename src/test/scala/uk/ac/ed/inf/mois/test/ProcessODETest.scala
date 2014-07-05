@@ -5,9 +5,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{ProcessODE, Var}
-// FIXME: If Conversions is imported, then the construction of
-// polynomials doesn't work anymore.
-// import uk.ac.ed.inf.mois.Conversions._
+import uk.ac.ed.inf.mois.Conversions._
 
 /** Directly calculated ODE system from Dominik's stuff. */
 object sampleODE extends ProcessODE("sample") {
