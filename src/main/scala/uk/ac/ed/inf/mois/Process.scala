@@ -6,7 +6,7 @@ import scala.collection.mutable
   * upon it parametrised by time.
   */
 abstract class Process(val name: String) extends VarContainer {
-  def state: Seq[Var[_]] = bools ++ ints ++ longs ++ floats ++ doubles
+  def state: Seq[Var[_]] = (allVars map { case (_, v) => v }).toSeq
 
   val stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
 

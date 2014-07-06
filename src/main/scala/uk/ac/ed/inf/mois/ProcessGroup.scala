@@ -1,7 +1,5 @@
 package uk.ac.ed.inf.mois
 
-import scala.reflect.ClassTag
-
 import scala.collection.mutable
 
 /*
@@ -9,40 +7,17 @@ import scala.collection.mutable
  * same interface as a `Process` and so hierarchies of them can be built.
  */
 class ProcessGroup(name: String) extends Process(name) {
-  var processes = mutable.ArrayBuffer.empty[(Process, Array[(Var[T], Var[T]) forSome { type T }])]
+  var processes = mutable.ArrayBuffer.empty[Process]
   var scheduler: Scheduler = null
 
   /*
    * The += operator adds a process to the group
    */
   def +=(proc: Process) = {
-    val varlist = mutable.ArrayBuffer.empty[(Var[T], Var[T]) forSome { type T }]
+    // merge vars to this (lhs) from proc (rhs)
+    leftMerge(proc)
 
-    def add[V <: Var[_]: ClassTag](pv: mutable.ArrayBuffer[V], pgv: mutable.ArrayBuffer[V]) = {
-      def f(v: V) = {
-	val myv: V = if (!(vmap contains v.meta)) {
-	  val vcopy = v.copy.asInstanceOf[V]
-	  vmap += v.meta -> vcopy
-	  pgv += vcopy
-	  vcopy
-	} else {
-	  vmap(v.meta) match {
-	    case v: V => v
-	    case _ => throw new IllegalArgumentException("bad")
-	  }
-	}
-	varlist += ((v, myv).asInstanceOf[(Var[T], Var[T]) forSome { type T }])
-      }
-      pv map (v => f(v))
-    }
-
-    add(proc.ints, this.ints)
-    add(proc.longs, this.longs)
-    add(proc.floats, this.floats)
-    add(proc.doubles, this.doubles)
-    add(proc.bools, this.bools)
-
-    processes += (proc -> varlist.toArray)
+    processes += proc
 
     this
   }

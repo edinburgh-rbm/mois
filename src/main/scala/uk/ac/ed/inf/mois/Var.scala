@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
+import scala.reflect.ClassTag
 
 /** A `ConstraintViolation` is raised when a restriction on a `Var`
   * is violated.
@@ -112,49 +113,106 @@ class NumericVar[T: Numeric](val meta: VarMeta)
   // def %=(that: T) = update (value % that)
 }
 
-trait VarContainer {
-  val ints = mutable.ArrayBuffer.empty[NumericVar[Int]]
-  val longs = mutable.ArrayBuffer.empty[NumericVar[Long]]
-  val floats = mutable.ArrayBuffer.empty[NumericVar[Float]]
-  val doubles = mutable.ArrayBuffer.empty[NumericVar[Double]]
-  val bools = mutable.ArrayBuffer.empty[BooleanVar]
-
-  val vmap = mutable.Map.empty[VarMeta, Var[_]]
-
-  private def numericVar[T: Numeric](
-    meta: VarMeta,
-    pool: mutable.ArrayBuffer[NumericVar[T]]) =
-  {
-    if (vmap contains meta) vmap(meta).asInstanceOf[NumericVar[T]]
-    else {
-      val v = new NumericVar[T](meta)
-      pool += v
-      vmap += (meta -> v)
+class VarMap[T, U <: Var[T]] {
+  private val meta = mutable.Map.empty[VarMeta, U]
+  def contains(m: VarMeta) = meta contains m
+  def apply(m: VarMeta) = meta.apply(m)
+  def update(v: U) = {
+    if (meta contains v.meta) {
+      meta(v.meta) := v.value
+    } else {
+      meta += v.meta -> v
       v
     }
   }
 
-  private def booleanVar(
-    meta: VarMeta,
-    pool: mutable.ArrayBuffer[BooleanVar]) = 
-  {
-    if (vmap contains meta) vmap(meta).asInstanceOf[BooleanVar]
-    else {
-      val v = new BooleanVar(meta)
-      pool += v
-      vmap += (meta -> v)
-      v
-    }
+  @inline final def <<(v: U) = update(v)
+  def leftUpdate(vs: VarMap[T, U]) {
+    for (v <- vs)
+      meta(v.meta) := v.value
   }
+  @inline final def <<<(vs: VarMap[T, U]) = leftUpdate(vs)
+  @inline final def >>>(vs: VarMap[T, U]) = vs.leftUpdate(this)
 
-  def Int(meta: VarMeta) = numericVar(meta, ints)
-  def Long(meta: VarMeta) = numericVar(meta, longs)
-  def Float(meta: VarMeta) = numericVar(meta, floats)
-  def Double(meta: VarMeta) = numericVar(meta, doubles)
-  def Boolean(meta: VarMeta) = booleanVar(meta, bools)
-
-  implicit def StringMeta(s: String) = new VarMeta(s)
-
-  implicit def getVarValue[T](v: Var[T]) = v.value
+  def map(f: U => Any) = meta map { case (_, v) => f(v) }
+  def foreach(f: U => Unit) = meta foreach { case (_, v) => f(v) }
+  def toSeq = (for (v <- this) yield v).toSeq
 }
 
+object VarMap {
+  def empty[T, U <: Var[T]] = new VarMap[T, U]
+}
+
+trait VarContainer {
+  implicit def Var2Meta(v: Var[_]) = v.meta
+  implicit def String2Meta(s: String) = new VarMeta(s)
+  implicit def getVarValue[T](v: Var[T]) = v.value
+
+  val intVars = VarMap.empty[Int, NumericVar[Int]]
+  val longVars = VarMap.empty[Long, NumericVar[Long]]
+  val floatVars = VarMap.empty[Float, NumericVar[Float]]
+  val doubleVars = VarMap.empty[Double, NumericVar[Double]]
+  val boolVars = VarMap.empty[Boolean, BooleanVar]
+  val allVars = mutable.Map.empty[VarMeta, Var[_]]
+
+  def addVar[T](nv: Var[T]): Var[T] = {
+    if (allVars contains nv) {
+      updateVar(nv)
+    } else {
+      allVars += nv.meta -> nv
+      nv.value match {
+	case i: Int => intVars << nv.asInstanceOf[NumericVar[Int]]
+	case l: Long => longVars << nv.asInstanceOf[NumericVar[Long]]
+	case f: Float => floatVars << nv.asInstanceOf[NumericVar[Float]]
+	case d: Double => doubleVars << nv.asInstanceOf[NumericVar[Double]]
+	case b: Boolean => boolVars << nv.asInstanceOf[BooleanVar]
+      }
+      nv
+    }
+  }
+
+  def leftMerge(right: VarContainer) {
+    for (i <- right.intVars) addVar(i)
+    for (l <- right.longVars) addVar(l)
+    for (f <- right.floatVars) addVar(f)
+    for (d <- right.doubleVars) addVar(d)
+    for (b <- right.boolVars) addVar(b)
+  }
+
+  def updateVar[T](nv: Var[T]): Var[T] = {
+    val v = allVars(nv).asInstanceOf[Var[T]]
+    v := nv
+    v
+  }
+
+  private def leftUpdate(right: VarContainer) {
+    intVars <<< right.intVars
+    longVars <<< right.longVars
+    floatVars <<< right.floatVars
+    doubleVars <<< right.doubleVars
+    boolVars <<< right.boolVars
+  }
+  @inline final def <<<(right: VarContainer) = leftUpdate(right)
+  @inline final def >>>(right: VarContainer) = right.leftUpdate(this)
+
+  def Int(meta: VarMeta) = {
+    val v = new NumericVar[Int](meta)
+    addVar(v).asInstanceOf[NumericVar[Int]]
+  }
+  def Long(meta: VarMeta) = {
+    val v = new NumericVar[Long](meta)
+    addVar(v).asInstanceOf[NumericVar[Long]]
+  }
+  def Float(meta: VarMeta) = {
+    val v = new NumericVar[Float](meta)
+    addVar(v).asInstanceOf[NumericVar[Float]]
+  }
+  def Double(meta: VarMeta) = {
+    val v = new NumericVar[Double](meta)
+    addVar(v).asInstanceOf[NumericVar[Double]]
+  }
+  def Boolean(meta: VarMeta) = {
+    val v = new BooleanVar(meta)
+    addVar(v).asInstanceOf[BooleanVar]
+  }
+}
