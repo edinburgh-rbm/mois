@@ -6,8 +6,6 @@ version := "1.99.2-SNAPSHOT"
 
 scalaVersion := "2.11.1"
 
-crossScalaVersions := Seq("2.11.1", "2.10.4")
-
 // this is needed to get some dependencies like grizzled-slf4j
 seq(bintrayResolverSettings:_*)
 
