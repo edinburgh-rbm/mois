@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{Accumulator, Process, StepHandler, TsvWriter, Var}
+import uk.ac.ed.inf.mois.{Accumulator, Process, StepHandler, TsvWriter}
 
 import org.scalatest.{FlatSpec, Matchers}
 
@@ -53,7 +53,7 @@ class TsvWriterTest extends FlatSpec with Matchers {
     p(1, 1)
     p(2, 1)
 
-    val expected = 
+    val expected =
 """0.0	0	0
 1.0	1	2
 2.0	2	4

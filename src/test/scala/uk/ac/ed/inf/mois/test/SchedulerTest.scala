@@ -3,7 +3,7 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{Process, ProcessGroup, ProcessODE, Var}
+import uk.ac.ed.inf.mois.{Process, ProcessGroup, ProcessODE}
 import uk.ac.ed.inf.mois.sched.NaiveScheduler
 
 /** Directly transcribed ODE system from Dominik's stuff. */
@@ -75,12 +75,9 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
     pg += sampleApache2
 
     val x1 = Double("ex:x1")
-    x1 := 25.0
     val x2 = Double("ex:x2")
+    x1 := 25.0
     x2 := 50.0
-
-    // pg.vmap("ex:x1") := 25.0
-    // pg.vmap("ex:x2") := 50.0
 
     pg.step(0, 50)
 

@@ -119,6 +119,9 @@ class NumericVar[T: Numeric](val meta: VarMeta)
 
 trait VarContainer {
 
+  // RHZ: I'm thinking maybe these should all be Maps and state be a
+  // Map[VarMeta, Var[_]] and then vmap is not needed anymore.  In
+  // this way we can spare the asInstanceOfs in numeric/booleanVar.
   val ints = mutable.ArrayBuffer.empty[NumericVar[Int]]
   val longs = mutable.ArrayBuffer.empty[NumericVar[Long]]
   val floats = mutable.ArrayBuffer.empty[NumericVar[Float]]
