@@ -136,12 +136,10 @@ object Macros {
       case q"$x.this.d($v)./($y.this.dt)" => v
       case _ => q"${c.prefix.tree}.v"
     }
-    println(showRaw(e.tree))
     // transformer to replace Vars by a call to ProcessODE.eval
     object transformer extends Transformer {
       override def transform(tree: Tree): Tree = tree match {
-        case q"uk.ac.ed.inf.mois.Process.getVarValue[$t]($v)" =>
-          q"eval($v, ys)"
+        case q"$p.this.getVarValue[$t]($v)" => q"eval($v, ys)"
         case _ => super.transform(tree)
       }
     }
