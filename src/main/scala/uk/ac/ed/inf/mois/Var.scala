@@ -158,5 +158,3 @@ trait VarContainer {
   implicit def getVarValue[T](v: Var[T]) = v.value
 }
 
-
-

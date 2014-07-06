@@ -45,7 +45,7 @@ object sampleApache2 extends ProcessODE("sampleApache2") {
 class NaiveSchedulerTest extends FlatSpec with Matchers {
 
   // Use approximate equality in `should equal`
-  val precision = 1e-4
+  val precision = 1e-3
   implicit val doubleEquality =
     TolerantNumerics.tolerantDoubleEquality(precision)
 
@@ -53,20 +53,14 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
     val pg = new ProcessGroup("naive euler")
     import pg._
 
-    pg.scheduler = new NaiveScheduler(0.0001)
+    pg.scheduler = new NaiveScheduler(0.001)
     pg += sampleEuler1
     pg += sampleEuler2
 
     val x1 = Double("ex:x1") := 25.0
     val x2 = Double("ex:x2") := 50.0
 
-    println(s"pg state ${pg.state}")
-    println(s"e1 state ${sampleEuler1.state}")
-    println(s"e2 state ${sampleEuler2.state}")
     pg.step(0, 50)
-    println(s"pg state ${pg.state}")
-    println(s"e1 state ${sampleEuler1.state}")
-    println(s"e2 state ${sampleEuler2.state}")
 
     x1.value should equal (-0.1398)
     x2.value should equal (0.0916)
@@ -76,7 +70,7 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
     val pg = new ProcessGroup("naive apache")
     import pg._
 
-    pg.scheduler = new NaiveScheduler(0.01)
+    pg.scheduler = new NaiveScheduler(0.005)
     pg += sampleApache1
     pg += sampleApache2
 
