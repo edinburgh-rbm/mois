@@ -10,9 +10,7 @@ class ProcessGroup(name: String) extends Process(name) {
   var processes = mutable.ArrayBuffer.empty[Process]
   var scheduler: Scheduler = null
 
-  /*
-   * The += operator adds a process to the group
-   */
+  /** The += operator adds a process to the group. */
   def +=(proc: Process) = {
     // merge vars to this (lhs) from proc (rhs)
     leftMerge(proc)
@@ -22,9 +20,7 @@ class ProcessGroup(name: String) extends Process(name) {
     this
   }
 
-  /*
-   * The -= operator removes a process from the group
-   */
+  /** The -= operator removes a process from the group. */
   def -=(proc: Process) = {
     // TODO: needed for process migration. Keeping state
     // coherent is important here

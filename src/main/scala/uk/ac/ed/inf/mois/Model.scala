@@ -6,14 +6,20 @@ package uk.ac.ed.inf.mois
  */
 abstract class Model(name: String) extends ProcessGroup(name) {
 
+  // RHZ: I think begin, end and step are part of the definition of a
+  // Model and shouldn't be given in the command line.  Why?
+  // Because the definition of a Model should contain everything you
+  // needed to get the results.  The other three can be given from the
+  // command line for the same reason.
+
   private case class Config(
     val begin: Double = 0.0,
-    val end: Double = 50.0,
-    val step: Double = 10.0,
+    val end: Double = 50.0, // why is 50.0 the default here?
+    val step: Double = 10.0, // and 10.0 here?
     val format: String = "tsv",
     val output: java.io.Writer =
       new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8")),
-    val outfile: java.io.File = null
+    val useFile: Boolean = false
   )
 
   private val parser = new scopt.OptionParser[Config](name) {
@@ -38,7 +44,7 @@ abstract class Model(name: String) extends ProcessGroup(name) {
       val fp = scala.io.Source.fromFile(filename)
       val json = fp.mkString
       fp.close()
-      //state <<< State.fromJSON(json)
+      fromJSON(json)
       c
     } text("Initial conditions filename (JSON)")
 
@@ -48,7 +54,7 @@ abstract class Model(name: String) extends ProcessGroup(name) {
 
     opt[String]('o', "output") action { (output, c) =>
       val fp = new java.io.File(output)
-      c.copy(output = new java.io.PrintWriter(fp), outfile = fp)
+      c.copy(output = new java.io.PrintWriter(fp), useFile = true)
     } text("Output file (default: stdout)")
   }
 
@@ -60,7 +66,8 @@ abstract class Model(name: String) extends ProcessGroup(name) {
 	  val handler = new TsvWriter(cfg.output)
 	  addStepHandler(handler)
 	  handler.init(cfg.begin, this)
-	case _ =>
+	case _ => throw new IllegalArgumentException(
+          "I don't understand format " + cfg.format)
       }
 
       // run the simulation
@@ -72,9 +79,8 @@ abstract class Model(name: String) extends ProcessGroup(name) {
 
       // clean up output
       cfg.output.flush()
-      if (cfg.outfile != null) {
-	cfg.output.close()
-      }
+      if (cfg.useFile)
+        cfg.output.close()
 
     } getOrElse {
       // some kind of specific error processing? 

@@ -3,9 +3,10 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{Var, VarContainer, ConstraintViolation}
+import uk.ac.ed.inf.mois.{VarContainer, ConstraintViolation}
 
 class VarTest extends FlatSpec with Matchers with VarContainer {
+
   // Use approximate equality in `should equal` for doubles
   val precision = 1e-8
   implicit val doubleEquality =

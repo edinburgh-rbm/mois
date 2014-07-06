@@ -3,7 +3,7 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{ProcessODE, Var}
+import uk.ac.ed.inf.mois.ProcessODE
 
 /** Directly calculated ODE system from Dominik's stuff. */
 object sampleODE extends ProcessODE("sample") {
@@ -56,7 +56,5 @@ class ODEProcessTest extends FlatSpec with Matchers {
     sampleODE.x1.value should equal (-0.1398)
     sampleODE.x2.value should equal (0.0916)
     sampleODE.x3.value should equal (0.0350)
-
-    println(s"known good ODE $sampleODE")
   }
 }

@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{Process, Var}
+import uk.ac.ed.inf.mois.Process
 
 import org.scalatest.{FlatSpec, Matchers}
 
