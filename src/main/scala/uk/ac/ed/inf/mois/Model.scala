@@ -12,6 +12,18 @@ abstract class Model(name: String) extends ProcessGroup(name) {
   // needed to get the results.  The other three can be given from the
   // command line for the same reason.
 
+  // WW: Because begin is an initial condition just like the x_i. You
+  // would typically want to run the model for a shorter time while
+  // developing it. In production you might want to run from t_0 to
+  // t_1, dump the state, and then run from t_1 to t_2 for various
+  // reasons. I kind of agree about step size though, since it can only
+  // be set on the top level here anyways.
+  //
+  // I also think this class should be named back to MoisMain and 
+  // should not be a ProcessGroup (although it might be a Process
+  // or at least a VarContainer) This is because the scheduler-like
+  // behaviour does not belong here.
+
   private case class Config(
     val begin: Double = 0.0,
     val end: Double = 50.0, // why is 50.0 the default here?
