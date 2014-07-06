@@ -12,8 +12,6 @@ class ProcessGroup(name: String) extends Process(name) {
   var processes = mutable.ArrayBuffer.empty[(Process, Array[(Var[T], Var[T]) forSome { type T }])]
   var scheduler: Scheduler = null
 
-  val vmap = mutable.Map.empty[VarMeta, Var[_]]
-
   /*
    * The += operator adds a process to the group
    */

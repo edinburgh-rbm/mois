@@ -26,9 +26,13 @@ class VarTest extends FlatSpec with Matchers with VarContainer {
   it should "support difference" in {
     val r1_0 = Double("ex:r1") := 0.5
     val r1_1 = Double("ex:r1") := 0.8
+    val r2 = Double("ex:r2") := 1.0
 
     val dr1 = r1_1 - r1_0
-    dr1 should equal (0.3)
+    dr1 should equal (0.0)
+
+    val dr2 = r2 - r1_1
+    dr2 should equal (0.2)
   }
 
   it should "support subtraction with doubles" in {

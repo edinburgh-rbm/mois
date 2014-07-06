@@ -37,6 +37,7 @@ object sampleApache1 extends ProcessODE("sampleApache1") {
 object sampleApache2 extends ProcessODE("sampleApache2") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
+  val x3 = Double("ex:x2")
   d(x2) := -0.5*x1 - 0.8*x2
 }
 
@@ -56,12 +57,16 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
     pg += sampleEuler1
     pg += sampleEuler2
 
-    val x1 = Double("ex:x1")
-    x1 := 25.0
-    val x2 = Double("ex:x2")
-    x2 := 50.0
+    val x1 = Double("ex:x1") := 25.0
+    val x2 = Double("ex:x2") := 50.0
 
+    println(s"pg state ${pg.state}")
+    println(s"e1 state ${sampleEuler1.state}")
+    println(s"e2 state ${sampleEuler2.state}")
     pg.step(0, 50)
+    println(s"pg state ${pg.state}")
+    println(s"e1 state ${sampleEuler1.state}")
+    println(s"e2 state ${sampleEuler2.state}")
 
     x1.value should equal (-0.1398)
     x2.value should equal (0.0916)

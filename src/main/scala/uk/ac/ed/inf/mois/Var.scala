@@ -119,22 +119,32 @@ trait VarContainer {
   val doubles = mutable.ArrayBuffer.empty[NumericVar[Double]]
   val bools = mutable.ArrayBuffer.empty[BooleanVar]
 
+  val vmap = mutable.Map.empty[VarMeta, Var[_]]
+
   private def numericVar[T: Numeric](
     meta: VarMeta,
     pool: mutable.ArrayBuffer[NumericVar[T]]) =
   {
-    val v = new NumericVar[T](meta)
-    pool += v
-    v
+    if (vmap contains meta) vmap(meta).asInstanceOf[NumericVar[T]]
+    else {
+      val v = new NumericVar[T](meta)
+      pool += v
+      vmap += (meta -> v)
+      v
+    }
   }
 
   private def booleanVar(
     meta: VarMeta,
     pool: mutable.ArrayBuffer[BooleanVar]) = 
   {
-    val v = new BooleanVar(meta)
-    pool += v
-    v
+    if (vmap contains meta) vmap(meta).asInstanceOf[BooleanVar]
+    else {
+      val v = new BooleanVar(meta)
+      pool += v
+      vmap += (meta -> v)
+      v
+    }
   }
 
   def Int(meta: VarMeta) = numericVar(meta, ints)
