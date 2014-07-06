@@ -10,7 +10,7 @@ case class ConstraintViolation(msg: String) extends Exception(msg)
 /** This class is to abstract away the details of uniquely identifying a
   * state variable.
   */
-class VarMeta(val identifier: String) extends Ordered[VarMeta] {
+case class VarMeta(identifier: String) extends Ordered[VarMeta] {
   def compare(that: VarMeta): Int = this.identifier compare that.identifier
 }
 
