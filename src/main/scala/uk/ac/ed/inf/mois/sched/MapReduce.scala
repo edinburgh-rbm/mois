@@ -6,15 +6,16 @@ import java.lang.Math.min
 import uk.ac.ed.inf.mois.{Scheduler, Process, ProcessGroup}
 
 abstract class MapReduceScheduler(step: Double) extends Scheduler {
-  type ACC
 
-  def accumulator: ACC
+  type Acc
+
+  def accumulator: Acc
 
   def m(t: Double, dt: Double, group: ProcessGroup, proc: Process): Process
-  def r(acc: ACC, proc: Process): ACC
+  def r(acc: Acc, proc: Process): Acc
   
-  def before(t: Double, dt: Double, acc: ACC, group: ProcessGroup) = dt
-  def after(t: Double, dt: Double, acc: ACC, group: ProcessGroup) = dt
+  def before(t: Double, dt: Double, acc: Acc, group: ProcessGroup) = dt
+  def after(t: Double, dt: Double, acc: Acc, group: ProcessGroup) = dt
 
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
     val acc = accumulator

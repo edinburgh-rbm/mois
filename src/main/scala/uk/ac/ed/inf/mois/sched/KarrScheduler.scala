@@ -1,26 +1,27 @@
 package uk.ac.ed.inf.mois.sched
 
 import scala.collection.mutable
-import uk.ac.ed.inf.mois.{NumericVar, Process, ProcessGroup, VarMap}
+import uk.ac.ed.inf.mois.{DoubleVar, Process, ProcessGroup, VarMap}
 import uk.ac.ed.inf.mois.VarConv._
 
 class KarrScheduler(step: Double) extends MapReduceScheduler(step) {
-  type ACC = VarMap[Double, NumericVar[Double]]
 
-  var totalDemand: ACC = null
-  val demand = mutable.Map.empty[Process, ACC]
+  type Acc = VarMap[Double, DoubleVar]
+
+  var totalDemand: Acc = null
+  val demand = mutable.Map.empty[Process, Acc]
   var first = true // first run
   var dt0 = step
 
-  val accumulator = new ACC
+  val accumulator = new Acc
 
   private def zeroAccumulator(group: ProcessGroup) {
     if (accumulator.size == 0) {
-      for (v <- group.doubleVars) {
-	accumulator += v.copy := 0.0
+      for ((m, v) <- group.doubleVars) {
+	accumulator(m) = (v.copy := 0.0)
       }
     } else {
-      for (v <- accumulator) {
+      for (v <- accumulator.values) {
 	v := 0.0
       }
     }
@@ -29,25 +30,23 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) {
   override def init(group: ProcessGroup) {
     if (demand.size == 0) {
       for (p <- group.processes) {
-	demand(p) = new ACC
-	for (v <- p.doubleVars) {
-	  demand(p) << v.copy
+	demand(p) = new Acc
+	for ((m, v) <- p.doubleVars) {
+	  demand(p)(m) = v.copy
 	}
       }
     }
   }
 
-  override def before(t: Double, dt: Double, acc: ACC, group: ProcessGroup) = {
+  override def before(t: Double, dt: Double, acc: Acc, group: ProcessGroup) = {
     // zero the accumulator
     zeroAccumulator(group)
     if (first) dt
-    else {
-      // this is where we cleverly figure out a better timestep
-      dt0
-    }
+    // this is where we cleverly figure out a better timestep
+    else dt0
   }
 
-  override def after(t: Double, dt: Double, acc: ACC, group: ProcessGroup) = {
+  override def after(t: Double, dt: Double, acc: Acc, group: ProcessGroup) = {
     //println(s"after($t, $dt, $first)")
     totalDemand = acc.copy
     if (first) {
@@ -56,16 +55,14 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) {
     } else {
       // update the process group's state
       // this should be written as
-      //    group.doubleVars <<< totalDemand map(_ * dt)
-      for (v <- totalDemand)
-        group.doubleVars(v) := v * dt
+      // group.doubleVars <<< totalDemand map(_ * dt)
+      for ((m, v) <- totalDemand)
+        group.doubleVars(m) := v * dt
       dt
     }
   }
 
-  /**
-   * map function
-   */
+  /** map function */
   def m(t: Double, dt: Double, group: ProcessGroup, proc: Process) = {
     //println(s"m($t, $dt, $first)")
     if (first) {
@@ -73,11 +70,11 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) {
       group >>> proc
     } else {
       // we have a total demand, so give this process its portion
-      for (v <- proc.doubleVars) {
-	if (totalDemand(v).value != 0.0) {
-          v := group.doubleVars(v) * demand(proc)(v) / totalDemand(v)
+      for ((m, v) <- proc.doubleVars) {
+	if (totalDemand(m).value != 0.0) {
+          v := group.doubleVars(m) * demand(proc)(m) / totalDemand(m)
 	} else {
-	  v := group.doubleVars(v)
+	  v := group.doubleVars(m)
 	}
       }
     }
@@ -89,13 +86,13 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) {
     val s1 = proc.doubleVars // just for clarity
 
     // fill in demand per unit time for our variables
-    for (v <- s0) {
-      val dvdt = (s1(v) - s0(v)) / dt
+    for ((m, _) <- s0) {
+      val dvdt = (s1(m) - s0(m)) / dt
       // demand means a negative gradient
       if (dvdt < 0)
-	demand(proc)(v) := dvdt
+	demand(proc)(m) := dvdt
       else
-	demand(proc)(v) := 0.0
+	demand(proc)(m) := 0.0
     }
 
 /*
@@ -108,14 +105,12 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) {
     proc
   }
 
-  /**
-   * reduce function
-   */
-  def r(acc: ACC, proc: Process) = {
+  /** reduce function */
+  def r(acc: Acc, proc: Process) = {
     //println(s"r($first) $proc ${proc.allVars}")
     // sum up total demand for this iteration in the accumulator
-    for (v <- proc.doubleVars)
-      acc(v) += demand(proc)(v).copy
+    for ((m, v) <- proc.doubleVars)
+      acc(m) += demand(proc)(m).copy
     acc
   }
 }

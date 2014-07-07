@@ -12,19 +12,23 @@ import collection.mutable
 // TODO: Maybe we should allow users to define algebraic equations
 // as well as we do in the graph-rewriting library.
 
+// RHZ: OrdinaryProcess sounds to me as CommonProcess, isn't that what
+// ordinary means in english?
 /** A partial implementation of `Process` that uses the Apache Commons
   * Math ODE library to implement its `step` method. The `computeDerivatives`
   * method must be filled out to describe the system of differential equations
   */
-abstract class OrdinaryProcess(name: String) extends Process(name) with ode.FirstOrderDifferentialEquations {
+abstract class OrdinaryProcess(name: String)
+    extends Process(name)
+       with ode.FirstOrderDifferentialEquations {
 
   /** A class to define derivatives of `Var`s. */
-  class ODE(val v: NumericVar[Double]) {
+  class ODE(val v: DoubleVar) {
     def := (e: Double): Unit = macro ODEMacros.createFun
   }
 
   /** Adds an ODE definition to the process. */
-  def addODE(v: NumericVar[Double], f: Derivative) = {
+  def addODE(v: DoubleVar, f: Derivative) = {
     indices += v -> (vars.size)
     vars += v
     funs += f
@@ -37,31 +41,28 @@ abstract class OrdinaryProcess(name: String) extends Process(name) with ode.Firs
   var t = 0.0
 
   /** Adds an ODE definition to the current `OrdinaryProcess`. */
-  def d(v: NumericVar[Double]) = new ODE(v) {
+  def d(v: DoubleVar) = new ODE(v) {
     def / (d: dt.type) = new ODE(v)
   }
 
-  @inline final def eval(v: NumericVar[Double], ys: Array[Double]): Double =
+  @inline final def eval(v: DoubleVar, ys: Array[Double]): Double =
     // if (indices contains v) ys(indices(v)) else v.value
     indices get v map ys getOrElse v.value
 
   /** A map that returns the index of a `Var` in `vars`. */
-  val indices: mutable.Map[NumericVar[Double], Int] =
-    mutable.Map.empty[NumericVar[Double], Int] withDefault (v =>
-      throw new IllegalArgumentException("No differential equation " +
-        "defined for " + v + ".  Define one using d(v) := ..."))
+  val indices = mutable.Map.empty[DoubleVar, Int] withDefault (v =>
+    throw new IllegalArgumentException("No differential equation " +
+      "defined for " + v + ".  Define one using d(v) := ..."))
 
   /** An array with all `Var`s for which to integrate. */
-  val vars: mutable.ArrayBuffer[NumericVar[Double]] =
-    mutable.ArrayBuffer.empty[NumericVar[Double]]
+  val vars = mutable.ArrayBuffer.empty[DoubleVar]
 
   type Derivative = Array[Double] => Double
 
   /** Functions defining the derivatives of the variables in `vars`.
     * The two arrays are indexed equally.
     */
-  val funs: mutable.ArrayBuffer[Derivative] =
-    mutable.ArrayBuffer.empty[Derivative]
+  val funs = mutable.ArrayBuffer.empty[Derivative]
 
   /** The integrator object which can be any implementation compatible
     * with the Apache Commons Math ODE library. Free to override in
@@ -83,6 +84,7 @@ abstract class OrdinaryProcess(name: String) extends Process(name) with ode.Firs
     // construct the integrator
     val i = integrator()
 
+    // RHZ: why renaming this to proc for just one use?
     val proc = this
     // only add step handlers if we have them
     if (stepHandlers.size > 0) {
