@@ -20,7 +20,7 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
 
   /** A class to define derivatives of `Var`s. */
   class ODE(val v: NumericVar[Double]) {
-    def := (e: Double): Unit = macro Macros.createFun
+    def := (e: Double): Unit = macro ODEMacros.createFun
   }
 
   /** Adds an ODE definition to the process. */
@@ -127,7 +127,7 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
   @inline override def apply(t: Double, tau: Double) = step(t, tau)
 }
 
-object Macros {
+object ODEMacros {
   def createFun(c: Context)(e: c.Expr[Double]): c.Expr[Unit] = {
     import c.universe._
     // v is the variable for which we are defining the ODE
