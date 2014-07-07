@@ -1,102 +1,91 @@
 package uk.ac.ed.inf.mois.sched
 
-/*
- 
-import uk.ac.ed.inf.mois.{Process, Scheduler, NumericVar}
-
 import scala.collection.mutable
+import uk.ac.ed.inf.mois.{MapReduceScheduler, NumericVar, Process, ProcessGroup, VarMap}
+import uk.ac.ed.inf.mois.VarConv._
 
-class KarrScheduler(step: Double) extends Scheduler {
-  // ds holds the demand, which is approximated by  the change per
-  // unit time of each variable
-  val ds = mutable.Map.empty[Process, State]
-  def apply(t: Double, tau: Double, state: State, procs: Process*) {
+class KarrScheduler extends MapReduceScheduler {
+  type ACC = VarMap[Double, NumericVar[Double]]
 
-    // we have no change or demand information so run for one step to
-    // collect it
-    if (ds.size == 0) {
-      for (p <- procs) {
-	// synthesize a new state. this disunifies the underlying variables!
-	// yes, rhz, you told me so
-	p.state ++= p.state.copy
-	val dx = p(t, step)
-	for (v <- dx) {
-	  // we only do doubles for now because we can't properly divide
-	  // other things
-	  v.value match {
-	    case d: Double => 
-	      // XXX ugly arithmetic. Shoudl be
-	      // v := state(v) * d / step
-	      v.asInstanceOf[NumericVar[Double]] := state(v).value.asInstanceOf[Double] * d / step
-	    case _ =>
-	  }
-	}
-	// create the entry in our 
-	ds += p -> dx
-      }
-    }
+  var totalDemand: ACC = null
+  val demand = mutable.Map.empty[Process, ACC]
+  var first = true // first run
+  var tau0 = 0.0
 
-    // find out total demand for each variable
-    val demand = new State
-    for (v <- state) {
-      demand += v
-      v.value match {
-	case d: Double =>
-	  demand(v) := 0
-	  for (p <- procs) {
-	    // XXX tabarnac
-	    // demand(v) += state(v) * ds(p)(v)
-	    demand(v).asInstanceOf[NumericVar[Double]] += 
-	      state(v).value.asInstanceOf[Double] * 
-	      ds(p)(v).value.asInstanceOf[Double]
-	  }
-      }
-    }
+  def accumulator = new ACC
 
-    // now let the process run in steps until tau
-    var dt = 0.0
-    while (dt < tau) {
-      // make a copy of the state variables subject to contention
-      val contended = new State
-      for (v <- demand)
-        contended(v) := 0.0
 
-      for (p <- procs) {
-	// adjust each process-local state variable according
-	// to its allocated portion of that variable if necessary,
-	// or copy the global one
-	for (v <- p.state) {
-	  if (demand contains v)
-   	    // XXXX more uglier arithmetic
-	    // p.state(v) := state(v) * ds(p)(v) / demand(v)
-	    p.state(v).asInstanceOf[NumericVar[Double]] := 
-   	      state(v).value.asInstanceOf[Double] *
-	      ds(p)(v).value.asInstanceOf[Double] /
-	      demand(v).value.asInstanceOf[Double]
-	  else
-	    p.state(v) := state(v)
-	}
-
-	// run the process for one step
-	val dx = p(t + dt, step)
-	// update the demand from that process, and the 
-	// accumulated new values
-	for (v <- ds(p)) {
-	  // XXXX ffs.
-	  // ds(p)(v) := state(v) * dx(v) / step
-	  ds(p)(v).asInstanceOf[NumericVar[Double]] :=
-	    state(v).value.asInstanceOf[Double] *
-	    dx(v).asInstanceOf[Double] / step
-	  contended(v) += p.state(v)
-	}
-      }
-
-      // now put the accumulated variables
-      state <<< contended
-
-      // next
-      dt += step
+  override def before(t: Double, tau: Double, acc: ACC, group: ProcessGroup) = {
+    println(s"before($t, $tau, $first)")
+    if (first) tau
+    else {
+      // this is where we cleverly figure out a better timestep
+      tau0
     }
   }
+
+  override def after(t: Double, tau: Double, acc: ACC, group: ProcessGroup) = {
+    println(s"after($t, $tau, $first)")
+    totalDemand = acc
+    if (first) {
+      first = false
+      tau0 = tau
+      0
+    } else {
+      // update the process group's state
+      for (v <- totalDemand)
+        group.doubleVars(v) := v * tau
+      tau
+    }
+  }
+
+  /**
+   * map function
+   */
+  def m(t: Double, dt: Double, group: ProcessGroup, proc: Process) = {
+    println(s"m($t, $dt, $first)")
+    if (first) {
+      // we need an entry in the demand table for this process
+      demand += proc -> new ACC
+    } else {
+      // we have a total demand, so give this process its portion
+      for (v <- proc.doubleVars) {
+	if (totalDemand(v).value != 0.0) {
+          v := group.doubleVars(v) * demand(proc)(v) / totalDemand(v)
+	} else {
+	  v := group.doubleVars(v)
+	}
+      }
+    }
+
+    val s0 = proc.doubleVars.copy
+    println(s"m --> ${s0.toSeq}")
+    proc(t, dt)
+    println(s"m <-- ${proc.doubleVars.toSeq}")
+    val s1 = proc.doubleVars // just for clarity
+
+    // fill in demand per unit time for our variables
+    for (v <- s0) {
+      if (!(demand(proc) contains v))
+	demand(proc) << v.copy
+      demand(proc)(v) := (s1(v) - s0(v)) / dt
+    }
+
+    // return the process itself to send to the reduce function
+    proc
+  }
+
+  /**
+   * reduce function
+   */
+  def r(acc: ACC, proc: Process) = {
+    println(s"r($first) $proc ${proc.allVars}")
+    // sum up total demand for this iteration in the accumulator
+    for (v <- proc.doubleVars)
+      if (acc contains v)
+	acc(v) += demand(proc)(v)
+      else
+	acc << demand(proc)(v).copy
+    acc
+  }
 }
-*/

@@ -142,16 +142,27 @@ class VarMap[T, U <: Var[T]] {
   def map(f: U => Any) = meta map { case (_, v) => f(v) }
   def foreach(f: U => Unit) = meta foreach { case (_, v) => f(v) }
   def toSeq = (for (v <- this) yield v).toSeq
+  def copy = {
+    val nvm = VarMap.empty[T, U]
+    for (v <- this) nvm << v.copy.asInstanceOf[U]
+    nvm
+  }
 }
 
 object VarMap {
   def empty[T, U <: Var[T]] = new VarMap[T, U]
 }
 
+object VarConv {
+  @inline implicit def Var2Meta(v: Var[_]) = v.meta
+  @inline implicit def String2Meta(s: String) = new VarMeta(s)
+  @inline implicit def getVarValue[T](v: Var[T]) = v.value
+}
+
 trait VarContainer {
-  implicit def Var2Meta(v: Var[_]) = v.meta
-  implicit def String2Meta(s: String) = new VarMeta(s)
-  implicit def getVarValue[T](v: Var[T]) = v.value
+  @inline implicit def Var2Meta(v: Var[_]) = v.meta
+  @inline implicit def String2Meta(s: String) = new VarMeta(s)
+  @inline implicit def getVarValue[T](v: Var[T]) = v.value
 
   val intVars = VarMap.empty[Int, NumericVar[Int]]
   val longVars = VarMap.empty[Long, NumericVar[Long]]
@@ -240,7 +251,8 @@ trait VarContainer {
       }
     }
     val json = for ((_, v) <- this.allVars) yield
-      ("value" -> jval(v)) ~ ("meta" -> Serialization.write(v.meta))
+      ("value" -> jval(v)) ~ 
+      ("meta" -> ("identifier" -> v.meta.identifier))
     pretty(render(json))
   }
 
