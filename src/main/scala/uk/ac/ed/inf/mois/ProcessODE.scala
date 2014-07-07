@@ -101,7 +101,7 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
     }
 
     // conduct the integration
-    integrator().integrate(this, time, doubleY, time+tau, doubleY)
+    i.integrate(this, time, doubleY, time+tau, doubleY)
 
     // put the results of the integration into the variables
     for (i <- 0 until vars.size)
@@ -123,6 +123,8 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
     * the vector-valued integral.
     */
   def getDimension = vars.size
+
+  @inline override def apply(t: Double, tau: Double) = step(t, tau)
 }
 
 object Macros {

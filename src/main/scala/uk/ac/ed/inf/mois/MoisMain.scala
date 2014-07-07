@@ -4,7 +4,7 @@ package uk.ac.ed.inf.mois
  * `MoisMain` is the entry point for command line programs that
  * run models. For how to use this, see the mois-examples repository
  */
-abstract class Model(name: String) extends ProcessGroup(name) {
+abstract class MoisMain(name: String) {
 
   // RHZ: I think begin, end and step are part of the definition of a
   // Model and shouldn't be given in the command line.  Why?
@@ -23,15 +23,16 @@ abstract class Model(name: String) extends ProcessGroup(name) {
   // should not be a ProcessGroup (although it might be a Process
   // or at least a VarContainer) This is because the scheduler-like
   // behaviour does not belong here.
+  val model: Process
 
   private case class Config(
     val begin: Double = 0.0,
-    val end: Double = 50.0, // why is 50.0 the default here?
-    val step: Double = 10.0, // and 10.0 here?
+    val duration: Double = 50.0, // why is 50.0 the default here?
     val format: String = "tsv",
     val output: java.io.Writer =
       new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8")),
-    val useFile: Boolean = false
+    val useFile: Boolean = false,
+    val dumpState: Boolean = false
   )
 
   private val parser = new scopt.OptionParser[Config](name) {
@@ -44,21 +45,21 @@ abstract class Model(name: String) extends ProcessGroup(name) {
       c.copy(begin = x)
     } text("Simulation start time (default: 0.0)")
 
-    opt[Double]('e', "end") action { (x, c) =>
-      c.copy(end = x)
-    } text("Simulation end time (default: 50.0)")
-
-    opt[Double]('s', "step") action { (x, c) =>
-      c.copy(step = x)
-    } text("Simulation (initial) step size")
+    opt[Double]('d', "duration") action { (x, c) =>
+      c.copy(duration = x)
+    } text("Simulation duration (default: 50.0)")
 
     opt[String]('i', "initial") action { (filename, c) =>
       val fp = scala.io.Source.fromFile(filename)
       val json = fp.mkString
       fp.close()
-      fromJSON(json)
+      model.fromJSON(json)
       c
     } text("Initial conditions filename (JSON)")
+
+    opt[Boolean]('s', "state") action { (x, c) =>
+      c.copy(dumpState = true)
+    } text("Dump state at end of simulation")
 
     opt[String]('f', "format") action { (format, c) =>
       c.copy(format = format)
@@ -76,24 +77,22 @@ abstract class Model(name: String) extends ProcessGroup(name) {
       cfg.format match {
 	case "tsv" =>
 	  val handler = new TsvWriter(cfg.output)
-	  addStepHandler(handler)
-	  handler.init(cfg.begin, this)
+	  model.addStepHandler(handler)
+	  handler.init(cfg.begin, model)
 	case _ => throw new IllegalArgumentException(
           "I don't understand format " + cfg.format)
       }
 
       // run the simulation
-      var t = cfg.begin
-      while(t < cfg.end) {
-	this(t, cfg.step)
-	t += cfg.step
-      }
+      model(cfg.begin, cfg.duration)
 
       // clean up output
       cfg.output.flush()
       if (cfg.useFile)
         cfg.output.close()
 
+      if (cfg.dumpState)
+	println(model.toJSON)
     } getOrElse {
       // some kind of specific error processing? 
     }
