@@ -16,7 +16,7 @@ import collection.mutable
   * Math ODE library to implement its `step` method. The `computeDerivatives`
   * method must be filled out to describe the system of differential equations
   */
-abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrderDifferentialEquations {
+abstract class OrdinaryProcess(name: String) extends Process(name) with ode.FirstOrderDifferentialEquations {
 
   /** A class to define derivatives of `Var`s. */
   class ODE(val v: NumericVar[Double]) {
@@ -36,7 +36,7 @@ abstract class ProcessODE(name: String) extends Process(name) with ode.FirstOrde
   /** `Var` used to construct derivatives that depend on time. */
   var t = 0.0
 
-  /** Adds an ODE definition to the current `ProcessODE`. */
+  /** Adds an ODE definition to the current `OrdinaryProcess`. */
   def d(v: NumericVar[Double]) = new ODE(v) {
     def / (d: dt.type) = new ODE(v)
   }
@@ -138,7 +138,7 @@ object ODEMacros {
       case q"$x.this.d($v)./($y.this.dt)" => v
       case _ => q"${c.prefix.tree}.v"
     }
-    // transformer to replace Vars by a call to ProcessODE.eval
+    // transformer to replace Vars by a call to OrdinaryProcess.eval
     object transformer extends Transformer {
       override def transform(tree: Tree): Tree = tree match {
         case q"$p.this.getVarValue[$t]($v)" => q"eval($v, ys)"

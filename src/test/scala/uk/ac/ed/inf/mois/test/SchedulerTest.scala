@@ -3,7 +3,7 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{Process, ProcessGroup, ProcessODE}
+import uk.ac.ed.inf.mois.{Process, ProcessGroup, OrdinaryProcess}
 import uk.ac.ed.inf.mois.sched.{NaiveScheduler, KarrScheduler}
 
 /** Directly transcribed ODE system from Dominik's stuff. */
@@ -28,13 +28,13 @@ object sampleEuler2 extends Process("sampleEuler2") {
 /** Version of same that does not use Euler's method and instead
   * uses whatever the apache commons math suite says is best.
   */
-class SampleApache1 extends ProcessODE("sampleApache1") {
+class SampleApache1 extends OrdinaryProcess("sampleApache1") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   d(x1) := -0.3*x1 - 0.4*x2
 }
 
-class SampleApache2 extends ProcessODE("sampleApache2") {
+class SampleApache2 extends OrdinaryProcess("sampleApache2") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   d(x2) := -0.5*x1 - 0.8*x2

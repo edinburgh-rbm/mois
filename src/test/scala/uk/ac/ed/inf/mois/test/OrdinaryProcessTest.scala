@@ -3,10 +3,10 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.ProcessODE
+import uk.ac.ed.inf.mois.OrdinaryProcess
 
 /** Directly calculated ODE system from Dominik's stuff. */
-object sampleODE extends ProcessODE("sample") {
+object sampleODE extends OrdinaryProcess("sample") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   val x3 = Double("ex:x3")
