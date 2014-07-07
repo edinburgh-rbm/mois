@@ -19,10 +19,16 @@ abstract class Model(name: String) extends ProcessGroup(name) {
   // reasons. I kind of agree about step size though, since it can only
   // be set on the top level here anyways.
   //
-  // I also think this class should be named back to MoisMain and 
+  // I also think this class should be named back to MoisMain and
   // should not be a ProcessGroup (although it might be a Process
   // or at least a VarContainer) This is because the scheduler-like
   // behaviour does not belong here.
+
+  // RHZ: It surely belongs here no?  You want to be able to set which
+  // scheduler you want to use for your model.  In the typical case
+  // this will be the only ProcessGroup in the whole model probably.
+  // Wrt dumping the state after t_1, that's what the StepHandler is
+  // for no?
 
   private case class Config(
     val begin: Double = 0.0,
