@@ -6,19 +6,27 @@ import scala.collection.mutable
 
 abstract class DiscreteProcess(name: String) extends Process(name) {
   type Func = () => Double
-  val vars = mutable.ArrayBuffer.empty[NumericVar[Double]]
-  val funcs = mutable.ArrayBuffer.empty[Func]
 
-  class Next(val v: NumericVar[Double]) {
+  /** Configurable time step size. This is a discrete time process but
+   * nevertheless might be integrated with a continuous time process.
+   * This stepSize is the amount of continuous, real, time that a discrete
+   * time step can be set to take. Defaults to 1.0, naturally.
+   */
+  val stepSize = 1.0
+
+  private val vars = mutable.ArrayBuffer.empty[NumericVar[Double]]
+  private val funcs = mutable.ArrayBuffer.empty[Func]
+
+  protected class Next(val v: NumericVar[Double]) {
     def :=(e: Double): Unit = macro DiscreteMacros.createFun
   }
 
-  def addNext(v: NumericVar[Double], f: Func) {
+  protected def addNext(v: NumericVar[Double], f: Func) {
     vars += v.copy
     funcs += f
   }
 
-  def n(v: NumericVar[Double]) = new Next(v)
+  protected def n(v: NumericVar[Double]) = new Next(v)
 
   def step(t0: Double, tau: Double) {
     var t = t0
@@ -29,14 +37,16 @@ abstract class DiscreteProcess(name: String) extends Process(name) {
       for (v <- vars) {
 	doubleVars(v) := v
       }
-      t += 1
+      t += stepSize
+      for (sh <- stepHandlers)
+        sh.handleStep(t, this)
     }
   }
 
   @inline override def apply(t: Double, tau: Double) = step(t, tau)
 }
 
-object DiscreteMacros {
+private object DiscreteMacros {
   def createFun(c: Context)(e: c.Expr[Double]): c.Expr[Unit] = {
     import c.universe._
     // v is the variable for which we are defining the discrete 
