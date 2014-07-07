@@ -122,19 +122,28 @@ class VarMap[T, U <: Var[T]] {
   private val meta = mutable.Map.empty[VarMeta, U]
   def contains(m: VarMeta) = meta contains m
   def apply(m: VarMeta) = meta.apply(m)
+
+  @inline final def size = meta.size
+
   def update(v: U) = {
     if (meta contains v.meta) {
       meta(v.meta) := v.value
     } else {
-      meta += v.meta -> v
-      v
+      this += v
     }
   }
-
   @inline final def <<(v: U) = update(v)
+
+  def set(v: U) = {
+    meta += v.meta -> v
+    v
+  }
+  @inline final def +=(v: U) = set(v)
+
   def leftUpdate(vs: VarMap[T, U]) {
     for (v <- vs)
-      meta(v.meta) := v.value
+      if (meta contains v.meta)
+        meta(v.meta) := v.value
   }
   @inline final def <<<(vs: VarMap[T, U]) = leftUpdate(vs)
   @inline final def >>>(vs: VarMap[T, U]) = vs.leftUpdate(this)
@@ -144,9 +153,12 @@ class VarMap[T, U <: Var[T]] {
   def toSeq = (for (v <- this) yield v).toSeq
   def copy = {
     val nvm = VarMap.empty[T, U]
-    for (v <- this) nvm << v.copy.asInstanceOf[U]
+    for (v <- this) nvm += v.copy.asInstanceOf[U]
     nvm
   }
+
+  override def toString =
+    "(" + toSeq.mkString(", ") + ")"
 }
 
 object VarMap {
@@ -175,15 +187,16 @@ trait VarContainer {
     if (allVars contains nv) {
       updateVar(nv)
     } else {
-      allVars += nv.meta -> nv
-      nv.value match {
-	case i: Int => intVars << nv.asInstanceOf[NumericVar[Int]]
-	case l: Long => longVars << nv.asInstanceOf[NumericVar[Long]]
-	case f: Float => floatVars << nv.asInstanceOf[NumericVar[Float]]
-	case d: Double => doubleVars << nv.asInstanceOf[NumericVar[Double]]
-	case b: Boolean => boolVars << nv.asInstanceOf[BooleanVar]
+      val nvc = nv.copy
+      allVars += nvc.meta -> nvc
+      nvc.value match {
+	case i: Int => intVars << nvc.asInstanceOf[NumericVar[Int]]
+	case l: Long => longVars << nvc.asInstanceOf[NumericVar[Long]]
+	case f: Float => floatVars << nvc.asInstanceOf[NumericVar[Float]]
+	case d: Double => doubleVars << nvc.asInstanceOf[NumericVar[Double]]
+	case b: Boolean => boolVars << nvc.asInstanceOf[BooleanVar]
       }
-      nv
+      nvc
     }
   }
 

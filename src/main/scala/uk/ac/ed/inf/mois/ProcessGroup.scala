@@ -32,7 +32,19 @@ class ProcessGroup(name: String) extends Process(name) {
    * the listof processes together with the group state table and time
    * parameters
    */
-  def step(t: Double, tau: Double) {
-    scheduler(t, tau, this)
+  def step(t0: Double, tau: Double) {
+    scheduler.init(this)
+    var t = t0
+    while (t < t0+tau) {
+      t += scheduler(t, tau, this)
+      for (sh <- stepHandlers)
+        sh.handleStep(t, this)
+    }
   }
+
+  /*
+   * Override the `apply` method because we take on responsibility for calling
+   * the step handlers
+   */
+  @inline override def apply(t: Double, tau: Double) = step(t, tau)
 }

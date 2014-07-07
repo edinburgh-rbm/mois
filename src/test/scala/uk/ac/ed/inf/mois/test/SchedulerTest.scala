@@ -28,13 +28,13 @@ object sampleEuler2 extends Process("sampleEuler2") {
 /** Version of same that does not use Euler's method and instead
   * uses whatever the apache commons math suite says is best.
   */
-object sampleApache1 extends ProcessODE("sampleApache1") {
+class SampleApache1 extends ProcessODE("sampleApache1") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   d(x1) := -0.3*x1 - 0.4*x2
 }
 
-object sampleApache2 extends ProcessODE("sampleApache2") {
+class SampleApache2 extends ProcessODE("sampleApache2") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   d(x2) := -0.5*x1 - 0.8*x2
@@ -70,8 +70,8 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
     import pg._
 
     pg.scheduler = new NaiveScheduler(0.005)
-    pg += sampleApache1
-    pg += sampleApache2
+    pg += new SampleApache1
+    pg += new SampleApache2
 
     val x1 = Double("ex:x1") := 25.0
     val x2 = Double("ex:x2") := 50.0
@@ -95,14 +95,24 @@ class KarrSchedulerTest extends FlatSpec with Matchers {
     val pg = new ProcessGroup("naive apache")
     import pg._
 
-    pg.scheduler = new KarrScheduler
-    pg += sampleApache1
-    pg += sampleApache2
+    pg.scheduler = new KarrScheduler(0.1)
+    pg += new SampleApache1
+    pg += new SampleApache2
 
     Double("ex:x1") := 25.0
     Double("ex:x2") := 50.0
 
+/*    import uk.ac.ed.inf.mois.TsvWriter
+    val fp = new java.io.PrintWriter(
+      new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8"))
+    )
+    val output = new TsvWriter(fp)
+    pg.addStepHandler(output)
+    output.init(0, pg)
+*/
     pg.step(0, 50)
+
+//    fp.flush()
 
     println(pg.toJSON)
   }
