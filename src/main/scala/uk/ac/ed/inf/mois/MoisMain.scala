@@ -31,6 +31,18 @@ abstract class MoisMain(name: String) {
   // Wrt dumping the state after t_1, that's what the StepHandler is
   // for no?
 
+  // WW: the correct way to do that is to have a "configuration" blob
+  // that gets passed to the top process. If it understands about
+  // schedulers, its sets up its scheduler. But not all processes have
+  // schedulers and there's no reason not to run them individually.
+  // The StepHandler should also be set up like this.
+  //
+  // About dumping and restarting, no that's not what the StepHandler
+  // is for. Java is a memory hog. This is a garbage collected language.
+  // We are expecting models to be written by academics. It will inevitably
+  // happen that a simulation cannot run for the whole duration, So
+  // dump and re-read state, and restart is an out for that.
+
   private case class Config(
     val begin: Double = 0.0,
     val duration: Double = 50.0, // why is 50.0 the default here?
