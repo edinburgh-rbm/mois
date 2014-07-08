@@ -5,28 +5,29 @@ import scala.reflect.macros.Context
 import scala.collection.mutable
 
 abstract class DiscreteProcess(name: String) extends Process(name) {
+
   type Func = () => Double
 
   /** Configurable time step size. This is a discrete time process but
-   * nevertheless might be integrated with a continuous time process.
-   * This stepSize is the amount of continuous, real, time that a discrete
-   * time step can be set to take. Defaults to 1.0, naturally.
-   */
+    * nevertheless might be integrated with a continuous time process.
+    * This stepSize is the amount of continuous, real, time that a discrete
+    * time step can be set to take. Defaults to 1.0, naturally.
+    */
   val stepSize = 1.0
 
-  private val vars = mutable.ArrayBuffer.empty[NumericVar[Double]]
+  private val vars = mutable.ArrayBuffer.empty[DoubleVar]
   private val funcs = mutable.ArrayBuffer.empty[Func]
 
-  protected class Next(val v: NumericVar[Double]) {
-    def :=(e: Double): Unit = macro DiscreteMacros.createFun
+  protected class Next(val v: DoubleVar) {
+    def := (e: => Double): Unit = addNext(v, () => e)
   }
 
-  protected def addNext(v: NumericVar[Double], f: Func) {
+  protected def addNext(v: DoubleVar, f: Func) {
     vars += v.copy
     funcs += f
   }
 
-  protected def n(v: NumericVar[Double]) = new Next(v)
+  protected def n(v: DoubleVar) = new Next(v)
 
   def step(t0: Double, tau: Double) {
     var t = t0
@@ -46,19 +47,3 @@ abstract class DiscreteProcess(name: String) extends Process(name) {
   @inline override def apply(t: Double, tau: Double) = step(t, tau)
 }
 
-private object DiscreteMacros {
-  def createFun(c: Context)(e: c.Expr[Double]): c.Expr[Unit] = {
-    import c.universe._
-    // v is the variable for which we are defining the discrete 
-    // process. this is just to make the generated code nicer, it
-    // could be just val v = q"${c.prefix.tree}.v" as well
-    val v = c.prefix.tree match {
-      case q"$x.this.n($v)" => v
-      case _ => q"${c.prefix.tree}.v"
-    }
-
-    // push the rhs into a lambda expression
-    val func = q"(() => ${e.tree})"
-    c.Expr[Unit](c.resetLocalAttrs(q"addNext($v, $func)"))
-  }
-}
