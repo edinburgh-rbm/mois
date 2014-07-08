@@ -40,12 +40,23 @@ abstract class MoisMain(name: String) {
   // About dumping and restarting, no that's not what the StepHandler
   // is for. Java is a memory hog. This is a garbage collected language.
   // We are expecting models to be written by academics. It will inevitably
-  // happen that a simulation cannot run for the whole duration, So
+  // happen that a simulation cannot run for the whole duration, so
   // dump and re-read state, and restart is an out for that.
+
+  // RHZ: I agree all this command line stuff doesn't belong in a
+  // model. But the idea would be that the user only has to define the
+  // `model: Process` and not all the boilerplate `class X extends
+  // MoisMain { val model = ... }` but anyway, if you prefer this way
+  // it's up to you.
+  //
+  // I was not saying we should dump and restart, where did you read
+  // that?  I was just saying that if the user wants to dump the state
+  // after t_1, they can do that using a StepHandler that has that
+  // condition.  That is definitely within the scope of StepHandler.
 
   private case class Config(
     val begin: Double = 0.0,
-    val duration: Double = 50.0, // why is 50.0 the default here?
+    val duration: Option[Double] = None,
     val format: String = "tsv",
     val output: java.io.Writer =
       new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8")),
@@ -64,8 +75,8 @@ abstract class MoisMain(name: String) {
     } text("Simulation start time (default: 0.0)")
 
     opt[Double]('d', "duration") action { (x, c) =>
-      c.copy(duration = x)
-    } text("Simulation duration (default: 50.0)")
+      c.copy(duration = Some(x))
+    } text("Simulation duration (mandatory)")
 
     opt[String]('i', "initial") action { (filename, c) =>
       val fp = scala.io.Source.fromFile(filename)
@@ -91,6 +102,12 @@ abstract class MoisMain(name: String) {
 
   def main(args: Array[String]) {
     parser.parse(args, Config()) map { cfg =>
+
+      // get duration
+      val duration = cfg.duration getOrElse (
+        throw new IllegalArgumentException(
+          "no duration given, please specify one using -d"))
+
       // set up output
       cfg.format match {
 	case "tsv" =>
@@ -102,7 +119,7 @@ abstract class MoisMain(name: String) {
       }
 
       // run the simulation
-      model(cfg.begin, cfg.duration)
+      model(cfg.begin, duration)
 
       // clean up output
       cfg.output.flush()
