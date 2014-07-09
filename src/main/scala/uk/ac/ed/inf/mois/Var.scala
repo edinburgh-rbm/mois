@@ -157,8 +157,10 @@ class DoubleVar(val meta: VarMeta) extends NumericVar[Double] {
 class ArrayVar[T](val meta: VarMeta) extends Var[mutable.ArrayBuffer[T]] {
   override def stringPrefix = "Array"
   val value: mutable.ArrayBuffer[T] = mutable.ArrayBuffer.empty[T]
-  def value_=(x: mutable.ArrayBuffer[T]) =
-    throw new UnsupportedOperationException("can't redefine this array")
+  def value_= (that: mutable.ArrayBuffer[T]) = {
+    value.clear
+    for (x <- that) value += x
+  }
   type R = ArrayVar[T]
   def copy = {
     val a = new ArrayVar[T](meta)
