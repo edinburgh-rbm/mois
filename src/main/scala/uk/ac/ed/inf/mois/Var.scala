@@ -98,7 +98,15 @@ class BooleanVar(val meta: VarMeta) extends Var[Boolean] {
   def copy = new BooleanVar(meta) := value
 }
 
-class IntVar(val meta: VarMeta) extends Var[Int] {
+trait NumericVar[T] extends Var[T] {
+  def +=(that: T): this.type
+  def -=(that: T): this.type
+  def *=(that: T): this.type
+  def /=(that: T): this.type
+  def %=(that: T): this.type
+}
+
+class IntVar(val meta: VarMeta) extends NumericVar[Int] {
   override def stringPrefix = "Int"
   var value = 0
   type R = IntVar
@@ -110,7 +118,7 @@ class IntVar(val meta: VarMeta) extends Var[Int] {
   def %=(that: Int) = update (value % that)
 }
 
-class LongVar(val meta: VarMeta) extends Var[Long] {
+class LongVar(val meta: VarMeta) extends NumericVar[Long] {
   override def stringPrefix = "Long"
   var value = 0L
   type R = LongVar
@@ -122,7 +130,7 @@ class LongVar(val meta: VarMeta) extends Var[Long] {
   def %=(that: Long) = update (value % that)
 }
 
-class FloatVar(val meta: VarMeta) extends Var[Float] {
+class FloatVar(val meta: VarMeta) extends NumericVar[Float] {
   override def stringPrefix = "Float"
   var value = (0.0).toFloat
   type R = FloatVar
@@ -134,7 +142,7 @@ class FloatVar(val meta: VarMeta) extends Var[Float] {
   def %=(that: Float) = update (value % that)
 }
 
-class DoubleVar(val meta: VarMeta) extends Var[Double] {
+class DoubleVar(val meta: VarMeta) extends NumericVar[Double] {
   override def stringPrefix = "Double"
   var value = 0.0
   type R = DoubleVar
@@ -144,6 +152,19 @@ class DoubleVar(val meta: VarMeta) extends Var[Double] {
   def *=(that: Double) = update (value * that)
   def /=(that: Double) = update (value / that)
   def %=(that: Double) = update (value % that)
+}
+
+class ArrayVar[T](val meta: VarMeta) extends Var[mutable.ArrayBuffer[T]] {
+  override def stringPrefix = "Array"
+  val value: mutable.ArrayBuffer[T] = mutable.ArrayBuffer.empty[T]
+  def value_=(x: mutable.ArrayBuffer[T]) =
+    throw new UnsupportedOperationException("can't redefine this array")
+  type R = ArrayVar[T]
+  def copy = {
+    val a = new ArrayVar[T](meta)
+    for (x <- value) a.value += x
+    a
+  }
 }
 
 class VarMap[T, U <: Var[T] { type R = U }] extends mutable.Map[VarMeta, U] {
