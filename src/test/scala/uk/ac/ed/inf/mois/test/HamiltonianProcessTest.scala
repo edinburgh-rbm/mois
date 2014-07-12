@@ -43,17 +43,9 @@ class HamiltonianProcessTest extends FlatSpec with Matchers {
 
     q := PI/4
 
-    import uk.ac.ed.inf.mois.TsvWriter
-    val buffer = new java.io.StringWriter
-    val fout = new TsvWriter(buffer)
-    pendulum.addStepHandler(fout)
+    pendulum.step(0, 10)
 
-    try {
-      pendulum.step(0, 10)
-    } finally {
-      println(buffer)
-    }
-
-    1 should not be 0
+    pendulum.q.value should equal (0.0914)
+    pendulum.p.value should equal (2.3676)
   }
 }
