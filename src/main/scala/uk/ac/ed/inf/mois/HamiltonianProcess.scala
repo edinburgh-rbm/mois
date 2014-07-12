@@ -18,60 +18,82 @@
 package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
+import org.apache.commons.math3.analysis.UnivariateFunction
 import org.apache.commons.math3.analysis.differentiation.DerivativeStructure
+import org.apache.commons.math3.analysis.differentiation.FiniteDifferencesDifferentiator
 import org.apache.commons.math3.analysis.differentiation.GradientFunction
 import org.apache.commons.math3.analysis.differentiation.MultivariateDifferentiableFunction
+import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction
 import org.apache.commons.math3.analysis.MultivariateVectorFunction
 
 abstract class HamiltonianProcess(name: String) extends OrdinaryProcess(name) {
   type F = () => Double
 
-  var gradH: MultivariateVectorFunction = null
+  var differentiator = new FiniteDifferencesDifferentiator(3, 0.25)
+  private var gradH: GradientFunction = null
+  private var energy: F = null
 
   case class H(q: Seq[DoubleVar], p: Seq[DoubleVar])
        extends MultivariateDifferentiableFunction {
-    var _f: F = null
-
+    private val phase = q ++ p
     assert(q.size == p.size)
 
+    private val unis = new Array[UnivariateFunction](phase.size)
+
+    private case class Uni(f: F, i: Integer)
+		 extends UnivariateFunction {
+      def value(x: Double): Double = {
+	val save = phase(i).value
+	phase(i) := x
+	val answer = f()
+	phase(i) := save
+	answer
+      }
+    }
+
     def :=(f: => Double) {
-      _f = () => f
+      energy = () => f
+      for (i <- 0 until phase.size)
+        unis(i) = Uni(energy, i)
       gradH = new GradientFunction(this)
-      for (v <- q ++ p)
+      for (v <- phase)
         vars += v
     }
 
     def value(point: Array[Double]): Double = {
-      // not very efficient... find a better way
-      val phase = (q ++ p)
-      val saved = phase map(_.copy)
-
-      assert(phase.size == point.size)
-      for (i <- 0 until phase.size)
-	phase(i) := point(i)
-
-      val answer = _f()
-
-      // not very efficient... find a better way
-      for ((s, v) <- saved zip phase)
-        v := s
-
-      answer
+      throw new IllegalArgumentException("unimplemented")
     }
+
     def value(point: Array[DerivativeStructure]): DerivativeStructure = {
-      new DerivativeStructure(point.size, 1, 0, value(point map(_.getValue)))
+      val partials = new Array[Double](point.size)
+      for (i <- 0 until point.size) {
+	val pval: DerivativeStructure = differentiator.differentiate(unis(i)).value(point(i))
+//	println(s"\tvalue:\t\t${pval.getValue}")
+//	println(s"\tallderiv:\t${pval.getAllDerivatives.toSeq.toString}")
+
+	partials(i) = pval.getAllDerivatives()(1+i) //PartialDerivative(1)
+      }
+//      println(s"point:\t\t${point.map(_.getValue).toSeq.toString}")
+//      println(s"energy:\t\t${energy()}")
+//      println(s"partials:\t${partials.toSeq.toString}")
+      new DerivativeStructure(point.size, 1, Seq(energy()) ++ partials: _*)
     }
   }
+
+
 
   override def computeDerivatives(time: Double, 
 				  qp: Array[Double],
 				  dqp: Array[Double]) {
     val dH = gradH.value(qp)
+//    println(s"dH:\t\t${dH.toSeq.toString}")
     val nq = qp.size/2
     for (i <- 0 until nq) {
       dqp(i) = dH(nq + i)
       dqp(nq + i) = -dH(i)
     }
+//    println(s"dqp:\t\t${dqp.toSeq.toString}")
+//    println("")
   }
 }
 
