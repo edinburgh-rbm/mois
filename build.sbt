@@ -6,6 +6,8 @@ version := "1.99.2-SNAPSHOT"
 
 scalaVersion := "2.11.1"
 
+scalacOptions ++= Seq( "-deprecation", "-unchecked", "-feature" )
+
 // this is needed to get some dependencies like grizzled-slf4j
 seq(bintrayResolverSettings:_*)
 
@@ -16,6 +18,8 @@ libraryDependencies += "org.apache.commons" % "commons-math3" % "3.3"
 libraryDependencies += "org.json4s" %% "json4s-native" % "3.2.10"
 
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
+
+libraryDependencies += "org.python" % "jython" % "2.7-b1"
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
