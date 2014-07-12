@@ -71,6 +71,8 @@ abstract class MoisMain(name: String) {
   // after t_1, they can do that using a StepHandler that has that
   // condition.  That is definitely within the scope of StepHandler.
 
+  protected var outputHandler: StepHandler = null
+
   private case class Config(
     val begin: Double = 0.0,
     val duration: Option[Double] = None,
@@ -117,6 +119,10 @@ abstract class MoisMain(name: String) {
     } text("Output file (default: stdout)")
   }
 
+  def run(t: Double, tau: Double) {
+    model(t, tau)
+  }
+
   def main(args: Array[String]) {
     parser.parse(args, Config()) map { cfg =>
 
@@ -128,15 +134,15 @@ abstract class MoisMain(name: String) {
       // set up output
       cfg.format match {
 	case "tsv" =>
-	  val handler = new TsvWriter(cfg.output)
-	  model.addStepHandler(handler)
-	  handler.init(cfg.begin, model)
+	  outputHandler = new TsvWriter(cfg.output)
+	  model.addStepHandler(outputHandler)
+	  outputHandler.init(cfg.begin, model)
 	case _ => throw new IllegalArgumentException(
           "I don't understand format " + cfg.format)
       }
 
       // run the simulation
-      model(cfg.begin, duration)
+      run(cfg.begin, duration)
 
       // clean up output
       cfg.output.flush()

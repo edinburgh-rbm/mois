@@ -39,6 +39,7 @@ abstract class HamiltonianProcess(name: String) extends OrdinaryProcess(name) {
     assert(q.size == p.size)
 
     private val unis = new Array[UnivariateFunction](phase.size)
+    private val HVar = Double("H")
 
     private case class Uni(f: F, i: Integer)
 		 extends UnivariateFunction {
@@ -58,6 +59,7 @@ abstract class HamiltonianProcess(name: String) extends OrdinaryProcess(name) {
       gradH = new GradientFunction(this)
       for (v <- phase)
         vars += v
+      HVar := energy() // calculate initial energy
     }
 
     def value(point: Array[Double]): Double = {
@@ -76,7 +78,8 @@ abstract class HamiltonianProcess(name: String) extends OrdinaryProcess(name) {
 //      println(s"point:\t\t${point.map(_.getValue).toSeq.toString}")
 //      println(s"energy:\t\t${energy()}")
 //      println(s"partials:\t${partials.toSeq.toString}")
-      new DerivativeStructure(point.size, 1, Seq(energy()) ++ partials: _*)
+      HVar := energy()
+      new DerivativeStructure(point.size, 1, Seq(HVar.value) ++ partials: _*)
     }
   }
 

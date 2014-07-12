@@ -26,6 +26,7 @@ import scala.collection.mutable
 abstract class StepHandler {
   def init(t: Double, proc: Process)
   def handleStep(t: Double, proc: Process)
+  def reset(t: Double, proc: Process) {}
 }
 
 /**
@@ -62,5 +63,9 @@ class TsvWriter(fp: java.io.Writer, sep: String = "\t")
     // apply a predictable ordering
     val vars = (for (v <- proc.state) yield v).toSeq.sortBy(_.meta)
     fp.write(t.toString + sep + vars.map(x => x.value).mkString(sep) + "\n")
+  }
+  override def reset(t: Double, proc: Process) {
+    fp.write("\n")
+    handleStep(t, proc)
   }
 }
