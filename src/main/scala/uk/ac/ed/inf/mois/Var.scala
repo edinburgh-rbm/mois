@@ -307,12 +307,12 @@ trait VarContainer {
       val ints = for {
         JObject(fields) <- jvar
         ("value", JInt(value)) <- fields
-        val valid = value.isValidLong
-        val _ = if (!valid) println("WARNING: integer variable in " +
+        valid = value.isValidLong
+        _ = if (!valid) println("WARNING: integer variable in " +
           "JSON string is not a valid Int or Long, skipping.")
         if valid
-        ("meta", meta: JObject) <- fields
-        val m = meta.extract[VarMeta]
+          ("meta", meta: JObject) <- fields
+        m = meta.extract[VarMeta]
       } yield if (value.isValidInt) Int(m) := value.toInt
               else Long(m) := value.toLong
       val bools = for {
