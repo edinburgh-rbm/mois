@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
+import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
 /** A `ConstraintViolation` is raised when a restriction on a `Var`
