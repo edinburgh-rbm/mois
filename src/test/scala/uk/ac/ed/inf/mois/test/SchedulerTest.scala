@@ -3,7 +3,7 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{Process, ProcessGroup, OrdinaryProcess}
+import uk.ac.ed.inf.mois.{Process, ProcessGroup, ODE}
 import uk.ac.ed.inf.mois.sched.{NaiveScheduler, KarrScheduler}
 
 /** Directly transcribed ODE system from Dominik's stuff. */
@@ -28,13 +28,13 @@ object sampleEuler2 extends Process("sampleEuler2") {
 /** Version of same that does not use Euler's method and instead
   * uses whatever the apache commons math suite says is best.
   */
-class SampleApache1 extends OrdinaryProcess("sampleApache1") {
+class SampleApache1 extends ODE("sampleApache1") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   d(x1) := -0.3*x1 - 0.4*x2
 }
 
-class SampleApache2 extends OrdinaryProcess("sampleApache2") {
+class SampleApache2 extends ODE("sampleApache2") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   d(x2) := -0.5*x1 - 0.8*x2
@@ -102,7 +102,8 @@ class KarrSchedulerTest extends FlatSpec with Matchers {
     Double("ex:x1") := 25.0
     Double("ex:x2") := 50.0
 
-/*    import uk.ac.ed.inf.mois.TsvWriter
+/*
+    import uk.ac.ed.inf.mois.TsvWriter
     val fp = new java.io.PrintWriter(
       new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8"))
     )
@@ -112,7 +113,7 @@ class KarrSchedulerTest extends FlatSpec with Matchers {
 */
     pg.step(0, 50)
 
-//    fp.flush()
+//   fp.flush()
 
     println(pg.toJSON)
   }

@@ -1,15 +1,14 @@
 package uk.ac.ed.inf.mois.sched
 
 import scala.collection.mutable
-import uk.ac.ed.inf.mois.{DoubleVar, Process, ProcessGroup, VarMap}
-import uk.ac.ed.inf.mois.VarConv._
+import uk.ac.ed.inf.mois.{DoubleVar, BaseProcess, ProcessGroup, VarMap, VarConversions}
 
-class KarrScheduler(step: Double) extends MapReduceScheduler(step) {
+class KarrScheduler(step: Double) extends MapReduceScheduler(step) with VarConversions {
 
   type Acc = VarMap[Double, DoubleVar]
 
   var totalDemand: Acc = null
-  val demand = mutable.Map.empty[Process, Acc]
+  val demand = mutable.Map.empty[BaseProcess, Acc]
   var first = true // first run
   var dt0 = step
 
@@ -63,7 +62,7 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) {
   }
 
   /** map function */
-  def m(t: Double, dt: Double, group: ProcessGroup, proc: Process) = {
+  def m(t: Double, dt: Double, group: ProcessGroup, proc: BaseProcess) = {
     //println(s"m($t, $dt, $first)")
     if (first) {
       // just give the process everything so we see what its demand looks like
@@ -106,7 +105,7 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) {
   }
 
   /** reduce function */
-  def r(acc: Acc, proc: Process) = {
+  def r(acc: Acc, proc: BaseProcess) = {
     //println(s"r($first) $proc ${proc.allVars}")
     // sum up total demand for this iteration in the accumulator
     for ((m, v) <- proc.doubleVars)

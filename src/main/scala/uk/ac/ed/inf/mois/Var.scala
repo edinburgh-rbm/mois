@@ -99,11 +99,11 @@ class BooleanVar(val meta: VarMeta) extends Var[Boolean] {
 }
 
 trait NumericVar[T] extends Var[T] {
-  def +=(that: T): this.type
-  def -=(that: T): this.type
-  def *=(that: T): this.type
-  def /=(that: T): this.type
-  def %=(that: T): this.type
+  def += (x: T): this.type
+  def -= (x: T): this.type
+  def *= (x: T): this.type
+  def /= (x: T): this.type
+  def %= (x: T): this.type
 }
 
 class IntVar(val meta: VarMeta) extends NumericVar[Int] {
@@ -169,7 +169,7 @@ class ArrayVar[T](val meta: VarMeta) extends Var[mutable.ArrayBuffer[T]] {
   }
 }
 
-class VarMap[T, U <: Var[T] { type R = U }] extends mutable.Map[VarMeta, U] {
+class VarMap[T, U <: Var[T] { type R <: U }] extends mutable.Map[VarMeta, U] {
 
   private val meta = mutable.Map.empty[VarMeta, U]
 
@@ -182,9 +182,12 @@ class VarMap[T, U <: Var[T] { type R = U }] extends mutable.Map[VarMeta, U] {
   def add(v: U): U = get(v.meta) match {
     case Some(myv) => myv := v.value
     case None => {
+      // RHZ: Do we really want to make a copy of v here?
       val copy = v.copy
       this += v.meta -> copy
       copy
+      // this += v.meta -> v
+      // v
     }
   }
 
@@ -209,19 +212,17 @@ class VarMap[T, U <: Var[T] { type R = U }] extends mutable.Map[VarMeta, U] {
 }
 
 object VarMap {
-  def empty[T, U <: Var[T] { type R = U }] = new VarMap[T, U]
+  def empty[T, U <: Var[T] { type R <: U }] = new VarMap[T, U]
 }
 
-object VarConv {
+trait VarConversions {
   @inline implicit def Var2Meta(v: Var[_]) = v.meta
-  @inline implicit def String2Meta(s: String) = new VarMeta(s)
   @inline implicit def getVarValue[T](v: Var[T]) = v.value
 }
 
 trait VarContainer {
-  @inline implicit def Var2Meta(v: Var[_]) = v.meta
+
   @inline implicit def String2Meta(s: String) = new VarMeta(s)
-  @inline implicit def getVarValue[T](v: Var[T]) = v.value
 
   val intVars = VarMap.empty[Int, IntVar]
   val longVars = VarMap.empty[Long, LongVar]

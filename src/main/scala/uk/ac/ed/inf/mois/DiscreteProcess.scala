@@ -4,7 +4,8 @@ import scala.language.experimental.macros
 import scala.reflect.macros.Context
 import scala.collection.mutable
 
-abstract class DiscreteProcess(name: String) extends Process(name) {
+abstract class DiscreteProcess(val name: String)
+    extends BaseProcess with VarConversions {
 
   override def stringPrefix = "DiscreteProcess"
 

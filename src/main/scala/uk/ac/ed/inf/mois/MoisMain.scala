@@ -23,7 +23,7 @@ abstract class MoisMain(name: String) {
   // should not be a ProcessGroup (although it might be a Process
   // or at least a VarContainer) This is because the scheduler-like
   // behaviour does not belong here.
-  val model: Process
+  val model: BaseProcess
 
   // RHZ: It surely belongs here no?  You want to be able to set which
   // scheduler you want to use for your model.  In the typical case
