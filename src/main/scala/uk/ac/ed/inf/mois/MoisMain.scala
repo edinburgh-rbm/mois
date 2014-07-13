@@ -78,8 +78,8 @@ object MoisMain {
       new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8")),
     val useFile: Boolean = false,
     val dumpState: Boolean = false,
-    val modelName: String = null,
-    val initialConditions: String = null
+    val modelName: Option[String] = None,
+    val initialConditions: Option[String] = None
   )
 
   private val p = getClass.getPackage
@@ -95,13 +95,13 @@ object MoisMain {
 
     opt[Double]('d', "duration") action { (x, c) =>
       c.copy(duration = Some(x))
-    } text("Simulation duration (mandatory)")
+    } required() text("Simulation duration (mandatory)")
 
     opt[String]('i', "initial") action { (filename, c) =>
       val fp = scala.io.Source.fromFile(filename)
       val json = fp.mkString
       fp.close()
-      c.copy(initialConditions = json)
+      c.copy(initialConditions = Some(json))
     } text("Initial conditions filename (JSON)")
 
     opt[Boolean]('s', "state") action { (x, c) =>
@@ -117,20 +117,31 @@ object MoisMain {
       c.copy(output = new java.io.PrintWriter(fp), useFile = true)
     } text("Output file (default: stdout)")
 
-    opt[String]('m', "model") action { (modelName, c) =>
-      c.copy(modelName = modelName)
-    } text("Model name")
+    arg[String]("<model>") action { (modelName, c) =>
+      c.copy(modelName = Some(modelName))
+    } required() text("Model name")
+
+    note("\nKnown models:\n\t" +
+	 Model.all
+	   .sortBy(_.toString)
+	   .map(_.toString.split("@")(0))
+	   .mkString("\n\t"))
+  }
+
+  private def eUsage(s: String) {
+    Console.err.println(s)
+    parser.showTryHelp
+    sys.exit
   }
 
   def main(args: Array[String]) {
     parser.parse(args, Config()) map { cfg =>
 
-      val model = Model(cfg.modelName)
+      // get model
+      val model = Model(cfg.modelName.get)
 
       // get duration
-      val duration = cfg.duration getOrElse (
-        throw new IllegalArgumentException(
-          "no duration given, please specify one using -d"))
+      val duration = cfg.duration.get
 
       // set up output
       cfg.format match {
@@ -139,11 +150,12 @@ object MoisMain {
 	  model.process.addStepHandler(outputHandler)
 	  outputHandler.init(cfg.begin, model.process)
 	case _ => throw new IllegalArgumentException(
-          "I don't understand format " + cfg.format)
+          "I don't understand format" + cfg.format)
       }
 
       // set initial conditions
-      model.process.fromJSON(cfg.initialConditions)
+      if(cfg.initialConditions.isDefined)
+	model.process.fromJSON(cfg.initialConditions.get)
 
       // run the simulation
       model.run(cfg.begin, duration)

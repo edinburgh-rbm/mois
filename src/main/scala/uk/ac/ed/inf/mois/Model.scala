@@ -20,8 +20,8 @@ package uk.ac.ed.inf.mois
 import scala.collection.mutable
 import scala.util.matching.Regex
 
-abstract class Model extends VarContainer {
-  val process: Process
+abstract class Model extends VarContainer with VarConversions {
+  val process: BaseProcess
 
   def run(t: Double, tau: Double) {
     process(t, tau)
@@ -29,23 +29,34 @@ abstract class Model extends VarContainer {
 }
 
 object Model {
-  def apply(name: String): Model = {
-    import scala.reflect._
-    import scala.reflect.runtime.universe._
-    import scala.reflect.runtime.currentMirror
-    import scala.collection.JavaConverters._
-    import java.util.ServiceLoader
+  import scala.reflect._
+  import scala.reflect.runtime.universe._
+  import scala.reflect.runtime.currentMirror
+  import scala.collection.JavaConverters._
+  import scala.language.implicitConversions
+  import java.util.ServiceLoader
 
+  type N = String
+
+  implicit def modelName(m: Model): String = {
+    val im = currentMirror reflect m
+    im.symbol.toType.toString.split("@")(0)
+  }
+
+  def all = {
     val models = mutable.ArrayBuffer.empty[Model]
     val need = typeOf[Model]
     for (model <- (ServiceLoader load classOf[Model]).asScala) {
       val im = currentMirror reflect model
       val typ = im.symbol.toType
       if (typ weak_<:< need) {
-	if (name.r.findFirstIn(typ.toString).isDefined)
 	  models += model
       }
     }
+    models.toSeq
+  }
+  def apply(name: String): Model = {
+    val models = all filter(name.r.findFirstIn(_).isDefined)
     models.size match {
       case 0 => throw new IllegalArgumentException(s"no such model $name")
       case 1 => models(0)
