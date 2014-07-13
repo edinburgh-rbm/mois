@@ -1,3 +1,20 @@
+/*
+ *  MOIS: Main Model Entry-Point and Command-Line Processing
+ *  Copyright (C) 2014 University of Edinburgh School of Informatics
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ed.inf.mois
 
 /**
@@ -54,6 +71,8 @@ abstract class MoisMain(name: String) {
   // after t_1, they can do that using a StepHandler that has that
   // condition.  That is definitely within the scope of StepHandler.
 
+  protected var outputHandler: StepHandler = null
+
   private case class Config(
     val begin: Double = 0.0,
     val duration: Option[Double] = None,
@@ -100,6 +119,10 @@ abstract class MoisMain(name: String) {
     } text("Output file (default: stdout)")
   }
 
+  def run(t: Double, tau: Double) {
+    model(t, tau)
+  }
+
   def main(args: Array[String]) {
     parser.parse(args, Config()) map { cfg =>
 
@@ -111,15 +134,15 @@ abstract class MoisMain(name: String) {
       // set up output
       cfg.format match {
 	case "tsv" =>
-	  val handler = new TsvWriter(cfg.output)
-	  model.addStepHandler(handler)
-	  handler.init(cfg.begin, model)
+	  outputHandler = new TsvWriter(cfg.output)
+	  model.addStepHandler(outputHandler)
+	  outputHandler.init(cfg.begin, model)
 	case _ => throw new IllegalArgumentException(
           "I don't understand format " + cfg.format)
       }
 
       // run the simulation
-      model(cfg.begin, duration)
+      run(cfg.begin, duration)
 
       // clean up output
       cfg.output.flush()

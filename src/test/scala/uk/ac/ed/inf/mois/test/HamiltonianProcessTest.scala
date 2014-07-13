@@ -1,5 +1,5 @@
 /*
- *  MOIS: Discrete-time Process Test
+ *  MOIS: Hamiltonian Process Test
  *  Copyright (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -17,40 +17,35 @@
  */
 package uk.ac.ed.inf.mois.test
 
+import java.lang.Math.{cos, PI}
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.DiscreteProcess
+import uk.ac.ed.inf.mois.HamiltonianProcess
 
-class Henon(a: Double, b: Double) extends DiscreteProcess("Henon") {
-  val x = Double("ex:x")
-  val y = Double("ex:y")
-  next(x) := 1.0 - a * x*x + y
-  next(y) := b * x
+case class Pendulum(m: Double, l: Double) extends HamiltonianProcess("Pendulum") {
+  val q = Double("ex:q")
+  val p = Double("ex:p")
+  val g = 9.81
+  H(Seq(q), Seq(p)) := (p*p)/(2*m*l*l) + m*g*l*(1 - cos(q))
 }
 
 
-class DiscreteProcessTest extends FlatSpec with Matchers {
-  "henon process" should "give correct results" in {
+class HamiltonianProcessTest extends FlatSpec with Matchers {
+  "hamiltonian pendulum" should "give correct results" in {
     // Use approximate equality in `should equal`
     val precision = 1e-4
     implicit val doubleEquality =
       TolerantNumerics.tolerantDoubleEquality(precision)
 
-    val henon = new Henon(1.4, 0.3)
-    import henon._
+    val pendulum = new Pendulum(1, 1)
+    import pendulum._
 
-    henon.x := 0.0
-    henon.y := 0.0
+    q := PI/4
 
-    henon.step(0, 1)
+    pendulum.step(0, 10)
 
-    henon.x.value should equal (1.0)
-    henon.y.value should equal (0.0)
-
-    henon.step(0, 5)
-    
-    henon.x.value should equal (0.3475)
-    henon.y.value should equal (0.1663)
+    pendulum.q.value should equal (0.0914)
+    pendulum.p.value should equal (2.3676)
   }
 }
