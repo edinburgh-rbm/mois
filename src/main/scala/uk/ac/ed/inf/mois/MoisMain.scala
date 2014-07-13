@@ -21,7 +21,7 @@ package uk.ac.ed.inf.mois
  * `MoisMain` is the entry point for command line programs that
  * run models. For how to use this, see the mois-examples repository
  */
-abstract class MoisMain(name: String) {
+object MoisMain {
 
   // RHZ: I think begin, end and step are part of the definition of a
   // Model and shouldn't be given in the command line.  Why?
@@ -40,7 +40,6 @@ abstract class MoisMain(name: String) {
   // should not be a ProcessGroup (although it might be a Process
   // or at least a VarContainer) This is because the scheduler-like
   // behaviour does not belong here.
-  val model: BaseProcess
 
   // RHZ: It surely belongs here no?  You want to be able to set which
   // scheduler you want to use for your model.  In the typical case
@@ -71,8 +70,6 @@ abstract class MoisMain(name: String) {
   // after t_1, they can do that using a StepHandler that has that
   // condition.  That is definitely within the scope of StepHandler.
 
-  protected var outputHandler: StepHandler = null
-
   private case class Config(
     val begin: Double = 0.0,
     val duration: Option[Double] = None,
@@ -80,12 +77,15 @@ abstract class MoisMain(name: String) {
     val output: java.io.Writer =
       new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8")),
     val useFile: Boolean = false,
-    val dumpState: Boolean = false
+    val dumpState: Boolean = false,
+    val modelName: String = null,
+    val initialConditions: String = null
   )
 
+  private val p = getClass.getPackage
+  private val name = p.getImplementationTitle
+
   private val parser = new scopt.OptionParser[Config](name) {
-    val p = getClass.getPackage
-    val name = p.getImplementationTitle
     val version = p.getImplementationVersion
     head(name, version)
 
@@ -101,8 +101,7 @@ abstract class MoisMain(name: String) {
       val fp = scala.io.Source.fromFile(filename)
       val json = fp.mkString
       fp.close()
-      model.fromJSON(json)
-      c
+      c.copy(initialConditions = json)
     } text("Initial conditions filename (JSON)")
 
     opt[Boolean]('s', "state") action { (x, c) =>
@@ -117,14 +116,16 @@ abstract class MoisMain(name: String) {
       val fp = new java.io.File(output)
       c.copy(output = new java.io.PrintWriter(fp), useFile = true)
     } text("Output file (default: stdout)")
-  }
 
-  def run(t: Double, tau: Double) {
-    model(t, tau)
+    opt[String]('m', "model") action { (modelName, c) =>
+      c.copy(modelName = modelName)
+    } text("Model name")
   }
 
   def main(args: Array[String]) {
     parser.parse(args, Config()) map { cfg =>
+
+      val model = Model(cfg.modelName)
 
       // get duration
       val duration = cfg.duration getOrElse (
@@ -134,15 +135,18 @@ abstract class MoisMain(name: String) {
       // set up output
       cfg.format match {
 	case "tsv" =>
-	  outputHandler = new TsvWriter(cfg.output)
-	  model.addStepHandler(outputHandler)
-	  outputHandler.init(cfg.begin, model)
+	  val outputHandler = new TsvWriter(cfg.output)
+	  model.process.addStepHandler(outputHandler)
+	  outputHandler.init(cfg.begin, model.process)
 	case _ => throw new IllegalArgumentException(
           "I don't understand format " + cfg.format)
       }
 
+      // set initial conditions
+      model.process.fromJSON(cfg.initialConditions)
+
       // run the simulation
-      run(cfg.begin, duration)
+      model.run(cfg.begin, duration)
 
       // clean up output
       cfg.output.flush()
@@ -150,7 +154,7 @@ abstract class MoisMain(name: String) {
         cfg.output.close()
 
       if (cfg.dumpState)
-	println(model.toJSON)
+	println(model.process.toJSON)
     } getOrElse {
       // some kind of specific error processing? 
     }
