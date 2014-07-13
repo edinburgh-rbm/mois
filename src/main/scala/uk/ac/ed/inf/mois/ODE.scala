@@ -25,12 +25,12 @@ abstract class ODEIntf extends BaseProcess
   self =>
 
   /** A class to define derivatives of `Var`s. */
-  protected class FunMaker(val v: DoubleVar) {
+  protected class FunMaker(val v: DoubleVarIntf) {
     def := (e: Double): Unit = macro ODEMacros.createFun
   }
 
   /** Adds an ODE definition to the process. */
-  def addODE(v: DoubleVar, f: Derivative) = {
+  def addODE(v: DoubleVarIntf, f: Derivative) = {
     indices += v -> (vars.size)
     vars += v
     funs += f
@@ -47,17 +47,17 @@ abstract class ODEIntf extends BaseProcess
   /** `Var` used to construct derivatives that depend on time. */
   var t = 0.0
 
-  @inline final def eval(v: DoubleVar, ys: Array[Double]): Double =
+  @inline final def eval(v: DoubleVarIntf, ys: Array[Double]): Double =
     // if (indices contains v) ys(indices(v)) else v.value
     indices get v map ys getOrElse v.value
 
   /** A map that returns the index of a `Var` in `vars`. */
-  val indices = mutable.Map.empty[DoubleVar, Int] withDefault (v =>
+  val indices = mutable.Map.empty[DoubleVarIntf, Int] withDefault (v =>
     throw new IllegalArgumentException("No differential equation " +
       "defined for " + v + ".  Define one using d(v) := ..."))
 
   /** An array with all `Var`s for which to integrate. */
-  val vars = mutable.ArrayBuffer.empty[DoubleVar]
+  val vars = mutable.ArrayBuffer.empty[DoubleVarIntf]
 
   type Derivative = Array[Double] => Double
 

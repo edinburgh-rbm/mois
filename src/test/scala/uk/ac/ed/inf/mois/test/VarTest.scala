@@ -3,9 +3,10 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{VarContainer, ConstraintViolation}
+import uk.ac.ed.inf.mois.{VarContainer, VarConversions, ConstraintViolation}
 
-class VarTest extends FlatSpec with Matchers with VarContainer {
+class VarTest extends FlatSpec with Matchers
+    with VarContainer with VarConversions {
 
   // Use approximate equality in `should equal` for doubles
   val precision = 1e-8
@@ -84,5 +85,14 @@ class VarTest extends FlatSpec with Matchers with VarContainer {
     x1.value should be (x2.value)
 
     (x1 - dx) should be (x2 - dx)
+  }
+
+  it should "be copyable" in {
+    val x1 = Double("ex:x1") := 5
+    val x2 = x1.copy
+    x1 should not equal (x2)
+    x1.value should equal (x2.value)
+    x2 := 1
+    x1.value should not equal (x2.value)
   }
 }

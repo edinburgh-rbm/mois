@@ -142,16 +142,19 @@ class FloatVar(val meta: VarMeta) extends NumericVar[Float] {
   def %=(that: Float) = update (value % that)
 }
 
-class DoubleVar(val meta: VarMeta) extends NumericVar[Double] {
-  override def stringPrefix = "Double"
+trait DoubleVarIntf extends NumericVar[Double] {
   var value = 0.0
-  type R = DoubleVar
-  def copy = new DoubleVar(meta) := value
   def +=(that: Double) = update (value + that)
   def -=(that: Double) = update (value - that)
   def *=(that: Double) = update (value * that)
   def /=(that: Double) = update (value / that)
   def %=(that: Double) = update (value % that)
+}
+
+class DoubleVar(val meta: VarMeta) extends DoubleVarIntf {
+  override def stringPrefix = "Double"
+  type R = DoubleVar
+  def copy = new DoubleVar(meta) := value
 }
 
 class ArrayVar[T](val meta: VarMeta) extends Var[mutable.ArrayBuffer[T]] {
