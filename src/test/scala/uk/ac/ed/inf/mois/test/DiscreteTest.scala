@@ -5,11 +5,11 @@ import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.DiscreteProcess
 
-case class Henon(a: Double, b: Double) extends DiscreteProcess("Henon") {
+class Henon(a: Double, b: Double) extends DiscreteProcess("Henon") {
   val x = Double("ex:x")
   val y = Double("ex:y")
-  n(x) := 1.0 - a * x*x + y
-  n(y) := b * x
+  next(x) := 1.0 - a * x*x + y
+  next(y) := b * x
 }
 
 

@@ -6,6 +6,8 @@ import scala.collection.mutable
 
 abstract class DiscreteProcess(name: String) extends Process(name) {
 
+  override def stringPrefix = "DiscreteProcess"
+
   type Func = () => Double
 
   /** Configurable time step size. This is a discrete time process but
@@ -27,7 +29,8 @@ abstract class DiscreteProcess(name: String) extends Process(name) {
     funcs += f
   }
 
-  protected def n(v: DoubleVar) = new Next(v)
+  @inline final def next(v: DoubleVar) = new Next(v)
+  @inline final def n(v: DoubleVar) = new Next(v)
 
   def step(t0: Double, tau: Double) {
     var t = t0
