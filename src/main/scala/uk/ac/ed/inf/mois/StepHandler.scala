@@ -62,7 +62,7 @@ class TsvWriter(fp: java.io.Writer, sep: String = "\t")
     val vars = (for (v <- proc.state) yield v).toSeq.sortBy(_.meta)
     fp.write(t.toString + sep + vars.map(x => x.value).mkString(sep) + "\n")
   }
-  override def reset(t: Double, proc: Process) {
+  override def reset(t: Double, proc: BaseProcess) {
     fp.write("\n")
     handleStep(t, proc)
   }

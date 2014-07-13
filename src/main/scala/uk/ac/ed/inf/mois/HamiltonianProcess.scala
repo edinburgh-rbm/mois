@@ -26,7 +26,8 @@ import org.apache.commons.math3.analysis.differentiation.MultivariateDifferentia
 import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction
 import org.apache.commons.math3.analysis.MultivariateVectorFunction
 
-abstract class HamiltonianProcess(name: String) extends OrdinaryProcess(name) {
+abstract class HamiltonianProcess(name: String) extends ODE(name) {
+
   type F = () => Double
 
   var differentiator = new FiniteDifferencesDifferentiator(3, 0.25)
