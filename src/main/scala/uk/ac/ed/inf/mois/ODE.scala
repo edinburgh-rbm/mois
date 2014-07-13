@@ -12,18 +12,20 @@ import collection.mutable
 // TODO: Maybe we should allow users to define algebraic equations
 // as well as we do in the graph-rewriting library.
 
-// RHZ: OrdinaryProcess sounds to me as CommonProcess, isn't that what
-// ordinary means in english?
 /** A partial implementation of `Process` that uses the Apache Commons
-  * Math ODE library to implement its `step` method. The `computeDerivatives`
-  * method must be filled out to describe the system of differential equations
+  * Math ODE library to implement its `step` method.
   */
-abstract class OrdinaryProcess(name: String)
-    extends Process(name)
-       with ode.FirstOrderDifferentialEquations {
+abstract class ODE(val name: String)
+    extends ODEIntf with VarConversions {
+  override def stringPrefix = "ODE"
+}
+
+abstract class ODEIntf extends BaseProcess
+    with ode.FirstOrderDifferentialEquations {
+  self =>
 
   /** A class to define derivatives of `Var`s. */
-  class ODE(val v: DoubleVar) {
+  protected class FunMaker(val v: DoubleVar) {
     def := (e: Double): Unit = macro ODEMacros.createFun
   }
 
@@ -34,16 +36,16 @@ abstract class OrdinaryProcess(name: String)
     funs += f
   }
 
+  /** Adds an ODE definition to the current `ODE`. */
+  protected def d(v: DoubleVarIntf) = new FunMaker(v) {
+    def / (d: dt.type) = new FunMaker(v)
+  }
+
   /** Object `dt` is used for writing ODEs with syntax: d(v1)/dt = ... */
   object dt
 
   /** `Var` used to construct derivatives that depend on time. */
   var t = 0.0
-
-  /** Adds an ODE definition to the current `OrdinaryProcess`. */
-  def d(v: DoubleVar) = new ODE(v) {
-    def / (d: dt.type) = new ODE(v)
-  }
 
   @inline final def eval(v: DoubleVar, ys: Array[Double]): Double =
     // if (indices contains v) ys(indices(v)) else v.value
@@ -69,8 +71,15 @@ abstract class OrdinaryProcess(name: String)
     * subclasses. By default we use the Dormand Prince 8,5,3 integrator
     * from their example documentation.
     */
-  val integrator: () => ode.FirstOrderIntegrator = () =>
-    new DormandPrince853Integrator(1e-8, 100.0, 1e-10, 1e-10)
+  def integrator(): ode.FirstOrderIntegrator =
+    new DormandPrince853Integrator(minStep, maxStep,
+      absoluteTolerance, relativeTolerance)
+
+  // RHZ: for me to remember what these numbers are
+  private val minStep = 1e-8
+  private val maxStep = 100
+  private val absoluteTolerance = 1e-10
+  private val relativeTolerance = 1e-10
 
   /** Main function implementing the `Process` interface. */
   def step(time: Double, tau: Double) {
@@ -84,22 +93,19 @@ abstract class OrdinaryProcess(name: String)
     // construct the integrator
     val i = integrator()
 
-    // RHZ: why renaming this to proc for just one use?
-    val proc = this
     // only add step handlers if we have them
     if (stepHandlers.size > 0) {
-      object SH extends sampling.StepHandler {
+      i.addStepHandler(new sampling.StepHandler {
         def init(t0: Double, y0: Array[Double], t: Double) {}
         def handleStep(interp: sampling.StepInterpolator, isLast: Boolean) {
           val t = interp.getCurrentTime()
-          val ydot = interp.getInterpolatedState()
+          val y = interp.getInterpolatedState()
           for (i <- 0 until vars.size)
-            vars(i) := ydot(i)
+            vars(i) := y(i)
           for (sh <- stepHandlers)
-            sh.handleStep(t, proc)
+            sh.handleStep(t, self)
         }
-      }
-      i.addStepHandler(SH)
+      })
     }
 
     // conduct the integration
@@ -117,8 +123,10 @@ abstract class OrdinaryProcess(name: String)
     */
   def computeDerivatives(time: Double, ys: Array[Double], ydots: Array[Double]) {
     t = time
-    for (i <- 0 until ydots.size)
+    for (i <- 0 until ydots.size) {
+      assume(funs isDefinedAt i, "no derivative defined for " + vars(i))
       ydots(i) = funs(i)(ys)
+    }
   }
 
   /** This is required by the ODE solver and gives the dimension of
@@ -140,7 +148,7 @@ object ODEMacros {
       case q"$x.this.d($v)./($y.this.dt)" => v
       case _ => q"${c.prefix.tree}.v"
     }
-    // transformer to replace Vars by a call to OrdinaryProcess.eval
+    // transformer that replaces Vars by a call to ODE.eval
     object transformer extends Transformer {
       override def transform(tree: Tree): Tree = tree match {
         case q"$p.this.getVarValue[$t]($v)" => q"eval($v, ys)"

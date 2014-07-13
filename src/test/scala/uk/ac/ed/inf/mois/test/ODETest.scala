@@ -3,10 +3,10 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.OrdinaryProcess
+import uk.ac.ed.inf.mois.ODE
 
 /** Directly calculated ODE system from Dominik's stuff. */
-object sampleODE extends OrdinaryProcess("sample") {
+object sampleODE extends ODE("sample") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   val x3 = Double("ex:x3")
@@ -15,7 +15,7 @@ object sampleODE extends OrdinaryProcess("sample") {
   d(x3)/dt := java.lang.Math.sin(t)
 }
 
-class ODEProcessTest extends FlatSpec with Matchers {
+class ODETest extends FlatSpec with Matchers {
 
   "sample ODE" should "give Dominik's expected results" in {
 
