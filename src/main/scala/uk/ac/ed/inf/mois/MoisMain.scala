@@ -70,16 +70,17 @@ object MoisMain {
   // after t_1, they can do that using a StepHandler that has that
   // condition.  That is definitely within the scope of StepHandler.
 
-  private case class Config(
-    val begin: Double = 0.0,
+  case class Config(
+    val begin: Option[Double] = Some(0.0),
     val duration: Option[Double] = None,
     val format: String = "tsv",
     val output: java.io.Writer =
       new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8")),
     val useFile: Boolean = false,
     val dumpState: Boolean = false,
-    val modelName: Option[String] = None,
-    val initialConditions: Option[String] = None
+    val model: Option[Model] = None,
+    val params: Option[String] = None,
+    val initial: Option[String] = None
   )
 
   private val p = getClass.getPackage
@@ -90,7 +91,7 @@ object MoisMain {
     head(name, version)
 
     opt[Double]('b', "begin") action { (x, c) =>
-      c.copy(begin = x)
+      c.copy(begin = Some(x))
     } text("Simulation start time (default: 0.0)")
 
     opt[Double]('d', "duration") action { (x, c) =>
@@ -101,7 +102,7 @@ object MoisMain {
       val fp = scala.io.Source.fromFile(filename)
       val json = fp.mkString
       fp.close()
-      c.copy(initialConditions = Some(json))
+      c.copy(initial = Some(json))
     } text("Initial conditions filename (JSON)")
 
     opt[Boolean]('s', "state") action { (x, c) =>
@@ -118,8 +119,22 @@ object MoisMain {
     } text("Output file (default: stdout)")
 
     arg[String]("<model>") action { (modelName, c) =>
-      c.copy(modelName = Some(modelName))
+      try {
+	val model = Model(modelName)
+	c.copy(model = Some(model))
+      } catch {
+	case e: IllegalArgumentException => {
+	  Console.err.println(e)
+	  c
+	}
+      }
     } required() text("Model name")
+
+    checkConfig { c => 
+      if (!c.model.isDefined)
+	failure("could not find the requested model")
+      success
+    }
 
     note("\nKnown models:\n\t" +
 	 Model.all
@@ -137,8 +152,11 @@ object MoisMain {
   def main(args: Array[String]) {
     parser.parse(args, Config()) map { cfg =>
 
-      // get model
-      val model = Model(cfg.modelName.get)
+      // get the model
+      val model = cfg.model.get
+
+      // get simulation start
+      val begin = cfg.begin.get
 
       // get duration
       val duration = cfg.duration.get
@@ -148,17 +166,17 @@ object MoisMain {
 	case "tsv" =>
 	  val outputHandler = new TsvWriter(cfg.output)
 	  model.process.addStepHandler(outputHandler)
-	  outputHandler.init(cfg.begin, model.process)
+	  outputHandler.init(begin, model.process)
 	case _ => throw new IllegalArgumentException(
           "I don't understand format" + cfg.format)
       }
 
       // set initial conditions
-      if(cfg.initialConditions.isDefined)
-	model.process.fromJSON(cfg.initialConditions.get)
+      if(cfg.initial.isDefined)
+	model.process.fromJSON(cfg.initial.get)
 
       // run the simulation
-      model.run(cfg.begin, duration)
+      model.run(begin, duration)
 
       // clean up output
       cfg.output.flush()
