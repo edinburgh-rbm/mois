@@ -27,6 +27,7 @@ abstract class StepHandler {
   def init(t: Double, proc: BaseProcess)
   def handleStep(t: Double, proc: BaseProcess)
   def reset(t: Double, proc: BaseProcess) {}
+  def finish {}
 }
 
 /**
@@ -65,5 +66,9 @@ class TsvWriter(fp: java.io.Writer, sep: String = "\t")
   override def reset(t: Double, proc: BaseProcess) {
     fp.write("\n")
     handleStep(t, proc)
+  }
+  override def finish = {
+    if (fp.isInstanceOf[java.io.Closeable])
+      fp.asInstanceOf[java.io.Closeable].close
   }
 }

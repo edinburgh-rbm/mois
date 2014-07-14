@@ -65,4 +65,20 @@ class ProcessGroup(val name: String) extends BaseProcess {
     * for calling the step handlers.
     */
   @inline override def apply(t: Double, tau: Double) = step(t, tau)
+
+  /** Override init hook by calling all of our children's before our own */
+  override def init(t: Double) {
+    for (p <- processes) p.init(t)
+    super.init(t)
+  }
+
+  /** Override reset hook by calling all of our children's before our own */
+  override def reset(t: Double) {
+    for (p <- processes) p.reset(t)
+  }
+
+  /** Override finish hook by calling all of our children's before our own */
+  override def finish {
+    for (p <- processes) p.finish
+  }
 }

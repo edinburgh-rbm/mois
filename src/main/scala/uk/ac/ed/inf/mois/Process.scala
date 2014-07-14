@@ -48,6 +48,34 @@ abstract class BaseProcess extends VarContainer {
       sh.handleStep(t+tau, this)
   }
 
+  /**
+   * Initialisation hook. Expected to be called once before the process
+   * runs for the first time. Initialises step handlers.
+   */
+  def init(t: Double) {
+    for (sh <- stepHandlers)
+      sh.init(t, this)
+  }
+
+  /**
+   * Reset hook. May be called as necessary. Resets the step handlers.
+   * May be overridden in sub-classes to reset internal state. Rember
+   * to call `super.reset(t)` if you do this!
+   */
+  def reset(t: Double) {
+    for (sh <- stepHandlers)
+      sh.reset(t, this)
+  }
+
+  /**
+   * Finish hook. Expected to be called once at the end of theprocess.
+   * Finishes the step handlers
+   */
+  def finish {
+    for (sh <- stepHandlers)
+      sh.finish
+  }
+
   def stringPrefix = "BaseProcess"
   override def toString = stringPrefix + "(\"" + name + "\")"
 }  

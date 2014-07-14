@@ -74,9 +74,7 @@ object MoisMain {
     val begin: Option[Double] = Some(0.0),
     val duration: Option[Double] = None,
     val format: String = "tsv",
-    val output: java.io.Writer =
-      new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8")),
-    val useFile: Boolean = false,
+    val outputFile: Option[String] = None,
     val dumpState: Boolean = false,
     val model: Option[Model] = None,
     val params: Option[String] = None,
@@ -113,9 +111,8 @@ object MoisMain {
       c.copy(format = format)
     } text("Timeseries output format (default: tsv)")
 
-    opt[String]('o', "output") action { (output, c) =>
-      val fp = new java.io.File(output)
-      c.copy(output = new java.io.PrintWriter(fp), useFile = true)
+    opt[String]('o', "output") action { (outputFile, c) =>
+      c.copy(outputFile = Some(outputFile))
     } text("Output file (default: stdout)")
 
     arg[String]("<model>") action { (modelName, c) =>
@@ -133,6 +130,8 @@ object MoisMain {
     checkConfig { c => 
       if (!c.model.isDefined)
 	failure("could not find the requested model")
+      if (c.format == "netcdf" && !c.outputFile.isDefined)
+	failure("netcdf output requires a file name")
       success
     }
 
@@ -164,9 +163,21 @@ object MoisMain {
       // set up output
       cfg.format match {
 	case "tsv" =>
-	  val outputHandler = new TsvWriter(cfg.output)
+	  val outputHandler = 
+	    if (cfg.outputFile.isDefined) {
+	      val fp = new java.io.File(cfg.outputFile.get)
+	      new TsvWriter(new java.io.PrintWriter(fp))
+	    } else {
+	      // ugly monkey patch to allow output to stdout when running
+	      // under sbt cli
+	      val stdout = new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8"))
+	      new TsvWriter(stdout) {
+	        override def finish {}
+	      }
+	    }
 	  model.process.addStepHandler(outputHandler)
-	  outputHandler.init(begin, model.process)
+	case "netcdf" =>
+	  val outputHandler = new NetCDFWriter(cfg.outputFile.get)
 	case _ => throw new IllegalArgumentException(
           "I don't understand format" + cfg.format)
       }
@@ -179,9 +190,7 @@ object MoisMain {
       model.run(begin, duration)
 
       // clean up output
-      cfg.output.flush()
-      if (cfg.useFile)
-        cfg.output.close()
+      System.out.flush()
 
       if (cfg.dumpState)
 	println(model.process.toJSON)

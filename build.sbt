@@ -28,6 +28,9 @@ scalacOptions ++= Seq( "-deprecation", "-unchecked", "-feature" )
 // this is needed to get some dependencies like grizzled-slf4j
 seq(bintrayResolverSettings:_*)
 
+resolvers += "ucar-unidata-releases" at
+  "https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/"
+
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.0" % "test"
 
 libraryDependencies += "org.apache.commons" % "commons-math3" % "3.3"
@@ -39,6 +42,8 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
 libraryDependencies += "org.jfree" % "jfreechart" % "1.0.14"
 
 libraryDependencies += "org.python" % "jython" % "2.7-b1"
+
+libraryDependencies += "edu.ucar" % "netcdf" % "4.3.22"
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"

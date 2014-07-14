@@ -24,7 +24,13 @@ abstract class Model extends VarContainer with VarConversions {
   val process: BaseProcess
 
   def run(t: Double, tau: Double) {
+    process.init(t)
     process(t, tau)
+    process.finish
+  }
+
+  def reset(t: Double) {
+    process.reset(t)
   }
 }
 
