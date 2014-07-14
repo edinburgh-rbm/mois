@@ -178,6 +178,7 @@ object MoisMain {
 	  model.process.addStepHandler(outputHandler)
 	case "netcdf" =>
 	  val outputHandler = new NetCDFWriter(cfg.outputFile.get)
+	  model.process.addStepHandler(outputHandler)
 	case _ => throw new IllegalArgumentException(
           "I don't understand format" + cfg.format)
       }
@@ -187,7 +188,9 @@ object MoisMain {
 	model.process.fromJSON(cfg.initial.get)
 
       // run the simulation
+      model.init(begin)
       model.run(begin, duration)
+      model.finish
 
       // clean up output
       System.out.flush()

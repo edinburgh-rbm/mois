@@ -23,9 +23,15 @@ import scala.util.matching.Regex
 abstract class Model extends VarContainer with VarConversions {
   val process: BaseProcess
 
-  def run(t: Double, tau: Double) {
+  def init(t: Double) {
     process.init(t)
+  }
+
+  def run(t: Double, tau: Double) {
     process(t, tau)
+  }
+
+  def finish {
     process.finish
   }
 
