@@ -138,7 +138,6 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
       off += 1
       val v = doubleDims(i)
       ddd.setDouble(0, v)
-      println(Array(origin(off)).toSeq)
       cdf.write(cdfvars(v), Array(origin(off)), ddd)
     }
     val fdd = new ma2.ArrayFloat(Array(0))
