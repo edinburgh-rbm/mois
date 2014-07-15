@@ -26,11 +26,8 @@ abstract class BaseProcess extends VarContainer {
 
   val name: String
   val stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
+  val dimensions = mutable.Map.empty[Var[_], Int]
 
-  def addStepHandler(sh: StepHandler) {
-    stepHandlers += sh
-  }
-  
   def state: Seq[Var[_]] = allVars.values.toSeq
 
   /** This function takes the state from where it is at
@@ -74,6 +71,29 @@ abstract class BaseProcess extends VarContainer {
   def finish {
     for (sh <- stepHandlers)
       sh.finish
+  }
+
+  def addStepHandler(sh: StepHandler) {
+    stepHandlers += sh
+  }
+  
+  /**
+   * Needed for NetCDF et al. TODO: explain better
+   */
+  class Dimension(v: Var[_]) {
+    def apply = dimensions(v)
+    def update(x: Int) { dimensions(v) = x }
+    def +=(x: Int) { dimensions(v) = dimensions(v) + x }
+    def -=(x: Int) { dimensions(v) = dimensions(v) - x }
+    def *=(x: Int) { dimensions(v) = dimensions(v) * x }
+    def /=(x: Int) { dimensions(v) = dimensions(v) / x }
+  }
+  object Dimension {
+    def apply(v: Var[_], size: Int): Dimension = {
+      dimensions += v -> size
+      Dimension(v)
+    }
+    def apply(v: Var[_]): Dimension = new Dimension(v)
   }
 
   def stringPrefix = "BaseProcess"

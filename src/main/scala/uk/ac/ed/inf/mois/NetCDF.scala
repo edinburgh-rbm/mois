@@ -25,13 +25,31 @@ import ucar.ma2
  * A StepHandler may be added to a `Process`. It then gets called at
  * the conclusion of each step with the end time and the state.
  */
-class NetCDFWriter(filename: String) extends StepHandler {
+class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
   private var cdf: nc2.NetcdfFileWriter = null
-  private var cdfvars: Array[nc2.Variable] = null
-  private var tick = 0
+  private var origin: Array[Int] = null
+  private var time: nc2.Variable = null
+  private var cdfvars = mutable.Map.empty[Var[_], nc2.Variable]
+  private var cdfindex: ma2.Index = null
+
+  /**
+   * We have a concept of "dimension" so we have to organise our variables
+   * a bit differently.
+   */
+  private var doubleDims: Array[DoubleVar] = null
+  private var doubles: Array[DoubleVar] = null
+  private var floatDims: Array[FloatVar] = null
+  private var floats: Array[FloatVar] = null
+  private var intDims: Array[IntVar] = null
+  private var ints: Array[IntVar] = null
+
+  private var doubleData: ma2.ArrayDouble = null
+  private var floatData: ma2.ArrayFloat = null
+  private var intData: ma2.ArrayInt = null
 
   def init(t: Double, proc: BaseProcess) {
     cdf = create(proc)
+    origin = Array.fill[Int](proc.dimensions.size + 1)(0)
     handleStep(t, proc)
   }
 
@@ -41,59 +59,140 @@ class NetCDFWriter(filename: String) extends StepHandler {
       filename, null)
     val timeDim = fp.addUnlimitedDimension("time")
 
-    val varlist = mutable.ArrayBuffer.empty[nc2.Variable]
-    varlist += fp.addVariable(null, "time", ma2.DataType.DOUBLE, "time")
-    for (v <- proc.doubleVars.values.toSeq.sortBy(_.meta)) {
-      varlist += fp.addVariable(null, v.meta.toString, ma2.DataType.DOUBLE, "time")
+    val shapeBuf = mutable.ArrayBuffer.empty[Int]
+
+    time = fp.addVariable(null, "time", ma2.DataType.DOUBLE, "time")
+    shapeBuf += 0
+
+    val dbuf = mutable.ArrayBuffer.empty[DoubleVar]
+    val fbuf = mutable.ArrayBuffer.empty[FloatVar]
+    val ibuf = mutable.ArrayBuffer.empty[IntVar]
+    for (v <- proc.dimensions.keys.toSeq.sortBy(_.meta)) {
+      val length = proc.dimensions(v)
+      fp.addDimension(null, v.meta.toString, length)
+      shapeBuf += length
+
+      v.value match {
+	case _: Double =>
+	  val cv = fp.addVariable(null, v.meta.toString, ma2.DataType.DOUBLE, v.meta.toString)
+	  cdfvars += v -> cv
+	  dbuf +=  v.asInstanceOf[DoubleVar]
+	case _: Float =>
+	  val cv = v -> fp.addVariable(null, v.meta.toString, ma2.DataType.FLOAT, v.meta.toString)
+	  cdfvars += cv
+	  fbuf += v.asInstanceOf[FloatVar]
+	case _: Int =>
+	  val cv = v -> fp.addVariable(null, v.meta.toString, ma2.DataType.INT, v.meta.toString)
+	  cdfvars += cv
+	  ibuf += v.asInstanceOf[IntVar]
+	case _ =>
+	  throw new IllegalArgumentException("Only numeric types supported as dimensions for now")
+      }
+      proc.dimensions(v) = 0
     }
-    for (v <- proc.floatVars.values.toSeq.sortBy(_.meta)) {
-      varlist += fp.addVariable(null, v.meta.toString, ma2.DataType.FLOAT, "time")
+    doubleDims = dbuf.toArray
+    floatDims = fbuf.toArray
+    intDims = ibuf.toArray
+
+    val shape = Array.fill(proc.dimensions.size+1)(1) //shapeBuf.toArray
+    val dims = "time " + (doubleDims.map(_.meta.toString) ++
+			  floatDims.map(_.meta.toString) ++
+			  intDims.map(_.meta.toString)).mkString(" ")
+
+    def notDim(v: Var[_]) = !(proc.dimensions contains v)
+    doubles = proc.doubleVars.values.toSeq.filter(notDim).sortBy(_.meta).toArray
+    floats = proc.floatVars.values.toSeq.filter(notDim).sortBy(_.meta).toArray
+    ints = proc.intVars.values.toSeq.filter(notDim).sortBy(_.meta).toArray
+
+    for (v <- doubles) {
+      cdfvars += v -> fp.addVariable(null, v.meta.toString, ma2.DataType.DOUBLE, dims)
     }
-    for (v <- proc.intVars.values.toSeq.sortBy(_.meta)) {
-      varlist += fp.addVariable(null, v.meta.toString, ma2.DataType.INT, "time")
+    for (v <- floats) {
+      cdfvars += v -> fp.addVariable(null, v.meta.toString, ma2.DataType.FLOAT, dims)
     }
-    cdfvars = varlist.toArray
+    for (v <- ints) {
+      cdfvars += v -> fp.addVariable(null, v.meta.toString, ma2.DataType.INT, dims)
+    }
+
+    doubleData = new ma2.ArrayDouble(shape)
+    floatData = new ma2.ArrayFloat(shape)
+    intData = new ma2.ArrayInt(shape)
+
     fp.create()
     fp
   }
 
+  /**
+   * If we were clever, we would buffer values and the write them out
+   * in batches.
+   */
   def handleStep(t: Double, proc: BaseProcess) {
-    var offset = 1
-    val origin = Array[Int](tick)
-
-    val doubleData = new ma2.ArrayDouble(Array[Int](1))
-
+    val ddd = new ma2.ArrayDouble(Array(1))
     // first do time
-    doubleData.setDouble(0, t)
-    cdf.write(cdfvars(0), origin, doubleData)
+    ddd.setDouble(0, t)
+    cdf.write(time, origin, ddd)
 
-    for (i <- 0 until proc.doubleVars.size) {
-      val doubles = proc.doubleVars.values.toSeq.sortBy(_.meta).map(_.value)
-      doubleData.setDouble(0, doubles(i))
-      cdf.write(cdfvars(offset+i), origin, doubleData)
+    var off = 0
+    // then do dimensions
+    for (i <- 0 until doubleDims.size) {
+      off += 1
+      val v = doubleDims(i)
+      ddd.setDouble(0, v)
+      println(Array(origin(off)).toSeq)
+      cdf.write(cdfvars(v), Array(origin(off)), ddd)
     }
-    offset += proc.doubleVars.size
-
-    val floatData = new ma2.ArrayFloat(Array[Int](1))
-    for (i <- 0 until proc.floatVars.size) {
-      val floats = proc.floatVars.values.toSeq.sortBy(_.meta).map(_.value)
-      floatData.setFloat(0, floats(i))
-      cdf.write(cdfvars(offset+i), origin, floatData)
+    val fdd = new ma2.ArrayFloat(Array(0))
+    for (i <- 0 until floatDims.size) {
+      off += 1
+      val v = floatDims(i)
+      floatData.setFloat(0, v)
+      cdf.write(cdfvars(v), Array(origin(off)), fdd)
     }
-    offset += proc.floatVars.size
-
-    val intData = new ma2.ArrayInt(Array[Int](1))
-    for (i <- 0 until proc.intVars.size) {
-      val ints = proc.intVars.values.toSeq.sortBy(_.meta).map(_.value)
-      intData.setInt(0, ints(i))
-      cdf.write(cdfvars(offset+i), origin, intData)
+    val idd = new ma2.ArrayInt(Array(0))
+    for (i <- 0 until intDims.size) {
+      off += 1
+      val v = intDims(i)
+      intData.setInt(0, v)
+      cdf.write(cdfvars(v), Array(origin(off)), idd)
     }
 
-    tick += 1
+    // now write out variables
+    val didx = doubleData.getIndex()
+    for (v <- doubles) {
+      doubleData.setDouble(didx, v)
+      cdf.write(cdfvars(v), origin, doubleData)
+    }
+
+    val fidx = floatData.getIndex()
+    for (v <- floats) {
+      floatData.setFloat(fidx, v)
+      cdf.write(cdfvars(v), origin, floatData)
+    }
+
+    val iidx = intData.getIndex()
+    for (v <- ints) {
+      intData.setInt(iidx, v)
+      cdf.write(cdfvars(v), origin, intData)
+    }
+
+    origin(0) += 1
   }
 
   override def reset(t: Double, proc: BaseProcess) {
-    tick = 0
+    origin(0) = 0
+    var off = 0
+    for (v <- doubleDims) {
+      off += 1
+      origin(off) = proc.dimensions(v)
+    }
+    for (v <- floatDims) {
+      off += 1
+      origin(off) = proc.dimensions(v)
+    }
+    for (v <- intDims) {
+      off += 1
+      origin(off) = proc.dimensions(v)
+    }
   }
 
   override def finish {

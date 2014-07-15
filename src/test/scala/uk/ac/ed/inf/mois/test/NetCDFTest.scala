@@ -17,20 +17,23 @@
  */
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{ODE, NetCDFWriter}
+import uk.ac.ed.inf.mois.{DiscreteProcess, NetCDFWriter}
 
 import org.scalatest.{FlatSpec, Matchers}
 
 class NetCDFTest extends FlatSpec with Matchers {
 
-  object p extends ODE("p") {
+  object p extends DiscreteProcess("p") {
     val x1 = Double("ex:x1")
     val x2 = Double("ex:x2")
     val x3 = Double("ex:x3")
+    val x4 = Double("ex:D")
 
-    d(x1) := x1 + 1
-    d(x2) := 2*x2 - 2*x1
-    d(x3) := x3 + 3*x2
+    Dimension(x4, 3)
+
+    next(x1) := x1 + 1 + x4
+    next(x2) := x1 + x2 + 1 + x4
+    next(x3) := x1 + x2 + x3 + 1 + x4
   }
 
   "netcdf writer" should "store data scalably" in {
@@ -39,9 +42,18 @@ class NetCDFTest extends FlatSpec with Matchers {
 
     cdf.init(0, p)
 
-    p(1, 1)
-    p(2, 1)
-    p(3, 1)
+    import p._
+    for (d <- 0 until 3) {
+      x1 := 0
+      x2 := 0
+      x3 := 0
+      reset(0)
+      for (t <- 0 until 4) {
+	p(t, 1)
+      }
+      Dimension(x4) += 1
+      x4 += 10
+    }
 
     cdf.finish
 
