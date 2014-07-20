@@ -57,6 +57,18 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
     val fp = nc2.NetcdfFileWriter.createNew(
       nc2.NetcdfFileWriter.Version.netcdf3,
       filename, null)
+
+    // add some metadata to the file
+    fp.addGroupAttribute(null, new nc2.Attribute("process", proc.toString))
+    val now = java.util.Calendar.getInstance().getTime().toString
+    fp.addGroupAttribute(null, new nc2.Attribute("created", now))
+
+    val p = getClass.getPackage
+    val name = p.getImplementationTitle
+    val version = p.getImplementationVersion
+    fp.addGroupAttribute(null, new nc2.Attribute("version", s"${name} ${version}"))
+
+    // add the dimensions
     val timeDim = fp.addUnlimitedDimension("time")
 
     val shapeBuf = mutable.ArrayBuffer.empty[Int]
