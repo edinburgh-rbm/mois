@@ -113,7 +113,7 @@ abstract class BaseProcess extends VarContainer {
   }
 
   def stringPrefix = "BaseProcess"
-  override def toString = stringPrefix + "(\"" + name + "\")"
+  override def toString = stringPrefix + "(" + name + ")"
 }  
 
 abstract class Process(val name: String)
