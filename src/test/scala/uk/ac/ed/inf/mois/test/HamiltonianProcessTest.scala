@@ -17,17 +17,18 @@
  */
 package uk.ac.ed.inf.mois.test
 
-import java.lang.Math.{cos, PI}
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.HamiltonianProcess
+import java.lang.Math.PI
+import uk.ac.ed.inf.mois.{HamiltonianProcess, Math}
 
-case class Pendulum(m: Double, l: Double) extends HamiltonianProcess("Pendulum") {
+case class Pendulum(m: Double, l: Double) 
+     extends HamiltonianProcess("Pendulum") with Math {
   val q = Double("ex:q")
   val p = Double("ex:p")
   val g = 9.81
-  H(Seq(q), Seq(p)) := (p*p)/(2*m*l*l) + m*g*l*(1 - cos(q))
+  H(Seq(q), Seq(p)) := pow(p, 2)/(2*m*pow(l,2)) + m*g*l*(1 - cos(q))
 }
 
 
