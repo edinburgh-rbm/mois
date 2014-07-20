@@ -19,9 +19,14 @@ package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.{DiscreteProcess, NetCDFWriter}
 
-import org.scalatest.{FlatSpec, Matchers}
+import java.io.File
+import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 
-class NetCDFTest extends FlatSpec with Matchers {
+class NetCDFTest extends FlatSpec with Matchers with BeforeAndAfter {
+
+  after {
+    new File("test.nc").delete
+  }
 
   object p extends DiscreteProcess("p") {
     val x1 = Double("ex:x1")
