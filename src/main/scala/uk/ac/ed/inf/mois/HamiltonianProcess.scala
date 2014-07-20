@@ -27,6 +27,7 @@ import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiabl
 import org.apache.commons.math3.analysis.MultivariateVectorFunction
 
 abstract class HamiltonianProcess(name: String) extends ODE(name) {
+  override def stringPrefix = "Hamiltonian"
 
   type F = () => Double
 
