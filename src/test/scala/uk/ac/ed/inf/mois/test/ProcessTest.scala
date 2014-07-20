@@ -23,7 +23,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class ProcessTest extends FlatSpec with Matchers {
 
-  object p extends Process("p") {
+  class P extends Process("p") {
     val x1 = Double("ex:x1")
     val x2 = Double("ex:x2")
     val x3 = Boolean("ex:x3")
@@ -34,7 +34,16 @@ class ProcessTest extends FlatSpec with Matchers {
     }
   }
 
-  "process" should "run and do arithmetic" in {
+  "process" should "be assigned an increasing id" in {
+    val p1 = new P
+    val p2 = new P
+//    println(p1.pid)
+//    println(p2.pid)
+    (p2.pid > p1.pid) should be (true)
+  }
+
+  it should "run and do arithmetic" in {
+    val p = new P
     p.x1 := 2.0
     p.x2 := 3.0
     p.x3 := true

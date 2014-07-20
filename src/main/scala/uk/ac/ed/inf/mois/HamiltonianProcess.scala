@@ -34,13 +34,20 @@ abstract class HamiltonianProcess(name: String) extends ODE(name) {
   private var gradH: GradientFunction = null
   private var energy: F = null
 
+  /**
+   * `E` is an automatically created variable that holds the total energy of the
+   * system. It is assigned the identifier "p${pid}:E", the prefix with process id being
+   * intended to facilitate combining several Hamiltonian processes together in
+   * a single process group.
+   */
+  var E = Double(s"p${pid}:E")
+
   case class H(q: Seq[DoubleVar], p: Seq[DoubleVar])
        extends MultivariateDifferentiableFunction {
     private val phase = q ++ p
     assert(q.size == p.size)
 
     private val unis = new Array[UnivariateFunction](phase.size)
-    private val E = Double("E")
 
     private case class Uni(f: F, i: Integer)
 		 extends UnivariateFunction {

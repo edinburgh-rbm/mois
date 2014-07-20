@@ -119,19 +119,6 @@ class KarrSchedulerTest extends FlatSpec with Matchers {
     Double("ex:x1") := 25.0
     Double("ex:x2") := 50.0
 
-/*
-    import uk.ac.ed.inf.mois.TsvWriter
-    val fp = new java.io.PrintWriter(
-      new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8"))
-    )
-    val output = new TsvWriter(fp)
-    pg.addStepHandler(output)
-    output.init(0, pg)
-*/
     pg.step(0, 50)
-
-//   fp.flush()
-
-    println(pg.toJSON)
   }
 }
