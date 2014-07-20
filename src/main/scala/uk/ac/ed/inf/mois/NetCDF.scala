@@ -54,6 +54,9 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
   }
 
   def create(proc: BaseProcess): nc2.NetcdfFileWriter = {
+    // needed for List.asJava for the annotations
+    import scala.collection.JavaConverters._
+
     val fp = nc2.NetcdfFileWriter.createNew(
       nc2.NetcdfFileWriter.Version.netcdf3,
       filename, null)
@@ -65,6 +68,8 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
 	  fp.addGroupAttribute(null, new nc2.Attribute(k, n))
 	case s: String =>
 	  fp.addGroupAttribute(null, new nc2.Attribute(k, s))
+	case l: List[_] =>
+	  fp.addGroupAttribute(null, new nc2.Attribute(k, l.asJava))
 	case _ =>
 	  fp.addGroupAttribute(null, new nc2.Attribute(k, v.toString))
       }
@@ -144,6 +149,8 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
 	    cv.addAttribute(new nc2.Attribute(k, n))
 	  case s: String =>
 	    cv.addAttribute(new nc2.Attribute(k, s))
+	  case l: List[_] =>
+	    cv.addAttribute(new nc2.Attribute(k, l.asJava))
 	  case _ =>
 	    cv.addAttribute(new nc2.Attribute(k, v.toString))
 	}
