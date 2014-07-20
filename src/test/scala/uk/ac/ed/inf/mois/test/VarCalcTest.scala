@@ -1,5 +1,5 @@
 /*
- *  MOIS: VarSet Process Helper Trait Test
+ *  MOIS: VarCalc Process Helper Trait Test
  *  Copyright (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -20,19 +20,19 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{Process, VarSet}
+import uk.ac.ed.inf.mois.{Process, VarCalc}
 
-class VarSetTest extends FlatSpec with Matchers {
-  class V extends Process("v") with VarSet {
+class VarCalcTest extends FlatSpec with Matchers {
+  class V extends Process("v") with VarCalc {
     val x = Double("x")
     val y = Double("y")
-    set(y) := x
+    calc(y) := x
     def step(t: Double, tau: Double) {
       x := t + tau
     }
   }
 
-  "process with VarSet" should "do assignments after steps" in {
+  "process with VarCalc" should "do assignments after steps" in {
     // Use approximate equality in `should equal`
     val precision = 1e-4
     implicit val doubleEquality =

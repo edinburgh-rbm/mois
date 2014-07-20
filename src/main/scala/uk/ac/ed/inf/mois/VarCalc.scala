@@ -1,5 +1,5 @@
 /*
- *  MOIS: VarSet Process Helper Trait
+ *  MOIS: VarCalc Process Helper Trait
  *  Copyright (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,22 +19,22 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 
-trait VarSet extends BaseProcess {
+trait VarCalc extends BaseProcess {
   type Func = () => Double
 
   private val vars = mutable.ArrayBuffer.empty[DoubleVar]
   private val funcs = mutable.ArrayBuffer.empty[Func]
 
-  protected class Setter(val v: DoubleVar) {
+  protected class Calcter(val v: DoubleVar) {
     def := (e: => Double): Unit = {
       vars += v
       funcs += (() => e)
     }
   }
 
-  @inline final def set(v: DoubleVar) = new Setter(v)
+  @inline final def calc(v: DoubleVar) = new Calcter(v)
 
-  protected class SetVars extends StepHandler {
+  protected class CalcVars extends StepHandler {
     def init(t: Double, proc: BaseProcess) {}
     def handleStep(t: Double, proc: BaseProcess) {
       for ((v, f) <- vars zip funcs) {
@@ -43,5 +43,5 @@ trait VarSet extends BaseProcess {
     }
   }
 
-  addStepHandler(new SetVars)
+  addStepHandler(new CalcVars)
 }
