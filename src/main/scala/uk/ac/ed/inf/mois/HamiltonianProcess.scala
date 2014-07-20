@@ -40,7 +40,7 @@ abstract class HamiltonianProcess(name: String) extends ODE(name) {
    * intended to facilitate combining several Hamiltonian processes together in
    * a single process group.
    */
-  var E = Double(s"p${pid}:E")
+  var totalEnergy = 0.0
 
   case class H(q: Seq[DoubleVar], p: Seq[DoubleVar])
        extends MultivariateDifferentiableFunction {
@@ -67,7 +67,7 @@ abstract class HamiltonianProcess(name: String) extends ODE(name) {
       gradH = new GradientFunction(this)
       for (v <- phase)
         vars += v
-      E := energy() // calculate initial energy
+      totalEnergy = energy() // calculate initial energy
     }
 
     def value(point: Array[Double]): Double = {
@@ -78,33 +78,22 @@ abstract class HamiltonianProcess(name: String) extends ODE(name) {
       val partials = new Array[Double](point.size)
       for (i <- 0 until point.size) {
 	val pval: DerivativeStructure = differentiator.differentiate(unis(i)).value(point(i))
-//	println(s"\tvalue:\t\t${pval.getValue}")
-//	println(s"\tallderiv:\t${pval.getAllDerivatives.toSeq.toString}")
-
-	partials(i) = pval.getAllDerivatives()(1+i) //PartialDerivative(1)
+	partials(i) = pval.getAllDerivatives()(1+i)
       }
-//      println(s"point:\t\t${point.map(_.getValue).toSeq.toString}")
-//      println(s"energy:\t\t${energy()}")
-//      println(s"partials:\t${partials.toSeq.toString}")
-      E := energy()
-      new DerivativeStructure(point.size, 1, Seq(E.value) ++ partials: _*)
+      totalEnergy = energy()
+      new DerivativeStructure(point.size, 1, Seq(totalEnergy) ++ partials: _*)
     }
   }
-
-
 
   override def computeDerivatives(time: Double, 
 				  qp: Array[Double],
 				  dqp: Array[Double]) {
     val dH = gradH.value(qp)
-//    println(s"dH:\t\t${dH.toSeq.toString}")
     val nq = qp.size/2
     for (i <- 0 until nq) {
       dqp(i) = dH(nq + i)
       dqp(nq + i) = -dH(i)
     }
-//    println(s"dqp:\t\t${dqp.toSeq.toString}")
-//    println("")
   }
 }
 
