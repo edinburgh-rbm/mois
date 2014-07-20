@@ -130,6 +130,13 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
     floatData = new ma2.ArrayFloat(shape)
     intData = new ma2.ArrayInt(shape)
 
+    // annotate the variables
+    for ((v, cv) <- cdfvars) {
+      for ((k, v) <- v.meta.annotations) {
+	cv.addAttribute(new nc2.Attribute(k, v))
+      }
+    }
+
     fp.create()
     fp
   }

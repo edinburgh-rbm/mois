@@ -30,6 +30,7 @@ case class ConstraintViolation(msg: String) extends Exception(msg)
   * state variable.
   */
 case class VarMeta(identifier: String) extends Ordered[VarMeta] {
+  val annotations = mutable.Map.empty[String, String]
   def compare(that: VarMeta): Int = this.identifier compare that.identifier
   override def toString = identifier
 }
@@ -106,6 +107,12 @@ abstract class Var[T] {
   def must(constraint: Constraint) = {
     constraints += constraint
     AddConstraint
+  }
+
+  /** Adds an annotation to variable metadata */
+  def Annotate(k: String, v: String) = {
+    meta.annotations += k -> v
+    this
   }
 }
 
