@@ -51,9 +51,13 @@ abstract class DiscreteProcess(val name: String)
   def step(t0: Double, tau: Double) {
     var t = t0
     while (t < t0+tau) {
+      // We do the setting in two steps so as not to perturb the
+      // t values when setting t+1. So first calculate all the 
+      // t+1 values
       for ((v, f) <- vars zip funcs) {
 	v := f()
       }
+      // ... and *then* set the actual variables.
       for (v <- vars) {
 	doubleVars(v) := v
       }
