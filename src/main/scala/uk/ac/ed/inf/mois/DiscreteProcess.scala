@@ -17,8 +17,6 @@
  */
 package uk.ac.ed.inf.mois
 
-import scala.language.experimental.macros
-import scala.reflect.macros.Context
 import scala.collection.mutable
 
 abstract class DiscreteProcess(val name: String)
