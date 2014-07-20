@@ -58,15 +58,21 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
       nc2.NetcdfFileWriter.Version.netcdf3,
       filename, null)
 
-    // add some metadata to the file
-    fp.addGroupAttribute(null, new nc2.Attribute("process", proc.toString))
+    // add user-defined annotations
+    for ((k, v) <- proc.annotations) {
+      v match {
+	case n: Number =>
+	  fp.addGroupAttribute(null, new nc2.Attribute(k, n))
+	case s: String =>
+	  fp.addGroupAttribute(null, new nc2.Attribute(k, s))
+	case _ =>
+	  fp.addGroupAttribute(null, new nc2.Attribute(k, v.toString))
+      }
+    }
+
+    // add some extra metadata to the file
     val now = java.util.Calendar.getInstance().getTime().toString
     fp.addGroupAttribute(null, new nc2.Attribute("created", now))
-
-    val p = getClass.getPackage
-    val name = p.getImplementationTitle
-    val version = p.getImplementationVersion
-    fp.addGroupAttribute(null, new nc2.Attribute("version", s"${name} ${version}"))
 
     // add the dimensions
     val timeDim = fp.addUnlimitedDimension("time")
@@ -133,7 +139,14 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
     // annotate the variables
     for ((v, cv) <- cdfvars) {
       for ((k, v) <- v.meta.annotations) {
-	cv.addAttribute(new nc2.Attribute(k, v))
+	v match {
+	  case n: Number =>
+	    cv.addAttribute(new nc2.Attribute(k, n))
+	  case s: String =>
+	    cv.addAttribute(new nc2.Attribute(k, s))
+	  case _ =>
+	    cv.addAttribute(new nc2.Attribute(k, v.toString))
+	}
       }
     }
 

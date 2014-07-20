@@ -34,15 +34,32 @@ private object ProcessID {
 /** A `Process` is basically a `State` and a function that operates
   * upon it parametrised by time.
   */
-abstract class BaseProcess extends VarContainer {
+abstract class BaseProcess extends VarContainer with Annotation {
 
   val name: String
   val stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
   val dimensions = mutable.Map.empty[Var[_], Int]
 
-  /** Automatically assigned (locally) unique process identifier
-   */
+  /** Automatically assigned (locally) unique process identifier */
   val pid = ProcessID.alloc
+
+  /** Automatically annotate the process with its software name and version */
+  protected def addBasicAnnotations = {
+    // XXX why does this not work? Implementation title and version
+    // aways return null for derived classes
+    val pkg = getClass.getPackage
+    val pkgname = pkg.getImplementationTitle
+    val pkgversion = pkg.getImplementationVersion
+    if (pkgname != null && pkgversion != null) {
+      Annotate(pkgname, pkgversion)
+    }
+
+    import uk.ac.ed.inf.{mois => m}
+    Annotate(m.name, m.version)
+    Annotate("name", name)
+    Annotate("type", stringPrefix)
+    Annotate("class", getClass.getName)
+  }
 
   def state: Seq[Var[_]] = allVars.values.toSeq
 
@@ -66,6 +83,7 @@ abstract class BaseProcess extends VarContainer {
    * runs for the first time. Initialises step handlers.
    */
   def init(t: Double) {
+    addBasicAnnotations
     for (sh <- stepHandlers)
       sh.init(t, this)
   }

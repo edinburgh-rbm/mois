@@ -19,7 +19,6 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 import scala.language.implicitConversions
-import scala.reflect.ClassTag
 
 /** A `ConstraintViolation` is raised when a restriction on a `Var`
   * is violated.
@@ -29,8 +28,7 @@ case class ConstraintViolation(msg: String) extends Exception(msg)
 /** This class is to abstract away the details of uniquely identifying a
   * state variable.
   */
-case class VarMeta(identifier: String) extends Ordered[VarMeta] {
-  val annotations = mutable.Map.empty[String, String]
+case class VarMeta(identifier: String) extends Ordered[VarMeta] with Annotation {
   def compare(that: VarMeta): Int = this.identifier compare that.identifier
   override def toString = identifier
 }
@@ -111,8 +109,7 @@ abstract class Var[T] {
 
   /** Adds an annotation to variable metadata */
   def Annotate(k: String, v: String) = {
-    meta.annotations += k -> v
-    this
+    meta.Annotate(k, v)
   }
 }
 

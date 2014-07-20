@@ -1,5 +1,5 @@
 /*
- *  MOIS: Package Top-level Documentation
+ *  MOIS: Variable Types
  *  Copyright (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,15 +15,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.ed.inf
+package uk.ac.ed.inf.mois
 
-/**
- * 
- * == Module Integration Simulator ==
- *
- */
-package object mois {
-  private val p = getClass.getPackage
-  val name = p.getImplementationTitle
-  val version = p.getImplementationVersion
+import scala.collection.mutable
+
+trait Annotation {
+  val annotations = mutable.Map.empty[String, Any]
+  def Annotate(k: String, v: Any) {
+    annotations += k -> v
+  }
 }
