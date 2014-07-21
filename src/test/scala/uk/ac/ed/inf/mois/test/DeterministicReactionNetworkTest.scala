@@ -49,7 +49,7 @@ class DeterministicReactionNetworkTest extends FlatSpec with Matchers {
     // Plot
     val series = (for (v <- Brusselator.vars) yield
       (v.meta, new XYSeries(v.meta))).toMap
-    for ((t, vs) <- acc.history; v <- vs if v.isInstanceOf[D])
+    for ((t, vs) <- acc.history; v <- vs.allVars.values if v.isInstanceOf[D])
       series(v.meta).add(t, v.asInstanceOf[D].value)
     val dataset = new XYSeriesCollection
     for ((v, ss) <- series)
