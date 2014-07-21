@@ -61,14 +61,30 @@ class VarTest extends FlatSpec with Matchers
 
   it should "respect constraints" in {
     val r1 = Double("ex:r1")
-    r1 must (_ >= 0) and (_ <= 2)
+    r1 must (_ >= 0)
 
+    r1 := 0
+    r1 := 1
     intercept[ConstraintViolation] {
-      r1 -= 1.0
+      r1 := -1.0
     }
 
+    val r2 = Double("ex:r2")
+    r2 must (_ <= 2)
+    r2 := 0
+    r2 := 2
     intercept[ConstraintViolation] {
-      r1 += 3.0
+      r2 := 3.0
+    }
+
+    val r3 = Double("ex:r3")
+    r3 must (_ >= 0) and (_ <= 2)
+    r3 := 1
+    intercept[ConstraintViolation] {
+      r3 := -1.0
+    }
+    intercept[ConstraintViolation] {
+      r3 := 3.0
     }
   }
 

@@ -90,7 +90,7 @@ abstract class Var[T] {
 
   /** Assignment to a Variable is expected to set the underlying value. */
   def update(x: T): this.type = {
-    for (c <- constraints if c(x))
+    for (c <- constraints if !c(x))
       throw new ConstraintViolation("variable " + this +
         " violated a constraint by setting its value to " + x)
     value = x
