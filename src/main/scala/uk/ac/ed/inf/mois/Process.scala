@@ -124,7 +124,7 @@ abstract class BaseProcess extends VarContainer with Annotation {
   }
   object Dimension {
     def apply(v: Var[_], size: Int): Dimension = {
-      dimensions += v -> size
+      dimensions += allVars(v.meta) -> size
       Dimension(v)
     }
     def apply(v: Var[_]): Dimension = new Dimension(v)
