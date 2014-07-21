@@ -12,7 +12,7 @@ Reimplementation of Dominik Bucher's original at
 https://github.com/edinburgh-rbm/moi-sim.git
 
   * [Examples and Narrative Documentation](https://edinburgh-rbm.github.io/mois-examples/)
-  * [API Documentation](https://edinburgh-rbm.github.io/api/current)
+  * [API Documentation](https://edinburgh-rbm.github.io/mois/api/current)
 
 Building and Releasing
 ======================
