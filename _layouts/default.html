@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/mois-examples/stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/mois-examples/stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/mois-examples/stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>mois: {{title}}</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Module Integration Simulator</h1>
+          <h2>{{title}}</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/edinburgh-rbm/mois/zipball/master" id="download-zip" class="button"><span>.zip</span></a>
+          <a href="https://github.com/edinburgh-rbm/mois/tarball/master" id="download-tar-gz" class="button"><span>.tar.gz</span></a>
+          <a href="https://github.com/edinburgh-rbm/mois" id="view-on-github" class="button"><span>GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+{{content}}
+        </section>
+
+        <footer>
+          MOIS is maintained by the <a href="https://github.com/edinburgh-rbm">edinburgh-rbm</a> group<br>
+          at the University of Edinburgh <a href="http://www.inf.ed.ac.uk/">School of Informatics</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+      processEscapes: true
+    },
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+    </script>
+    <script type="text/javascript"
+	    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+  </body>
+</html>
