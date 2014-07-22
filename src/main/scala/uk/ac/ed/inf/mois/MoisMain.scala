@@ -122,17 +122,17 @@ object MoisMain {
     note("") // spacer
 
 
-    cmd("run") action { (_, c) =>
+    cmd("model") action { (_, c) =>
       c.copy(command = Some("run"))
     } text("Run a model") children(
-      opt[Double]('b', "begin") action { (x, c) =>
-	c.copy(begin = Some(x))
-      } text("Simulation start time (default: 0.0)"),
-
       opt[Double]('d', "duration") action { (x, c) =>
 	c.copy(duration = Some(x))
       } required() text("Simulation duration (mandatory)"),
 
+      opt[Double]('b', "begin") action { (x, c) =>
+	c.copy(begin = Some(x))
+      } text("Simulation start time (default: 0.0)"),
+      
       opt[String]('i', "initial") action { (filename, c) =>
 	val fp = scala.io.Source.fromFile(filename)
 	val json = fp.mkString

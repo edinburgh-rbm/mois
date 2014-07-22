@@ -26,6 +26,11 @@ class MoisMainTest extends FlatSpec with Matchers {
     MoisMain.optParser.parse(args, MoisMain.Config())
   }
 
+  def run(args: String*) = {
+    MoisMain.main(args.toArray)
+    true
+  }
+  
   "main class" should "understand TSV step handlers for stdout" in {
     val sh = MoisMain.getStepHandler("tsv:")
     sh.isDefined should be (true)
@@ -60,7 +65,7 @@ class MoisMainTest extends FlatSpec with Matchers {
   }
 
   it should "parse step handlers from the command line" in {
-    val ocfg = parse("run",
+    val ocfg = parse("model",
 		    "-d", "1",
 		    "-o", "tsv:",
 		    "-o", "netcdf:/dev/null",
@@ -72,5 +77,9 @@ class MoisMainTest extends FlatSpec with Matchers {
     cfg.stepHandlers(0).get.isInstanceOf[TsvWriter] should be (true)
     cfg.stepHandlers(1).isDefined should be (true)
     cfg.stepHandlers(1).get.isInstanceOf[NetCDFWriter] should be (true)
+  }
+
+  it should "print out information about a model" in {
+    run("info", "TestModel1") should be (true)
   }
 }
