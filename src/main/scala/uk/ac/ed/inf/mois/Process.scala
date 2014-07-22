@@ -55,7 +55,10 @@ abstract class BaseProcess extends VarContainer with Annotation {
     }
 
     import uk.ac.ed.inf.{mois => m}
-    Annotate(m.name, m.version)
+    if (m.name != null && m.version != null) {
+      Annotate(m.name, m.version)
+    }
+
     Annotate("name", name)
     Annotate("type", stringPrefix)
     Annotate("class", getClass.getName)

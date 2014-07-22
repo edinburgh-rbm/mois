@@ -188,18 +188,6 @@ object MoisMain {
     }
   }
 
-  def info(cfg: Config) {
-    println("info")
-  }
-
-  def list(cfg: Config) {
-    println("Known models:\n\t" +
-	    Model.all
-	      .sortBy(_.toString)
-	      .map(_.toString.split("@")(0))
-	      .mkString("\n\t"))
-  }
-
   def getStepHandler(spec: String): Option[StepHandler] = {
     val fmtargs = spec split ":"
     val format = fmtargs(0)
@@ -239,6 +227,38 @@ object MoisMain {
 	None
       }
     }
+  }
+
+  def info(cfg: Config) {
+    val model = cfg.model.get
+    model.init(0)
+    println("model parameters:")
+    for (v <- model.allVars.values) {
+      println(String.format("    %s", v))
+      for ((k, a) <- v.meta.annotations)
+	println(String.format("%24s: %s", k, a.toString))
+    }
+
+    println("process tree:")
+    def prprocess(proc: BaseProcess, prefix: String) {
+      for ((k,a) <- model.process.annotations)
+	println(String.format("%s%16s: %s", prefix, k, a.toString))
+      println(String.format("%s%16s:", prefix, "variables"))
+      for (v <- model.process.state) {
+	println(String.format("%s          %s", prefix, v))
+	for ((k, a) <- v.meta.annotations) 
+          println(String.format("%s%32s: %s", prefix, k, a.toString))
+      }
+    }
+    prprocess(model.process, "")
+  }
+
+  def list(cfg: Config) {
+    println("Known models:\n\t" +
+	    Model.all
+	      .sortBy(_.toString)
+	      .map(_.toString.split("@")(0))
+	      .mkString("\n\t"))
   }
 
   def run(cfg: Config) {
