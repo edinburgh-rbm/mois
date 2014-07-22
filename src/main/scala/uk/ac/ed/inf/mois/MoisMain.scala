@@ -162,9 +162,12 @@ object MoisMain {
 
       note(""),
       note("Allowed output specifications:"),
-      note("\ttsv:\t\t\tTab-separated values to standard output"),
-      note("\ttsv:<filename>\t\tTab-separated values to the given file"),
-      note("\tnetcdf:<filename>\tNetCDF output to the given file"),
+      note("\tgui[:vars...]\t\tSimple plot to a graphical window."),
+      note("\tnetcdf:<file>\t\tNetCDF output to the given file"),
+      note("\tpng:<file>[:vars...]\tSimple plot to a PNG file"),
+      note("\ttsv\t\t\tTab-separated values to standard output"),
+      note("\ttsv:<file>\t\tTab-separated values to the given file"),
+      note(""),
 
       checkConfig { c =>
 	if (c.command == Some("run")) {
