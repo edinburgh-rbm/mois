@@ -1,32 +1,36 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.{DeterministicReactionNetwork, Accumulator,
-  DoubleVarIntf => D}
-
-import org.jfree.data.xy.{XYSeries, XYSeriesCollection}
-import org.jfree.chart.{ChartFactory, ChartUtilities}
-import org.jfree.chart.plot.PlotOrientation
+			  Model, DoubleVarIntf => D}
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
+object Brusselator
+  extends DeterministicReactionNetwork("Brusselator") {
+  
+  val A = Specie("A") := 1.0
+  val B = Specie("B") := 1.7
+  val X = Specie("X") := 1.0
+  val Y = Specie("Y") := 1.0
+  
+  reactions(
+    A -> X + A at 1.0,
+    2(X) + Y -> 3(X) at 1.0,
+    B + X -> B + Y at 1.0,
+    X -> () at 1.0
+  )
+}
+
+/**
+ * BrusselatorModel is used generically in test:run because it is a
+ * decent model to test things like graphing out.
+ */
+class BrusselatorModel extends Model {
+  val process = Brusselator
+}
+
 class DeterministicReactionNetworkTest extends FlatSpec with Matchers {
-
-  object Brusselator
-      extends DeterministicReactionNetwork("Brusselator") {
-
-    val A = Specie("A")
-    val B = Specie("B")
-    val X = Specie("X")
-    val Y = Specie("Y")
-
-    reactions(
-      A -> X + A at 1.0,
-      2(X) + Y -> 3(X) at 1.0,
-      B + X -> B + Y at 1.0,
-      X -> () at 1.0
-    )
-  }
 
   // Use approximate equality in `should equal`
   val precision = 1e-3
@@ -42,23 +46,6 @@ class DeterministicReactionNetworkTest extends FlatSpec with Matchers {
     val acc = new Accumulator
     Brusselator.addStepHandler(acc)
     Brusselator.step(0, 50)
-
-    // TODO: Move this into a uk.ac.ed.inf.mois.Plotting
-    // Also maybe there should be an Accumulator that stores the
-    // values directly on XYSeries for memory-efficiency.
-    // Plot
-    val series = (for (v <- Brusselator.vars) yield
-      (v.meta, new XYSeries(v.meta))).toMap
-    for ((t, vs) <- acc.history; v <- vs.allVars.values if v.isInstanceOf[D])
-      series(v.meta).add(t, v.asInstanceOf[D].value)
-    val dataset = new XYSeriesCollection
-    for ((v, ss) <- series)
-      dataset.addSeries(ss)
-    val chart = ChartFactory.createXYLineChart(
-      "Brusselator", "Time", "Concentration", dataset,
-      PlotOrientation.VERTICAL, true, true, false)
-    ChartUtilities.saveChartAsJPEG(
-      new java.io.File("brusselator.jpg"), chart, 800, 600)
 
     // Tests
     Brusselator.X.value should equal (1.0)

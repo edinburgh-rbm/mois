@@ -222,6 +222,19 @@ object MoisMain {
 	  }
 	}
       }
+      case "plot" => {
+	fmtargs.size match {
+	  case 2 => Some(new PlotWriter(fmtargs(1)))
+	  case 3 => {
+	    val vars = fmtargs(2) split (",")
+	    Some(new PlotWriter(fmtargs(1), vars:_*))
+	  }
+	  case _ => {
+	    System.err.println("Invalid spec for Plot output")
+	    None
+	  }
+	}
+      }
       case _ => {
 	System.err.println("Unknown output format")
 	None

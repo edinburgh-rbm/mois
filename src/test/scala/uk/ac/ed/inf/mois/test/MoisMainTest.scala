@@ -19,7 +19,7 @@ package uk.ac.ed.inf.mois.test
 
 import org.scalatest.{FlatSpec, Matchers}
 import uk.ac.ed.inf.mois.MoisMain
-import uk.ac.ed.inf.mois.{TsvWriter, NetCDFWriter}
+import uk.ac.ed.inf.mois.{TsvWriter, NetCDFWriter, PlotWriter}
 
 class MoisMainTest extends FlatSpec with Matchers {
   def parse(args: String*) = {
@@ -62,6 +62,23 @@ class MoisMainTest extends FlatSpec with Matchers {
   it should "not understand mal-formed NetCDF step handlers" in {
     val sh = MoisMain.getStepHandler("netcdf:/dev/null:xxx")
     sh.isDefined should be (false)
+  }
+
+  it should "understand Plot step handlers" in {
+    val sh = MoisMain.getStepHandler("plot:/dev/null")
+    sh.isDefined should be (true)
+    sh.get.isInstanceOf[PlotWriter] should be (true)
+  }
+
+  it should "understand Plot step handlers with arguments" in {
+    val sh = MoisMain.getStepHandler("plot:/dev/null:x,y")
+    sh.isDefined should be (true)
+    sh.get.isInstanceOf[PlotWriter] should be (true)
+  }
+
+  it should "not understand mal-formed Plot step handler specs" in {
+    val sh = MoisMain.getStepHandler("plot:")
+    sh.isDefined  should be (false)
   }
 
   it should "parse step handlers from the command line" in {
