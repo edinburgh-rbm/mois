@@ -62,7 +62,7 @@ class ModelTest extends FlatSpec with Matchers {
     }
   }
 
-  it should "find two models when asked for all of them" in {
-    Model.all.size should equal (2)
+  it should "find three models when asked for all of them" in {
+    Model.all.size should equal (3)
   }
 }
