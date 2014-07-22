@@ -71,10 +71,10 @@ object MoisMain {
   // condition.  That is definitely within the scope of StepHandler.
 
   case class Config(
+    val command: Option[String] = None,
     val begin: Option[Double] = Some(0.0),
     val duration: Option[Double] = None,
-    val format: String = "tsv",
-    val outputFile: Option[String] = None,
+    val stepHandlers: Seq[Option[StepHandler]] = Seq[Option[StepHandler]](),
     val dumpState: Boolean = false,
     val model: Option[Model] = None,
     val params: Option[String] = None,
@@ -84,119 +84,200 @@ object MoisMain {
   private val p = getClass.getPackage
   private val name = p.getImplementationTitle
 
-  private val parser = new scopt.OptionParser[Config](name) {
+  val optParser = new scopt.OptionParser[Config](name) {
     val version = p.getImplementationVersion
     head(name, version)
 
-    opt[Double]('b', "begin") action { (x, c) =>
-      c.copy(begin = Some(x))
-    } text("Simulation start time (default: 0.0)")
+    cmd("info") action { (_, c) =>
+      c.copy(command = Some("info"))
+    } text("Get information on a model") children(
+	arg[String]("<model>") action { (modelName, c) =>
+	  try {
+	    val model = Model(modelName)
+	    c.copy(model = Some(model))
+	  } catch {
+	    case e: IllegalArgumentException => {
+	      Console.err.println(e)
+	      c
+	    }
+	  }
+	} required () text("Model name"),
 
-    opt[Double]('d', "duration") action { (x, c) =>
-      c.copy(duration = Some(x))
-    } required() text("Simulation duration (mandatory)")
+	checkConfig { c =>
+	  if (c.command == Some("info")) {
+	    if (!c.model.isDefined)
+	      failure("Could not find the requested model")
+	    else
+	      success
+	  } else {
+	    success
+	  }
+	}
+      )
+    note("") // spacer
 
-    opt[String]('i', "initial") action { (filename, c) =>
-      val fp = scala.io.Source.fromFile(filename)
-      val json = fp.mkString
-      fp.close()
-      c.copy(initial = Some(json))
-    } text("Initial conditions filename (JSON)")
+    cmd("list") action { (_, c) =>
+      c.copy(command = Some("list"))
+    } text("List models")
+    note("") // spacer
 
-    opt[Boolean]('s', "state") action { (x, c) =>
-      c.copy(dumpState = true)
-    } text("Dump state at end of simulation")
 
-    opt[String]('f', "format") action { (format, c) =>
-      c.copy(format = format)
-    } text("Timeseries output format (default: tsv)")
+    cmd("run") action { (_, c) =>
+      c.copy(command = Some("run"))
+    } text("Run a model") children(
+      opt[Double]('b', "begin") action { (x, c) =>
+	c.copy(begin = Some(x))
+      } text("Simulation start time (default: 0.0)"),
 
-    opt[String]('o', "output") action { (outputFile, c) =>
-      c.copy(outputFile = Some(outputFile))
-    } text("Output file (default: stdout)")
+      opt[Double]('d', "duration") action { (x, c) =>
+	c.copy(duration = Some(x))
+      } required() text("Simulation duration (mandatory)"),
 
-    arg[String]("<model>") action { (modelName, c) =>
-      try {
-	val model = Model(modelName)
-	c.copy(model = Some(model))
-      } catch {
-	case e: IllegalArgumentException => {
-	  Console.err.println(e)
-	  c
+      opt[String]('i', "initial") action { (filename, c) =>
+	val fp = scala.io.Source.fromFile(filename)
+	val json = fp.mkString
+	fp.close()
+	c.copy(initial = Some(json))
+      } text("Initial conditions filename (JSON)"),
+
+      opt[Boolean]('s', "state") action { (x, c) =>
+	c.copy(dumpState = true)
+      } text("Dump state at end of simulation"),
+
+      opt[String]('o', "output") action { (outspec, c) =>
+	c.copy(stepHandlers = c.stepHandlers ++ Seq(getStepHandler(outspec)))
+      } optional() unbounded() text("Output specification"),
+
+      arg[String]("<model>") action { (modelName, c) =>
+	try {
+	  val model = Model(modelName)
+	  c.copy(model = Some(model))
+	} catch {
+	  case e: IllegalArgumentException => {
+	    Console.err.println(e)
+	    c
+	  }
+	}
+      } required () text("Model name"),
+
+      note(""),
+      note("Allowed output specifications:"),
+      note("\ttsv:\t\t\tTab-separated values to standard output"),
+      note("\ttsv:<filename>\t\tTab-separated values to the given file"),
+      note("\tnetcdf:<filename>\tNetCDF output to the given file"),
+
+      checkConfig { c =>
+	if (c.command == Some("run")) {
+	  if (!c.model.isDefined)
+	    failure("Could not find the requested model")
+	  else if (!c.stepHandlers.foldLeft(true)((acc, shopt) => acc && shopt.isDefined))
+	    failure("Bad step handlers")
+	  else 
+	    success
+	} else {
+	  success
 	}
       }
-    } required() text("Model name")
+    )
 
-    checkConfig { c => 
-      if (!c.model.isDefined)
-	failure("could not find the requested model")
-      if (c.format == "netcdf" && !c.outputFile.isDefined)
-	failure("netcdf output requires a file name")
-      success
+    checkConfig { c =>
+      if (!c.command.isDefined)
+	failure("Must specify a command")
+      else
+	success
     }
-
-    note("\nKnown models:\n\t" +
-	 Model.all
-	   .sortBy(_.toString)
-	   .map(_.toString.split("@")(0))
-	   .mkString("\n\t"))
   }
 
-  private def eUsage(s: String) {
-    Console.err.println(s)
-    parser.showTryHelp
-    sys.exit
+  def info(cfg: Config) {
+    println("info")
+  }
+
+  def list(cfg: Config) {
+    println("Known models:\n\t" +
+	    Model.all
+	      .sortBy(_.toString)
+	      .map(_.toString.split("@")(0))
+	      .mkString("\n\t"))
+  }
+
+  def getStepHandler(spec: String): Option[StepHandler] = {
+    val fmtargs = spec split ":"
+    val format = fmtargs(0)
+    format match {
+      case "tsv" => {
+	fmtargs.size match {
+	  case 1 => {
+	    // ugly monkey patch to allow output to stdout when running
+	    // under sbt cli
+	    val osw = new java.io.OutputStreamWriter(System.out, "UTF-8")
+	    val stdout = new java.io.PrintWriter(osw)
+	    Some(new TsvWriter(stdout) {
+	      override def finish {}
+	    })
+	  }
+	  case 2 => {
+	    val fp = new java.io.File(fmtargs(1))
+	    Some(new TsvWriter(new java.io.PrintWriter(fp)))
+	  }
+	  case _ => {
+	    System.err.println("Invalid spec for TSV output")
+	    None
+	  }
+	}
+      }
+      case "netcdf" => {
+	fmtargs.size match {
+	  case 2 => Some(new NetCDFWriter(fmtargs(1)))
+	  case _ => {
+	    System.err.println("Invalid spec for NetCDF output")
+	    None
+	  }
+	}
+      }
+      case _ => {
+	System.err.println("Unknown output format")
+	None
+      }
+    }
+  }
+
+  def run(cfg: Config) {
+    // get the model
+    val model = cfg.model.get
+    
+    // get simulation start
+    val begin = cfg.begin.get
+    
+    // get duration
+    val duration = cfg.duration.get
+
+    // set up output
+    for (sh <- cfg.stepHandlers)
+      model.process.addStepHandler(sh.get)
+
+    // set initial conditions
+    if(cfg.initial.isDefined)
+      model.process.fromJSON(cfg.initial.get)
+    
+    // run the simulation
+    model.init(begin)
+    model.run(begin, duration)
+    model.finish
+
+    // clean up output
+    System.out.flush()
+
+    if (cfg.dumpState)
+      println(model.process.toJSON)
   }
 
   def main(args: Array[String]) {
-    parser.parse(args, Config()) map { cfg =>
-
-      // get the model
-      val model = cfg.model.get
-
-      // get simulation start
-      val begin = cfg.begin.get
-
-      // get duration
-      val duration = cfg.duration.get
-
-      // set up output
-      cfg.format match {
-	case "tsv" =>
-	  val outputHandler = 
-	    if (cfg.outputFile.isDefined) {
-	      val fp = new java.io.File(cfg.outputFile.get)
-	      new TsvWriter(new java.io.PrintWriter(fp))
-	    } else {
-	      // ugly monkey patch to allow output to stdout when running
-	      // under sbt cli
-	      val stdout = new java.io.PrintWriter(new java.io.OutputStreamWriter(System.out, "UTF-8"))
-	      new TsvWriter(stdout) {
-	        override def finish {}
-	      }
-	    }
-	  model.process.addStepHandler(outputHandler)
-	case "netcdf" =>
-	  val outputHandler = new NetCDFWriter(cfg.outputFile.get)
-	  model.process.addStepHandler(outputHandler)
-	case _ => throw new IllegalArgumentException(
-          "I don't understand format" + cfg.format)
+    optParser.parse(args, Config()) map { cfg =>
+      cfg.command.get match {
+	case "info" => info(cfg)
+	case "list" => list(cfg)
+	case "run" => run(cfg)
       }
-
-      // set initial conditions
-      if(cfg.initial.isDefined)
-	model.process.fromJSON(cfg.initial.get)
-
-      // run the simulation
-      model.init(begin)
-      model.run(begin, duration)
-      model.finish
-
-      // clean up output
-      System.out.flush()
-
-      if (cfg.dumpState)
-	println(model.process.toJSON)
     } getOrElse {
       // some kind of specific error processing? 
     }
