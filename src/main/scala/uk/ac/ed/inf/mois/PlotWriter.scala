@@ -20,14 +20,16 @@ package uk.ac.ed.inf.mois
 import scala.collection.mutable
 
 import org.jfree.data.xy.{XYSeries, XYSeriesCollection}
-import org.jfree.chart.{ChartFactory, ChartUtilities}
+import org.jfree.chart.{ChartFactory, ChartPanel, ChartUtilities}
 import org.jfree.chart.plot.PlotOrientation
+
+import javax.swing.{JFrame, WindowConstants}
 
 /**
  * A StepHandler may be added to a `Process`. It then gets called at
  * the conclusion of each step with the end time and the state.
  */
-class PlotWriter(filename: String, varnames: String*)
+abstract class PlotWriter(varnames: String*)
     extends StepHandler with VarConversions {
 
   val series = mutable.Map.empty[Var[_], XYSeries]
@@ -71,15 +73,55 @@ class PlotWriter(filename: String, varnames: String*)
     }
   }
 
-  override def finish {
+  def chart = {
     val dataset = new XYSeriesCollection
     for ((v, ss) <- series.toSeq.sortBy(_._1.meta))
       dataset.addSeries(ss)
-    val chart = ChartFactory.createXYLineChart(
+    ChartFactory.createXYLineChart(
       title, "Time", ylabel, dataset,
       PlotOrientation.VERTICAL, true, true, false)
-    ChartUtilities.saveChartAsJPEG(
-      new java.io.File(filename), chart, 800, 600
-    )
+  }
+}
+
+class PlotFileWriter(filename: String, varnames: String*)
+    extends PlotWriter(varnames:_*) {
+  override def finish {
+    val fp = new java.io.File(filename)
+    ChartUtilities.saveChartAsPNG(fp, chart, 800, 600)
+    if (fp.isInstanceOf[java.io.Closeable])
+      fp.asInstanceOf[java.io.Closeable].close
+  }
+}
+
+class PlotGUIWriter(varnames: String*)
+    extends PlotWriter(varnames:_*) {
+
+  private object gui {
+    var frame: JFrame = null
+    object init extends Runnable {
+      override def run {
+	frame = new JFrame("mois")
+	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	frame.setSize(800, 600)
+	frame.setVisible(true)
+      }
+    }
+    object finish extends Runnable {
+      override def run = {
+	val panel = new ChartPanel(chart)
+	panel.setPreferredSize(new java.awt.Dimension(800, 600))
+	frame.setContentPane(panel)
+	frame.pack
+      }
+    }
+  }
+
+  override def init(t: Double, proc: BaseProcess) {
+    super.init(t, proc)
+    java.awt.EventQueue.invokeLater(gui.init)
+  }
+
+  override def finish {
+    java.awt.EventQueue.invokeLater(gui.finish)
   }
 }

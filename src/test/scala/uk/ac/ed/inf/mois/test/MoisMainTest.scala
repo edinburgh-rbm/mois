@@ -19,7 +19,8 @@ package uk.ac.ed.inf.mois.test
 
 import org.scalatest.{FlatSpec, Matchers}
 import uk.ac.ed.inf.mois.MoisMain
-import uk.ac.ed.inf.mois.{TsvWriter, NetCDFWriter, PlotWriter}
+import uk.ac.ed.inf.mois.{TsvWriter, NetCDFWriter,
+			  PlotFileWriter, PlotGUIWriter}
 
 class MoisMainTest extends FlatSpec with Matchers {
   def parse(args: String*) = {
@@ -65,20 +66,32 @@ class MoisMainTest extends FlatSpec with Matchers {
   }
 
   it should "understand Plot step handlers" in {
-    val sh = MoisMain.getStepHandler("plot:/dev/null")
+    val sh = MoisMain.getStepHandler("png:/dev/null")
     sh.isDefined should be (true)
-    sh.get.isInstanceOf[PlotWriter] should be (true)
+    sh.get.isInstanceOf[PlotFileWriter] should be (true)
   }
 
   it should "understand Plot step handlers with arguments" in {
-    val sh = MoisMain.getStepHandler("plot:/dev/null:x,y")
+    val sh = MoisMain.getStepHandler("png:/dev/null:x,y")
     sh.isDefined should be (true)
-    sh.get.isInstanceOf[PlotWriter] should be (true)
+    sh.get.isInstanceOf[PlotFileWriter] should be (true)
   }
 
   it should "not understand mal-formed Plot step handler specs" in {
-    val sh = MoisMain.getStepHandler("plot:")
+    val sh = MoisMain.getStepHandler("png:")
     sh.isDefined  should be (false)
+  }
+
+  it should "understand GUI step handlers" in {
+    val sh = MoisMain.getStepHandler("gui")
+    sh.isDefined should be (true)
+    sh.get.isInstanceOf[PlotGUIWriter] should be (true)
+  }
+
+  it should "understand GUI step handlers with arguments" in {
+    val sh = MoisMain.getStepHandler("gui:x,y,z")
+    sh.isDefined should be (true)
+    sh.get.isInstanceOf[PlotGUIWriter] should be (true)
   }
 
   it should "parse step handlers from the command line" in {

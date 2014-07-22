@@ -222,18 +222,31 @@ object MoisMain {
 	  }
 	}
       }
-      case "plot" => {
+      case "png" => {
 	fmtargs.size match {
-	  case 2 => Some(new PlotWriter(fmtargs(1)))
+	  case 2 => Some(new PlotFileWriter(fmtargs(1)))
 	  case 3 => {
 	    val vars = fmtargs(2) split (",")
-	    Some(new PlotWriter(fmtargs(1), vars:_*))
+	    Some(new PlotFileWriter(fmtargs(1), vars:_*))
 	  }
 	  case _ => {
 	    System.err.println("Invalid spec for Plot output")
 	    None
 	  }
 	}
+      }
+      case "gui" => {
+	  fmtargs.size match {
+	    case 1 => Some(new PlotGUIWriter)
+	    case 2 => {
+	      val vars = fmtargs(1) split (",")
+	      Some(new PlotGUIWriter(vars:_*))
+	    }
+	    case _ => {
+	      System.err.println("Invalid spec for GUI Plot output")
+	      None
+	    }
+	  }
       }
       case _ => {
 	System.err.println("Unknown output format")
