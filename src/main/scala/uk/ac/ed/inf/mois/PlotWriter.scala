@@ -19,11 +19,12 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 
-import org.jfree.data.xy.{XYSeries, XYSeriesCollection}
 import org.jfree.chart.{ChartFactory, ChartPanel, ChartUtilities}
 import org.jfree.chart.{ChartMouseEvent, ChartMouseListener}
 import org.jfree.chart.title.TextTitle
 import org.jfree.chart.plot.PlotOrientation
+import org.jfree.data.general.SeriesChangeEvent
+import org.jfree.data.xy.{XYSeries, XYSeriesCollection}
 
 import javax.swing.{JFrame, WindowConstants}
 
@@ -64,6 +65,19 @@ abstract class PlotWriter(varnames: String*)
 	      proc.name
   }
 
+  val dataset = new XYSeriesCollection
+  lazy val chart = {
+    for ((v, ss) <- series.toSeq.sortBy(_._1.meta))
+      dataset.addSeries(ss)
+    ChartFactory.createXYLineChart(
+      title, "Time", ylabel, dataset,
+      PlotOrientation.VERTICAL, true, true, false)
+  }
+}
+
+class PlotFileWriter(filename: String, varnames: String*)
+    extends PlotWriter(varnames:_*) {
+
   def handleStep(t: Double, proc: BaseProcess) {
     for ((v, ss) <- series) {
       ss.add(t, v.asInstanceOf[DoubleVarIntf].value)
@@ -76,18 +90,6 @@ abstract class PlotWriter(varnames: String*)
     }
   }
 
-  lazy val chart = {
-    val dataset = new XYSeriesCollection
-    for ((v, ss) <- series.toSeq.sortBy(_._1.meta))
-      dataset.addSeries(ss)
-    ChartFactory.createXYLineChart(
-      title, "Time", ylabel, dataset,
-      PlotOrientation.VERTICAL, true, true, false)
-  }
-}
-
-class PlotFileWriter(filename: String, varnames: String*)
-    extends PlotWriter(varnames:_*) {
   override def finish {
     val fp = new java.io.File(filename)
     ChartUtilities.saveChartAsPNG(fp, chart, 800, 600)
@@ -128,15 +130,41 @@ class PlotGUIWriter(varnames: String*)
     def chartMouseMoved(e: ChartMouseEvent) {}
   }
 
+  class GuiHandler(t: Double, ds: mutable.Map[Double, XYSeries], title: String)
+      extends Runnable {
+    override def run {
+      for ((d, s) <- ds)
+        s.add(t, d)
+      dataset.seriesChanged(new SeriesChangeEvent(this))
+      dimTitle.setText(title)
+    }
+  }
+
+  class GuiReset extends Runnable {
+    override def run {
+      for(ss <- series.values) {
+	ss.clear
+      }
+      dataset.seriesChanged(new SeriesChangeEvent(this))
+    }
+  }
+
   override def init(t: Double, proc: BaseProcess) {
     super.init(t, proc)
-    for (ss <- series.values)
+    for (ss <- series.values) {
+      ss.setNotify(false)
       ss.setMaximumItemCount(600)
+    }
     java.awt.EventQueue.invokeLater(new Gui)
   }
 
-  override def handleStep(t: Double, proc: BaseProcess) {
-    super.handleStep(t, proc)
-    dimTitle.setText(proc.dimensions.keys.mkString(", "))
+  def handleStep(t: Double, proc: BaseProcess) {
+    val title = proc.dimensions.keys.mkString(", ")
+    val ds = for ((v, s) <- series) yield (v.asInstanceOf[DoubleVarIntf].value, s)
+    java.awt.EventQueue.invokeLater(new GuiHandler(t, ds, title))
+  }
+
+  override def reset(t: Double, proc: BaseProcess) {
+    java.awt.EventQueue.invokeLater(new GuiReset)
   }
 }
