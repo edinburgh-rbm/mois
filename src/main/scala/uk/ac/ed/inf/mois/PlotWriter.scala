@@ -21,6 +21,8 @@ import scala.collection.mutable
 
 import org.jfree.data.xy.{XYSeries, XYSeriesCollection}
 import org.jfree.chart.{ChartFactory, ChartPanel, ChartUtilities}
+import org.jfree.chart.{ChartMouseEvent, ChartMouseListener}
+import org.jfree.chart.title.TextTitle
 import org.jfree.chart.plot.PlotOrientation
 
 import javax.swing.{JFrame, WindowConstants}
@@ -36,16 +38,17 @@ abstract class PlotWriter(varnames: String*)
   var title = "Untitled"
   var ylabel = ""
 
-  def init(t: Double, proc: BaseProcess) {
-    def label(v: Var[_]): String = {
-      if (v.meta.annotations contains "long_name")
-	v.meta.annotations("long_name").toString
-      else
-	v.meta.identifier
-    }
+  def label(v: Var[_]): String = {
+    if (v.meta.annotations contains "long_name")
+      v.meta.annotations("long_name").toString
+    else
+      v.meta.identifier
+  }
 
+  def init(t: Double, proc: BaseProcess) {
     if (varnames.size == 0) { // try to plot everything!
-      for (v <- proc.allVars.values if v.isInstanceOf[DoubleVarIntf]) {
+      for (v <- proc.allVars.values
+	   if (v.isInstanceOf[DoubleVarIntf] && !(proc.dimensions contains v))) {
         series += v -> new XYSeries(label(v))
       }
     } else {
@@ -68,12 +71,12 @@ abstract class PlotWriter(varnames: String*)
   }
 
   override def reset(t: Double, proc: BaseProcess) {
-    for (vm <- series.keys) {
-      series(vm) = new XYSeries(vm)
+    for(ss <- series.values) {
+      ss.clear
     }
   }
 
-  def chart = {
+  lazy val chart = {
     val dataset = new XYSeriesCollection
     for ((v, ss) <- series.toSeq.sortBy(_._1.meta))
       dataset.addSeries(ss)
@@ -96,32 +99,44 @@ class PlotFileWriter(filename: String, varnames: String*)
 class PlotGUIWriter(varnames: String*)
     extends PlotWriter(varnames:_*) {
 
-  private object gui {
-    var frame: JFrame = null
-    object init extends Runnable {
-      override def run {
-	frame = new JFrame("mois")
-	frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-	frame.setSize(800, 600)
-	frame.setVisible(true)
-      }
+  val dimTitle = new TextTitle
+
+  class Gui extends Runnable with ChartMouseListener {
+    override def run {
+      val frame = new JFrame("mois")
+      frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+      frame.setSize(800, 600)
+
+      chart.addSubtitle(dimTitle)
+
+      val panel = new ChartPanel(chart)
+      panel.setPreferredSize(new java.awt.Dimension(800, 600))
+      panel.addChartMouseListener(this)
+
+      frame.setContentPane(panel)
+
+      frame.pack()
+      frame.setVisible(true)
     }
-    object finish extends Runnable {
-      override def run = {
-	val panel = new ChartPanel(chart)
-	panel.setPreferredSize(new java.awt.Dimension(800, 600))
-	frame.setContentPane(panel)
-	frame.pack
-      }
+
+    var running = true
+    def chartMouseClicked(e: ChartMouseEvent) {
+      running = !running
+      chart.setNotify(running)
     }
+
+    def chartMouseMoved(e: ChartMouseEvent) {}
   }
 
   override def init(t: Double, proc: BaseProcess) {
     super.init(t, proc)
-    java.awt.EventQueue.invokeLater(gui.init)
+    for (ss <- series.values)
+      ss.setMaximumItemCount(600)
+    java.awt.EventQueue.invokeLater(new Gui)
   }
 
-  override def finish {
-    java.awt.EventQueue.invokeLater(gui.finish)
+  override def handleStep(t: Double, proc: BaseProcess) {
+    super.handleStep(t, proc)
+    dimTitle.setText(proc.dimensions.keys.mkString(", "))
   }
 }
