@@ -135,13 +135,17 @@ class PlotGUIWriter(varnames: String*)
     def chartMouseMoved(e: ChartMouseEvent) {}
   }
 
-  class GuiHandler(t: Double, ds: mutable.Map[Double, XYSeries], title: String)
+  class GuiHandle(t: Double, ds: mutable.Map[Double, XYSeries], title: String)
       extends Runnable {
+    var count = 0
     override def run {
       for ((d, s) <- ds)
         s.add(t, d)
-      dataset.seriesChanged(new SeriesChangeEvent(this))
-      dimTitle.setText(title)
+      if (count % 200 == 0) {
+	dataset.seriesChanged(new SeriesChangeEvent(this))
+	dimTitle.setText(title)
+      }
+      count += 1
     }
   }
 
@@ -150,6 +154,12 @@ class PlotGUIWriter(varnames: String*)
       for(ss <- series.values) {
 	ss.clear
       }
+      dataset.seriesChanged(new SeriesChangeEvent(this))
+    }
+  }
+
+  class GuiFinish extends Runnable {
+    override def run {
       dataset.seriesChanged(new SeriesChangeEvent(this))
     }
   }
@@ -166,10 +176,14 @@ class PlotGUIWriter(varnames: String*)
   def handleStep(t: Double, proc: BaseProcess) {
     val title = proc.dimensions.keys.mkString(", ")
     val ds = for ((v, s) <- series) yield (v.asInstanceOf[DoubleVarIntf].value, s)
-    java.awt.EventQueue.invokeLater(new GuiHandler(t, ds, title))
+    java.awt.EventQueue.invokeLater(new GuiHandle(t, ds, title))
   }
 
   override def reset(t: Double, proc: BaseProcess) {
     java.awt.EventQueue.invokeLater(new GuiReset)
+  }
+
+  override def finish {
+    java.awt.EventQueue.invokeLater(new GuiFinish)
   }
 }
