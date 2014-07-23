@@ -40,10 +40,15 @@ abstract class PlotWriter(varnames: String*)
   var ylabel = ""
 
   def label(v: Var[_]): String = {
-    if (v.meta.annotations contains "long_name")
-      v.meta.annotations("long_name").toString
-    else
+    if (v.meta.annotations contains "long_name") {
+      v.meta.annotations("long_name").toString +
+	(if (v.meta.annotations contains "units")
+	  " (" + v.meta.annotations("units").toString + ")"
+	else 
+	  "")
+    } else {
       v.meta.identifier
+    }
   }
 
   def init(t: Double, proc: BaseProcess) {
