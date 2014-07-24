@@ -1,5 +1,5 @@
 /*
- *  MOIS: Variable Types
+ *  MOIS: Annotations
  *  Copyright (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,16 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 
+/**
+ * Annotation provides the ability to add arbitrary key-value
+ * pairs associated with an object. This is typically used for
+ * meta-data such as descriptive names, titles, authorship,
+ * units and so forth.
+ */
 trait Annotation {
   val annotations = mutable.Map.empty[String, Any]
-  def Annotate(k: String, v: Any) {
+  /** Add an annotation */
+  def annotate(k: String, v: Any) {
     annotations += k -> v
   }
 }

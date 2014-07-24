@@ -51,17 +51,17 @@ abstract class BaseProcess extends VarContainer with Annotation {
     val pkgname = pkg.getImplementationTitle
     val pkgversion = pkg.getImplementationVersion
     if (pkgname != null && pkgversion != null) {
-      Annotate(pkgname, pkgversion)
+      annotate(pkgname, pkgversion)
     }
 
     import uk.ac.ed.inf.{mois => m}
     if (m.name != null && m.version != null) {
-      Annotate(m.name, m.version)
+      annotate(m.name, m.version)
     }
 
-    Annotate("name", name)
-    Annotate("type", stringPrefix)
-    Annotate("class", getClass.getName)
+    annotate("name", name)
+    annotate("type", stringPrefix)
+    annotate("class", getClass.getName)
   }
 
   /** All variables defined in this `BaseProcess`. */

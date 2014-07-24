@@ -108,8 +108,8 @@ abstract class Var[T] {
   }
 
   /** Adds an annotation to variable metadata */
-  def Annotate(k: String, v: String) = {
-    meta.Annotate(k, v)
+  def annotate(k: String, v: String) = {
+    meta.annotate(k, v)
   }
 }
 
