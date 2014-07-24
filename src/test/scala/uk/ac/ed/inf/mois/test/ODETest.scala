@@ -20,11 +20,10 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.ODE
-import java.lang.Math.sin
+import uk.ac.ed.inf.mois.{Math, ODE}
 
 /** Directly calculated ODE system from Dominik's stuff. */
-object sampleODE extends ODE("sample") {
+object sampleODE extends ODE("sample") with Math {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   val x3 = Double("ex:x3")
