@@ -43,13 +43,13 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <span class="name">Reaction</span><span class="result"> extends <a href="DeterministicReactionNetwork.html#ReactionIntfextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">ReactionIntf</a></span>
+        <span class="name">Reaction</span><span class="result"> extends <a href="DeterministicReactionNetwork.html#BaseReactionextendsReactionNetwork.this.SimpleReaction" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">BaseReaction</a> with <a href="DeterministicReactionNetwork.html#UnratedReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction">UnratedReaction</a> with <a href="DeterministicReactionNetwork.html#CatalysableReactionextendsCatalyticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysableReaction">CatalysableReaction</a></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="DeterministicReactionNetwork.html#ReactionIntfextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">DeterministicReactionNetwork.ReactionIntf</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="DeterministicReactionNetwork.html#CatalysableReactionextendsCatalyticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysableReaction">DeterministicReactionNetwork.CatalysableReaction</a>, <a href="DeterministicReactionNetwork.html#UnratedReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction">DeterministicReactionNetwork.UnratedReaction</a>, <a href="DeterministicReactionNetwork.html#BaseReactionextendsReactionNetwork.this.SimpleReaction" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">DeterministicReactionNetwork.BaseReaction</a>, <a href="DeterministicReactionNetwork.html#SimpleReactionextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">DeterministicReactionNetwork.SimpleReaction</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -67,7 +67,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction"><span>Reaction</span></li><li class="in" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf"><span>ReactionIntf</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction"><span>Reaction</span></li><li class="in" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysableReaction"><span>CatalysableReaction</span></li><li class="in" name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction"><span>UnratedReaction</span></li><li class="in" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction"><span>BaseReaction</span></li><li class="in" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction"><span>SimpleReaction</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -88,7 +88,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(lhs:DeterministicReactionNetwork.this.Multiset,rhs:DeterministicReactionNetwork.this.Multiset,rate:Double):DeterministicReactionNetwork.this.Reaction"></a>
+      <a id="&lt;init&gt;(lhs:DeterministicReactionNetwork.this.Multiset,rhs:DeterministicReactionNetwork.this.Multiset):DeterministicReactionNetwork.this.Reaction"></a>
       <a id="&lt;init&gt;:Reaction"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -96,10 +96,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Reaction</span><span class="params">(<span name="lhs">lhs: <a href="DeterministicReactionNetwork.html#MultisetextendsMap[ReactionNetwork.this.Specie,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">DeterministicReactionNetwork.Multiset</a></span>, <span name="rhs">rhs: <a href="DeterministicReactionNetwork.html#MultisetextendsMap[ReactionNetwork.this.Specie,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">DeterministicReactionNetwork.Multiset</a></span>, <span name="rate">rate: <span class="extype" name="scala.Double">Double</span></span>)</span>
+        <span class="name">Reaction</span><span class="params">(<span name="lhs">lhs: <a href="DeterministicReactionNetwork.html#MultisetextendsMap[ReactionNetwork.this.Specie,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">DeterministicReactionNetwork.Multiset</a></span>, <span name="rhs">rhs: <a href="DeterministicReactionNetwork.html#MultisetextendsMap[ReactionNetwork.this.Specie,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">DeterministicReactionNetwork.Multiset</a></span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.DeterministicReactionNetwork$Reaction@&lt;init&gt;(lhs:DeterministicReactionNetwork.this.Multiset,rhs:DeterministicReactionNetwork.this.Multiset,rate:Double):DeterministicReactionNetwork.this.Reaction" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.DeterministicReactionNetwork$Reaction@&lt;init&gt;(lhs:DeterministicReactionNetwork.this.Multiset,rhs:DeterministicReactionNetwork.this.Multiset):DeterministicReactionNetwork.this.Reaction" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -147,7 +147,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf#*" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction#*" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="*(n:Int):ReactionNetwork.this.Reaction"></a>
       <a id="*(Int):Reaction"></a>
       <h4 class="signature">
@@ -163,8 +163,8 @@
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork$ReactionIntf.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">ReactionIntf</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork$BaseReaction.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">BaseReaction</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="+(s:ReactionNetwork.this.Specie):ReactionNetwork.this.Reaction"></a>
       <a id="+(DeterministicReactionNetwork.Specie):Reaction"></a>
       <h4 class="signature">
@@ -180,8 +180,8 @@
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork$ReactionIntf.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">ReactionIntf</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork$BaseReaction.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">BaseReaction</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction#+" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="+(m:ReactionNetwork.this.Multiset):ReactionNetwork.this.Reaction"></a>
       <a id="+(DeterministicReactionNetwork.Multiset):Reaction"></a>
       <h4 class="signature">
@@ -197,7 +197,7 @@
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork$ReactionIntf.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">ReactionIntf</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork$BaseReaction.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">BaseReaction</a></dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
@@ -215,6 +215,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(s:ReactionNetwork.this.Specie):Int"></a>
+      <a id="apply(DeterministicReactionNetwork.Specie):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="s">s: <a href="DeterministicReactionNetwork.html#Specie=ConcentrationBasedReactionNetwork.this.ConcentrationBasedSpecie" class="extmbr" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Specie">DeterministicReactionNetwork.Specie</a></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.DeterministicReactionNetwork$Reaction@apply(s:ReactionNetwork.this.Specie):Int" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork$SimpleReaction.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">SimpleReaction</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -232,40 +249,57 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction#at" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="at(d:Double):DeterministicReactionNetwork.this.Reaction"></a>
-      <a id="at(Double):Reaction"></a>
+    </li><li name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction#at" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="at(k:=&gt;Double):KineticReactionNetwork.this.MassActionReaction"></a>
+      <a id="at(⇒Double):DeterministicReactionNetwork.MassActionReaction"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">at</span><span class="params">(<span name="d">d: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <a href="" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction">Reaction</a></span>
+        <span class="name">at</span><span class="params">(<span name="k">k: ⇒ <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <a href="DeterministicReactionNetwork.html#MassActionReactionextendsKineticReactionNetwork.this.BaseReactionwithKineticReactionNetwork.this.KineticReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.MassActionReaction">DeterministicReactionNetwork.MassActionReaction</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.DeterministicReactionNetwork$Reaction@at(d:Double):DeterministicReactionNetwork.this.Reaction" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.DeterministicReactionNetwork$Reaction@at(k:=&gt;Double):KineticReactionNetwork.this.MassActionReaction" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
-    </li><li name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction#atRate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="atRate(d:Double):DeterministicReactionNetwork.this.Reaction"></a>
-      <a id="atRate(Double):Reaction"></a>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticReactionNetwork$UnratedReaction.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction">UnratedReaction</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction#at!" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="at!(k:=&gt;Double):KineticReactionNetwork.this.RateLawReaction"></a>
+      <a id="at!(⇒Double):DeterministicReactionNetwork.RateLawReaction"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">atRate</span><span class="params">(<span name="d">d: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <a href="" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction">Reaction</a></span>
+        <span title="gt4s: at$bang" class="name">at!</span><span class="params">(<span name="k">k: ⇒ <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <a href="DeterministicReactionNetwork.html#RateLawReactionextendsKineticReactionNetwork.this.BaseReactionwithKineticReactionNetwork.this.KineticReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.RateLawReaction">DeterministicReactionNetwork.RateLawReaction</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.DeterministicReactionNetwork$Reaction@atRate(d:Double):DeterministicReactionNetwork.this.Reaction" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.DeterministicReactionNetwork$Reaction@at!(k:=&gt;Double):KineticReactionNetwork.this.RateLawReaction" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticReactionNetwork$UnratedReaction.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction">UnratedReaction</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysableReaction#catalysedBy" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="catalysedBy(catalyser:CatalyticReactionNetwork.this.Specie):CatalyticReactionNetwork.this.ReactionWithCatalyser"></a>
+      <a id="catalysedBy(DeterministicReactionNetwork.Specie):DeterministicReactionNetwork.ReactionWithCatalyser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">catalysedBy</span><span class="params">(<span name="catalyser">catalyser: <a href="DeterministicReactionNetwork.html#Specie=ConcentrationBasedReactionNetwork.this.ConcentrationBasedSpecie" class="extmbr" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Specie">DeterministicReactionNetwork.Specie</a></span>)</span><span class="result">: <a href="DeterministicReactionNetwork.html#ReactionWithCatalyserextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.ReactionWithCatalyser">DeterministicReactionNetwork.ReactionWithCatalyser</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.DeterministicReactionNetwork$Reaction@catalysedBy(catalyser:CatalyticReactionNetwork.this.Specie):CatalyticReactionNetwork.this.ReactionWithCatalyser" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="CatalyticReactionNetwork$CatalysableReaction.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysableReaction">CatalysableReaction</a></dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -306,7 +340,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(that:Any):Boolean"></a>
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
@@ -322,7 +356,7 @@
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork$ReactionIntf.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">ReactionIntf</a> → AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork$SimpleReaction.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">SimpleReaction</a> → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -413,7 +447,7 @@
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction">Reaction</a> → <a href="ReactionNetwork$ReactionIntf.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">ReactionIntf</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction">Reaction</a> → <a href="ReactionNetwork$SimpleReaction.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">SimpleReaction</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -465,23 +499,6 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction#rate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="rate:Double"></a>
-      <a id="rate:Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">var</span>
-      </span>
-      <span class="symbol">
-        <span class="name">rate</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.DeterministicReactionNetwork$Reaction@rate:Double" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      
     </li><li name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction#rhs" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="rhs:DeterministicReactionNetwork.this.Multiset"></a>
       <a id="rhs:DeterministicReactionNetwork.Multiset"></a>
@@ -498,7 +515,7 @@
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction">Reaction</a> → <a href="ReactionNetwork$ReactionIntf.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">ReactionIntf</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction">Reaction</a> → <a href="ReactionNetwork$SimpleReaction.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">SimpleReaction</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -516,7 +533,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -532,7 +549,7 @@
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction">Reaction</a> → <a href="ReactionNetwork$ReactionIntf.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">ReactionIntf</a> → AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork$SimpleReaction.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">SimpleReaction</a> → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -602,23 +619,6 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction#withRate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="withRate(d:Double):DeterministicReactionNetwork.this.Reaction"></a>
-      <a id="withRate(Double):Reaction"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">withRate</span><span class="params">(<span name="d">d: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <a href="" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork.Reaction">Reaction</a></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.DeterministicReactionNetwork$Reaction@withRate(d:Double):DeterministicReactionNetwork.this.Reaction" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      
     </li></ol>
             </div>
 
@@ -628,8 +628,14 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">
-              <h3>Inherited from <a href="DeterministicReactionNetwork.html#ReactionIntfextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionIntf">DeterministicReactionNetwork.ReactionIntf</a></h3>
+        <div class="parent" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysableReaction">
+              <h3>Inherited from <a href="DeterministicReactionNetwork.html#CatalysableReactionextendsCatalyticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysableReaction">DeterministicReactionNetwork.CatalysableReaction</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction">
+              <h3>Inherited from <a href="DeterministicReactionNetwork.html#UnratedReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction">DeterministicReactionNetwork.UnratedReaction</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">
+              <h3>Inherited from <a href="DeterministicReactionNetwork.html#BaseReactionextendsReactionNetwork.this.SimpleReaction" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">DeterministicReactionNetwork.BaseReaction</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">
+              <h3>Inherited from <a href="DeterministicReactionNetwork.html#SimpleReactionextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">DeterministicReactionNetwork.SimpleReaction</a></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">

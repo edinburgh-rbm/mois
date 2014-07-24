@@ -49,7 +49,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="ODE.html" class="extype" name="uk.ac.ed.inf.mois.ODE">ODE</a>, <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a>, <a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a>, <span class="extype" name="org.apache.commons.math3.ode.FirstOrderDifferentialEquations">FirstOrderDifferentialEquations</span>, <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a>, <a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a>, <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="ODE.html" class="extype" name="uk.ac.ed.inf.mois.ODE">ODE</a>, <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a>, <a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a>, <span class="extype" name="org.apache.commons.math3.ode.FirstOrderDifferentialEquations">FirstOrderDifferentialEquations</span>, <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a>, <a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a>, <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -67,7 +67,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="uk.ac.ed.inf.mois.HamiltonianProcess"><span>HamiltonianProcess</span></li><li class="in" name="uk.ac.ed.inf.mois.ODE"><span>ODE</span></li><li class="in" name="uk.ac.ed.inf.mois.VarConversions"><span>VarConversions</span></li><li class="in" name="uk.ac.ed.inf.mois.ODEIntf"><span>ODEIntf</span></li><li class="in" name="org.apache.commons.math3.ode.FirstOrderDifferentialEquations"><span>FirstOrderDifferentialEquations</span></li><li class="in" name="uk.ac.ed.inf.mois.BaseProcess"><span>BaseProcess</span></li><li class="in" name="uk.ac.ed.inf.mois.Annotation"><span>Annotation</span></li><li class="in" name="uk.ac.ed.inf.mois.VarContainer"><span>VarContainer</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="uk.ac.ed.inf.mois.HamiltonianProcess"><span>HamiltonianProcess</span></li><li class="in" name="uk.ac.ed.inf.mois.ODE"><span>ODE</span></li><li class="in" name="uk.ac.ed.inf.mois.VarConversions"><span>VarConversions</span></li><li class="in" name="uk.ac.ed.inf.mois.BaseODE"><span>BaseODE</span></li><li class="in" name="org.apache.commons.math3.ode.FirstOrderDifferentialEquations"><span>FirstOrderDifferentialEquations</span></li><li class="in" name="uk.ac.ed.inf.mois.BaseProcess"><span>BaseProcess</span></li><li class="in" name="uk.ac.ed.inf.mois.Annotation"><span>Annotation</span></li><li class="in" name="uk.ac.ed.inf.mois.VarContainer"><span>VarContainer</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -109,7 +109,7 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="uk.ac.ed.inf.mois.ODEIntf.Derivative" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+              <ol><li name="uk.ac.ed.inf.mois.BaseODE.Derivative" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Derivative=Array[Double]=&gt;Double"></a>
       <a id="Derivative:Derivative"></a>
       <h4 class="signature">
@@ -125,7 +125,7 @@
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess.Dimension" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="DimensionextendsAnyRef"></a>
       <a id="Dimension:Dimension"></a>
@@ -142,8 +142,7 @@
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">Needed for NetCDF et al.</p><div class="fullcomment"><div class="comment cmt"><p>Needed for NetCDF et al. TODO: explain better
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+      <p class="shortcomment cmt">Needed for NetCDF et al.</p><div class="fullcomment"><div class="comment cmt"><p>Needed for NetCDF et al. TODO: explain better</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.HamiltonianProcess.F" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="F=()=&gt;Double"></a>
       <a id="F:F"></a>
@@ -161,7 +160,7 @@
       </a>
     </span>
       
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf.FunMaker" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseODE.FunMaker" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="FunMakerextendsAnyRef"></a>
       <a id="FunMaker:FunMaker"></a>
       <h4 class="signature">
@@ -170,14 +169,14 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ODEIntf$FunMaker.html"><span class="name">FunMaker</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="BaseODE$FunMaker.html"><span class="name">FunMaker</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ODEIntf@FunMakerextendsAnyRef" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@FunMakerextendsAnyRef" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">A class to define derivatives of <code>Var</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>A class to define derivatives of <code>Var</code>s.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd></dl></div>
+      <p class="shortcomment cmt">A class to define derivatives of <code>Var</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>A class to define derivatives of <code>Var</code>s.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.HamiltonianProcess.H" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="HextendsMultivariateDifferentiableFunctionwithProductwithSerializable"></a>
       <a id="H:H"></a>
@@ -187,7 +186,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="HamiltonianProcess$H.html"><span class="name">H</span></a><span class="params">(<span name="q">q: <span class="extype" name="scala.Seq">Seq</span>[<a href="DoubleVar.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVar">DoubleVar</a>]</span>, <span name="p">p: <span class="extype" name="scala.Seq">Seq</span>[<a href="DoubleVar.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVar">DoubleVar</a>]</span>)</span><span class="result"> extends <span class="extype" name="org.apache.commons.math3.analysis.differentiation.MultivariateDifferentiableFunction">MultivariateDifferentiableFunction</span> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="HamiltonianProcess$H.html"><span class="name">H</span></a><span class="params">(<span name="q">q: <a href="DoubleVar.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVar">DoubleVar</a>*</span>)</span><span class="params">(<span name="p">p: <a href="DoubleVar.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVar">DoubleVar</a>*</span>)</span><span class="result"> extends <span class="extype" name="org.apache.commons.math3.analysis.differentiation.MultivariateDifferentiableFunction">MultivariateDifferentiableFunction</span> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../../index.html#uk.ac.ed.inf.mois.HamiltonianProcess@HextendsMultivariateDifferentiableFunctionwithProductwithSerializable" title="Permalink" target="_top">
@@ -469,8 +468,8 @@
       </a>
     </span>
       <p class="shortcomment cmt">Automatically annotate the process with its software name and version</p><div class="fullcomment"><div class="comment cmt"><p>Automatically annotate the process with its software name and version</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#addODE" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="addODE(v:uk.ac.ed.inf.mois.DoubleVarIntf,f:ODEIntf.this.Derivative):scala.collection.mutable.ArrayBuffer[ODEIntf.this.Derivative]"></a>
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#addODE" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addODE(v:uk.ac.ed.inf.mois.DoubleVarIntf,f:BaseODE.this.Derivative):scala.collection.mutable.ArrayBuffer[BaseODE.this.Derivative]"></a>
       <a id="addODE(DoubleVarIntf,Derivative):ArrayBuffer[Derivative]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -481,11 +480,11 @@
         <span class="name">addODE</span><span class="params">(<span name="v">v: <a href="DoubleVarIntf.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVarIntf">DoubleVarIntf</a></span>, <span name="f">f: <a href="#Derivative=Array[Double]=&gt;Double" class="extmbr" name="uk.ac.ed.inf.mois.HamiltonianProcess.Derivative">Derivative</a></span>)</span><span class="result">: <span class="extype" name="scala.collection.mutable.ArrayBuffer">ArrayBuffer</span>[<a href="#Derivative=Array[Double]=&gt;Double" class="extmbr" name="uk.ac.ed.inf.mois.HamiltonianProcess.Derivative">Derivative</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.HamiltonianProcess@addODE(v:uk.ac.ed.inf.mois.DoubleVarIntf,f:ODEIntf.this.Derivative):scala.collection.mutable.ArrayBuffer[ODEIntf.this.Derivative]" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.HamiltonianProcess@addODE(v:uk.ac.ed.inf.mois.DoubleVarIntf,f:BaseODE.this.Derivative):scala.collection.mutable.ArrayBuffer[BaseODE.this.Derivative]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">Adds an ODE definition to the process.</p><div class="fullcomment"><div class="comment cmt"><p>Adds an ODE definition to the process.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd></dl></div>
+      <p class="shortcomment cmt">Adds an ODE definition to the process.</p><div class="fullcomment"><div class="comment cmt"><p>Adds an ODE definition to the process.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="package.html" class="extype" name="uk.ac.ed.inf.mois">uk.ac.ed.inf.mois</a>] </dd><dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#addStepHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addStepHandler(sh:uk.ac.ed.inf.mois.StepHandler):Unit"></a>
       <a id="addStepHandler(StepHandler):Unit"></a>
@@ -622,7 +621,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply(t:Double,tau:Double):Unit"></a>
       <a id="apply(Double,Double):Unit"></a>
       <h4 class="signature">
@@ -641,7 +640,7 @@
       <p class="shortcomment cmt">A wrapper around the user defined step function to calculate
 changes.</p><div class="fullcomment"><div class="comment cmt"><p>A wrapper around the user defined step function to calculate
 changes.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd><dt>Annotations</dt><dd>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -722,9 +721,9 @@ changes.
 by concrete sub-classes which should calculate the values of the
 derivatives (third argument, <code>ydots</code>) in terms of the (given) first two.
 Indexes into the arrays are as defined by <code>vars</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.HamiltonianProcess">HamiltonianProcess</a> → <a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a> → FirstOrderDifferentialEquations</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#d" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="d(v:uk.ac.ed.inf.mois.DoubleVarIntf):ODEIntf.this.FunMaker{def/(d:ODEIntf.this.dt.type):ODEIntf.this.FunMaker}"></a>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.HamiltonianProcess">HamiltonianProcess</a> → <a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a> → FirstOrderDifferentialEquations</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#d" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="d(v:uk.ac.ed.inf.mois.DoubleVarIntf):BaseODE.this.FunMaker{def/(d:BaseODE.this.dt.type):BaseODE.this.FunMaker}"></a>
       <a id="d(DoubleVarIntf):FunMaker{def/(d:HamiltonianProcess.this.dt.type):HamiltonianProcess.this.FunMaker}"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -732,14 +731,14 @@ Indexes into the arrays are as defined by <code>vars</code>.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">d</span><span class="params">(<span name="v">v: <a href="DoubleVarIntf.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVarIntf">DoubleVarIntf</a></span>)</span><span class="result">: <a href="#FunMakerextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ODEIntf.FunMaker">FunMaker</a> { def /(d: HamiltonianProcess.this.dt.type): HamiltonianProcess.this.FunMaker }</span>
+        <span class="name">d</span><span class="params">(<span name="v">v: <a href="DoubleVarIntf.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVarIntf">DoubleVarIntf</a></span>)</span><span class="result">: <a href="#FunMakerextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.BaseODE.FunMaker">FunMaker</a> { def /(d: HamiltonianProcess.this.dt.type): HamiltonianProcess.this.FunMaker }</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.HamiltonianProcess@d(v:uk.ac.ed.inf.mois.DoubleVarIntf):ODEIntf.this.FunMaker{def/(d:ODEIntf.this.dt.type):ODEIntf.this.FunMaker}" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.HamiltonianProcess@d(v:uk.ac.ed.inf.mois.DoubleVarIntf):BaseODE.this.FunMaker{def/(d:BaseODE.this.dt.type):BaseODE.this.FunMaker}" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">Adds an ODE definition to the current <code>ODE</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Adds an ODE definition to the current <code>ODE</code>.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd></dl></div>
+      <p class="shortcomment cmt">Adds an ODE definition to the current <code>ODE</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Adds an ODE definition to the current <code>ODE</code>.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.HamiltonianProcess#differentiator" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="differentiator:org.apache.commons.math3.analysis.differentiation.FiniteDifferencesDifferentiator"></a>
       <a id="differentiator:FiniteDifferencesDifferentiator"></a>
@@ -791,7 +790,7 @@ Indexes into the arrays are as defined by <code>vars</code>.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf.dt" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseODE.dt" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="dt"></a>
       <a id="dt:dt"></a>
       <h4 class="signature">
@@ -800,14 +799,14 @@ Indexes into the arrays are as defined by <code>vars</code>.
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="ODEIntf$dt$.html"><span class="name">dt</span></a>
+        <a href="BaseODE$dt$.html"><span class="name">dt</span></a>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ODEIntf@dt" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@dt" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">Object <code>dt</code> is used for writing ODEs with syntax: d(v1)/dt = .</p><div class="fullcomment"><div class="comment cmt"><p>Object <code>dt</code> is used for writing ODEs with syntax: d(v1)/dt = ...</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd></dl></div>
+      <p class="shortcomment cmt">Object <code>dt</code> is used for writing ODEs with syntax: d(v1)/dt = .</p><div class="fullcomment"><div class="comment cmt"><p>Object <code>dt</code> is used for writing ODEs with syntax: d(v1)/dt = ...</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -842,7 +841,7 @@ Indexes into the arrays are as defined by <code>vars</code>.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#eval" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#eval" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eval(v:uk.ac.ed.inf.mois.DoubleVarIntf,ys:Array[Double]):Double"></a>
       <a id="eval(DoubleVarIntf,Array[Double]):Double"></a>
       <h4 class="signature">
@@ -858,7 +857,7 @@ Indexes into the arrays are as defined by <code>vars</code>.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -942,8 +941,8 @@ finds to this VarContainer.</p><div class="fullcomment"><div class="comment cmt"
 finds to this VarContainer.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the <code>Seq</code> of added variables.
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#funs" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="funs:scala.collection.mutable.ArrayBuffer[ODEIntf.this.Derivative]"></a>
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#funs" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="funs:scala.collection.mutable.ArrayBuffer[BaseODE.this.Derivative]"></a>
       <a id="funs:ArrayBuffer[Derivative]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -954,13 +953,13 @@ finds to this VarContainer.
         <span class="name">funs</span><span class="result">: <span class="extype" name="scala.collection.mutable.ArrayBuffer">ArrayBuffer</span>[<a href="#Derivative=Array[Double]=&gt;Double" class="extmbr" name="uk.ac.ed.inf.mois.HamiltonianProcess.Derivative">Derivative</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.HamiltonianProcess@funs:scala.collection.mutable.ArrayBuffer[ODEIntf.this.Derivative]" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.HamiltonianProcess@funs:scala.collection.mutable.ArrayBuffer[BaseODE.this.Derivative]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
       <p class="shortcomment cmt">Functions defining the derivatives of the variables in <code>vars</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Functions defining the derivatives of the variables in <code>vars</code>.
 The two arrays are indexed equally.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -978,7 +977,7 @@ The two arrays are indexed equally.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#getDimension" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#getDimension" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getDimension():Int"></a>
       <a id="getDimension():Int"></a>
       <h4 class="signature">
@@ -997,7 +996,7 @@ The two arrays are indexed equally.
       <p class="shortcomment cmt">This is required by the ODE solver and gives the dimension of
 the vector-valued integral.</p><div class="fullcomment"><div class="comment cmt"><p>This is required by the ODE solver and gives the dimension of
 the vector-valued integral.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a> → FirstOrderDifferentialEquations</dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a> → FirstOrderDifferentialEquations</dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.VarConversions#getVarValue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getVarValue[T](v:uk.ac.ed.inf.mois.Var[T]):T"></a>
       <a id="getVarValue[T](Var[T]):T"></a>
@@ -1035,7 +1034,7 @@ the vector-valued integral.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#indices" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#indices" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="indices:scala.collection.mutable.Map[uk.ac.ed.inf.mois.DoubleVarIntf,Int]"></a>
       <a id="indices:Map[DoubleVarIntf,Int]"></a>
       <h4 class="signature">
@@ -1051,7 +1050,7 @@ the vector-valued integral.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">A map that returns the index of a <code>Var</code> in <code>vars</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A map that returns the index of a <code>Var</code> in <code>vars</code>.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd></dl></div>
+      <p class="shortcomment cmt">A map that returns the index of a <code>Var</code> in <code>vars</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A map that returns the index of a <code>Var</code> in <code>vars</code>.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#init" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="init(t:Double):Unit"></a>
       <a id="init(Double):Unit"></a>
@@ -1088,7 +1087,7 @@ runs for the first time. Initialises step handlers.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#integrator" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#integrator" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="integrator():org.apache.commons.math3.ode.FirstOrderIntegrator"></a>
       <a id="integrator():FirstOrderIntegrator"></a>
       <h4 class="signature">
@@ -1109,7 +1108,7 @@ with the Apache Commons Math ODE library.</p><div class="fullcomment"><div class
 with the Apache Commons Math ODE library. Free to override in
 subclasses. By default we use the Dormand Prince 8,5,3 integrator
 from their example documentation.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd></dl></div>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -1299,8 +1298,8 @@ to call <code>super.reset(t)</code> if you do this!
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#step" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <p class="shortcomment cmt">All variables defined in this <code>BaseProcess</code>.</p><div class="fullcomment"><div class="comment cmt"><p>All variables defined in this <code>BaseProcess</code>.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#step" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="step(time:Double,tau:Double):Unit"></a>
       <a id="step(Double,Double):Unit"></a>
       <h4 class="signature">
@@ -1316,7 +1315,7 @@ to call <code>super.reset(t)</code> if you do this!
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">Main function implementing the <code>Process</code> interface.</p><div class="fullcomment"><div class="comment cmt"><p>Main function implementing the <code>Process</code> interface.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+      <p class="shortcomment cmt">Main function implementing the <code>Process</code> interface.</p><div class="fullcomment"><div class="comment cmt"><p>Main function implementing the <code>Process</code> interface.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#stepHandlers" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stepHandlers:scala.collection.mutable.ArrayBuffer[uk.ac.ed.inf.mois.StepHandler]"></a>
       <a id="stepHandlers:ArrayBuffer[StepHandler]"></a>
@@ -1368,7 +1367,7 @@ to call <code>super.reset(t)</code> if you do this!
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#t" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#t" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="t:Double"></a>
       <a id="t:Double"></a>
       <h4 class="signature">
@@ -1384,7 +1383,7 @@ to call <code>super.reset(t)</code> if you do this!
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt"><code>Var</code> used to construct derivatives that depend on time.</p><div class="fullcomment"><div class="comment cmt"><p><code>Var</code> used to construct derivatives that depend on time.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd></dl></div>
+      <p class="shortcomment cmt"><code>Var</code> used to construct derivatives that depend on time.</p><div class="fullcomment"><div class="comment cmt"><p><code>Var</code> used to construct derivatives that depend on time.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.VarContainer#toJSON" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toJSON:String"></a>
       <a id="toJSON:String"></a>
@@ -1441,7 +1440,7 @@ system. It is assigned the identifier &quot;p${pid}:E&quot;, the prefix with pro
 intended to facilitate combining several Hamiltonian processes together in
 a single process group.
 </p></div></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf#vars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#vars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="vars:scala.collection.mutable.ArrayBuffer[uk.ac.ed.inf.mois.DoubleVarIntf]"></a>
       <a id="vars:ArrayBuffer[DoubleVarIntf]"></a>
       <h4 class="signature">
@@ -1457,7 +1456,7 @@ a single process group.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">An array with all <code>Var</code>s for which to integrate.</p><div class="fullcomment"><div class="comment cmt"><p>An array with all <code>Var</code>s for which to integrate.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></dd></dl></div>
+      <p class="shortcomment cmt">An array with all <code>Var</code>s for which to integrate.</p><div class="fullcomment"><div class="comment cmt"><p>An array with all <code>Var</code>s for which to integrate.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -1540,8 +1539,8 @@ a single process group.
               <h3>Inherited from <a href="ODE.html" class="extype" name="uk.ac.ed.inf.mois.ODE">ODE</a></h3>
             </div><div class="parent" name="uk.ac.ed.inf.mois.VarConversions">
               <h3>Inherited from <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></h3>
-            </div><div class="parent" name="uk.ac.ed.inf.mois.ODEIntf">
-              <h3>Inherited from <a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.BaseODE">
+              <h3>Inherited from <a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a></h3>
             </div><div class="parent" name="org.apache.commons.math3.ode.FirstOrderDifferentialEquations">
               <h3>Inherited from <span class="extype" name="org.apache.commons.math3.ode.FirstOrderDifferentialEquations">FirstOrderDifferentialEquations</span></h3>
             </div><div class="parent" name="uk.ac.ed.inf.mois.BaseProcess">

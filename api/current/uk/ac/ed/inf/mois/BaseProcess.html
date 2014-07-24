@@ -54,7 +54,7 @@ upon it parametrised by time.
           <div class="superTypes hiddenContent"><a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a>, <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
             <span class="toggle">Known Subclasses</span>
-            <div class="subClasses hiddenContent"><a href="ConcentrationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ConcentrationBasedReactionNetwork">ConcentrationBasedReactionNetwork</a>, <a href="DeterministicReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork">DeterministicReactionNetwork</a>, <a href="DiscreteProcess.html" class="extype" name="uk.ac.ed.inf.mois.DiscreteProcess">DiscreteProcess</a>, <a href="HamiltonianProcess.html" class="extype" name="uk.ac.ed.inf.mois.HamiltonianProcess">HamiltonianProcess</a>, <a href="ODE.html" class="extype" name="uk.ac.ed.inf.mois.ODE">ODE</a>, <a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a>, <a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a>, <a href="Process.html" class="extype" name="uk.ac.ed.inf.mois.Process">Process</a>, <a href="ProcessGroup.html" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a>, <a href="PythonProcess.html" class="extype" name="uk.ac.ed.inf.mois.PythonProcess">PythonProcess</a>, <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a>, <a href="VarCalc.html" class="extype" name="uk.ac.ed.inf.mois.VarCalc">VarCalc</a></div>
+            <div class="subClasses hiddenContent"><a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a>, <a href="CatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork">CatalyticReactionNetwork</a>, <a href="ConcentrationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ConcentrationBasedReactionNetwork">ConcentrationBasedReactionNetwork</a>, <a href="DeterministicReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork">DeterministicReactionNetwork</a>, <a href="DiscreteProcess.html" class="extype" name="uk.ac.ed.inf.mois.DiscreteProcess">DiscreteProcess</a>, <a href="HamiltonianProcess.html" class="extype" name="uk.ac.ed.inf.mois.HamiltonianProcess">HamiltonianProcess</a>, <a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a>, <a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a>, <a href="ODE.html" class="extype" name="uk.ac.ed.inf.mois.ODE">ODE</a>, <a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a>, <a href="Process.html" class="extype" name="uk.ac.ed.inf.mois.Process">Process</a>, <a href="ProcessGroup.html" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a>, <a href="PythonProcess.html" class="extype" name="uk.ac.ed.inf.mois.PythonProcess">PythonProcess</a>, <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a>, <a href="VarCalc.html" class="extype" name="uk.ac.ed.inf.mois.VarCalc">VarCalc</a></div>
           </div></div>
         
 
@@ -130,8 +130,7 @@ upon it parametrised by time.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">Needed for NetCDF et al.</p><div class="fullcomment"><div class="comment cmt"><p>Needed for NetCDF et al. TODO: explain better
-</p></div></div>
+      <p class="shortcomment cmt">Needed for NetCDF et al.</p><div class="fullcomment"><div class="comment cmt"><p>Needed for NetCDF et al. TODO: explain better</p></div></div>
     </li></ol>
             </div>
 
@@ -143,7 +142,7 @@ upon it parametrised by time.
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
         <span class="name">name</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
@@ -1028,7 +1027,7 @@ to call <code>super.reset(t)</code> if you do this!
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">All variables defined in this <code>BaseProcess</code>.</p>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#stepHandlers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="stepHandlers:scala.collection.mutable.ArrayBuffer[uk.ac.ed.inf.mois.StepHandler]"></a>
       <a id="stepHandlers:ArrayBuffer[StepHandler]"></a>

@@ -43,7 +43,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Config</span><span class="params">(<span name="begin">begin: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">Some(0.0)</span></span>, <span name="duration">duration: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">None</span></span>, <span name="format">format: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;tsv&quot;</span></span>, <span name="outputFile">outputFile: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dumpState">dumpState: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="model">model: <span class="extype" name="scala.Option">Option</span>[<a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a>] = <span class="symbol">None</span></span>, <span name="params">params: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="initial">initial: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">Config</span><span class="params">(<span name="command">command: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="begin">begin: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">Some(0.0)</span></span>, <span name="duration">duration: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">None</span></span>, <span name="stepHandlers">stepHandlers: <span class="extype" name="scala.Seq">Seq</span>[(<a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a>) ⇒ <span class="extype" name="scala.Option">Option</span>[<a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>]] = <span class="defval" name="Seq.empty[Model =&gt; Option[StepHandler]]">...</span></span>, <span name="dumpState">dumpState: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="model">model: <span class="extype" name="scala.Option">Option</span>[<a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a>] = <span class="symbol">None</span></span>, <span name="params">params: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="initial">initial: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -88,7 +88,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="uk.ac.ed.inf.mois.MoisMain.Config#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(begin:Option[Double],duration:Option[Double],format:String,outputFile:Option[String],dumpState:Boolean,model:Option[uk.ac.ed.inf.mois.Model],params:Option[String],initial:Option[String]):uk.ac.ed.inf.mois.MoisMain.Config"></a>
+      <a id="&lt;init&gt;(command:Option[String],begin:Option[Double],duration:Option[Double],stepHandlers:Seq[uk.ac.ed.inf.mois.Model=&gt;Option[uk.ac.ed.inf.mois.StepHandler]],dumpState:Boolean,model:Option[uk.ac.ed.inf.mois.Model],params:Option[String],initial:Option[String]):uk.ac.ed.inf.mois.MoisMain.Config"></a>
       <a id="&lt;init&gt;:Config"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -96,10 +96,10 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Config</span><span class="params">(<span name="begin">begin: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">Some(0.0)</span></span>, <span name="duration">duration: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">None</span></span>, <span name="format">format: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;tsv&quot;</span></span>, <span name="outputFile">outputFile: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dumpState">dumpState: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="model">model: <span class="extype" name="scala.Option">Option</span>[<a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a>] = <span class="symbol">None</span></span>, <span name="params">params: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="initial">initial: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span>
+        <span class="name">Config</span><span class="params">(<span name="command">command: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="begin">begin: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">Some(0.0)</span></span>, <span name="duration">duration: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">None</span></span>, <span name="stepHandlers">stepHandlers: <span class="extype" name="scala.Seq">Seq</span>[(<a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a>) ⇒ <span class="extype" name="scala.Option">Option</span>[<a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>]] = <span class="defval" name="Seq.empty[Model =&gt; Option[StepHandler]]">...</span></span>, <span name="dumpState">dumpState: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="model">model: <span class="extype" name="scala.Option">Option</span>[<a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a>] = <span class="symbol">None</span></span>, <span name="params">params: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="initial">initial: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$$Config@&lt;init&gt;(begin:Option[Double],duration:Option[Double],format:String,outputFile:Option[String],dumpState:Boolean,model:Option[uk.ac.ed.inf.mois.Model],params:Option[String],initial:Option[String]):uk.ac.ed.inf.mois.MoisMain.Config" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$$Config@&lt;init&gt;(command:Option[String],begin:Option[Double],duration:Option[Double],stepHandlers:Seq[uk.ac.ed.inf.mois.Model=&gt;Option[uk.ac.ed.inf.mois.StepHandler]],dumpState:Boolean,model:Option[uk.ac.ed.inf.mois.Model],params:Option[String],initial:Option[String]):uk.ac.ed.inf.mois.MoisMain.Config" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -221,6 +221,23 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.MoisMain.Config#command" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="command:Option[String]"></a>
+      <a id="command:Option[String]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">command</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$$Config@command:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
     </li><li name="uk.ac.ed.inf.mois.MoisMain.Config#dumpState" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="dumpState:Boolean"></a>
       <a id="dumpState:Boolean"></a>
@@ -295,23 +312,6 @@
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.MoisMain.Config#format" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="format:String"></a>
-      <a id="format:String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">format</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$$Config@format:String" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -431,23 +431,6 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.MoisMain.Config#outputFile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="outputFile:Option[String]"></a>
-      <a id="outputFile:Option[String]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">outputFile</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$$Config@outputFile:Option[String]" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      
     </li><li name="uk.ac.ed.inf.mois.MoisMain.Config#params" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="params:Option[String]"></a>
       <a id="params:Option[String]"></a>
@@ -461,6 +444,23 @@
       </span>
       </h4><span class="permalink">
       <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$$Config@params:Option[String]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.MoisMain.Config#stepHandlers" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="stepHandlers:Seq[uk.ac.ed.inf.mois.Model=&gt;Option[uk.ac.ed.inf.mois.StepHandler]]"></a>
+      <a id="stepHandlers:Seq[(Model)⇒Option[StepHandler]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stepHandlers</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[(<a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a>) ⇒ <span class="extype" name="scala.Option">Option</span>[<a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$$Config@stepHandlers:Seq[uk.ac.ed.inf.mois.Model=&gt;Option[uk.ac.ed.inf.mois.StepHandler]]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>

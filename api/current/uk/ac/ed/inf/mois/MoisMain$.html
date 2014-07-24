@@ -100,7 +100,7 @@ run models. For how to use this, see the mois-examples repository
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="MoisMain$$Config.html"><span class="name">Config</span></a><span class="params">(<span name="begin">begin: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">Some(0.0)</span></span>, <span name="duration">duration: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">None</span></span>, <span name="format">format: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">&quot;tsv&quot;</span></span>, <span name="outputFile">outputFile: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="dumpState">dumpState: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="model">model: <span class="extype" name="scala.Option">Option</span>[<a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a>] = <span class="symbol">None</span></span>, <span name="params">params: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="initial">initial: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="MoisMain$$Config.html"><span class="name">Config</span></a><span class="params">(<span name="command">command: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="begin">begin: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">Some(0.0)</span></span>, <span name="duration">duration: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Double">Double</span>] = <span class="symbol">None</span></span>, <span name="stepHandlers">stepHandlers: <span class="extype" name="scala.Seq">Seq</span>[(<a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a>) ⇒ <span class="extype" name="scala.Option">Option</span>[<a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>]] = <span class="defval" name="Seq.empty[Model =&gt; Option[StepHandler]]">...</span></span>, <span name="dumpState">dumpState: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>, <span name="model">model: <span class="extype" name="scala.Option">Option</span>[<a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a>] = <span class="symbol">None</span></span>, <span name="params">params: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>, <span name="initial">initial: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">None</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$@ConfigextendsProductwithSerializable" title="Permalink" target="_top">
@@ -280,6 +280,40 @@ run models. For how to use this, see the mois-examples repository
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.MoisMain#getDoubleVars" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getDoubleVars(names:Seq[String],model:uk.ac.ed.inf.mois.Model):Seq[uk.ac.ed.inf.mois.DoubleVarIntf]"></a>
+      <a id="getDoubleVars(Seq[String],Model):Seq[DoubleVarIntf]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getDoubleVars</span><span class="params">(<span name="names">names: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>, <span name="model">model: <a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a></span>)</span><span class="result">: <span class="extype" name="scala.collection.Seq">Seq</span>[<a href="DoubleVarIntf.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVarIntf">DoubleVarIntf</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$@getDoubleVars(names:Seq[String],model:uk.ac.ed.inf.mois.Model):Seq[uk.ac.ed.inf.mois.DoubleVarIntf]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.MoisMain#getStepHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getStepHandler(spec:String,model:uk.ac.ed.inf.mois.Model):Option[uk.ac.ed.inf.mois.StepHandler]"></a>
+      <a id="getStepHandler(String,Model):Option[StepHandler]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getStepHandler</span><span class="params">(<span name="spec">spec: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="model">model: <a href="Model.html" class="extype" name="uk.ac.ed.inf.mois.Model">Model</a></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$@getStepHandler(spec:String,model:uk.ac.ed.inf.mois.Model):Option[uk.ac.ed.inf.mois.StepHandler]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -297,6 +331,23 @@ run models. For how to use this, see the mois-examples repository
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.MoisMain#info" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="info(cfg:uk.ac.ed.inf.mois.MoisMain.Config):Unit"></a>
+      <a id="info(Config):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">info</span><span class="params">(<span name="cfg">cfg: <a href="MoisMain$$Config.html" class="extype" name="uk.ac.ed.inf.mois.MoisMain.Config">Config</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$@info(cfg:uk.ac.ed.inf.mois.MoisMain.Config):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -314,6 +365,23 @@ run models. For how to use this, see the mois-examples repository
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.MoisMain#list" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="list(cfg:uk.ac.ed.inf.mois.MoisMain.Config):Unit"></a>
+      <a id="list(Config):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">list</span><span class="params">(<span name="cfg">cfg: <a href="MoisMain$$Config.html" class="extype" name="uk.ac.ed.inf.mois.MoisMain.Config">Config</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$@list(cfg:uk.ac.ed.inf.mois.MoisMain.Config):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
     </li><li name="uk.ac.ed.inf.mois.MoisMain#main" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="main(args:Array[String]):Unit"></a>
       <a id="main(Array[String]):Unit"></a>
@@ -382,6 +450,40 @@ run models. For how to use this, see the mois-examples repository
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.MoisMain#optParser" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="optParser:scopt.OptionParser[uk.ac.ed.inf.mois.MoisMain.Config]{valversion:String}"></a>
+      <a id="optParser:OptionParser[Config]{valversion:String}"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">optParser</span><span class="result">: <span class="extype" name="scopt.OptionParser">OptionParser</span>[<a href="MoisMain$$Config.html" class="extype" name="uk.ac.ed.inf.mois.MoisMain.Config">Config</a>] { val version: String }</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$@optParser:scopt.OptionParser[uk.ac.ed.inf.mois.MoisMain.Config]{valversion:String}" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.MoisMain#run" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="run(cfg:uk.ac.ed.inf.mois.MoisMain.Config):Unit"></a>
+      <a id="run(Config):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">run</span><span class="params">(<span name="cfg">cfg: <a href="MoisMain$$Config.html" class="extype" name="uk.ac.ed.inf.mois.MoisMain.Config">Config</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.MoisMain$@run(cfg:uk.ac.ed.inf.mois.MoisMain.Config):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

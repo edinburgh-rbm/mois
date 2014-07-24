@@ -142,6 +142,23 @@ all state in a time-indexed dictionary in memory
       </a>
     </span>
       
+    </li><li name="uk.ac.ed.inf.mois.BaseODE" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="BaseODEextendsBaseProcesswithFirstOrderDifferentialEquations"></a>
+      <a id="BaseODE:BaseODE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BaseODE.html"><span class="name">BaseODE</span></a><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> with <span class="extype" name="org.apache.commons.math3.ode.FirstOrderDifferentialEquations">FirstOrderDifferentialEquations</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@BaseODEextendsBaseProcesswithFirstOrderDifferentialEquations" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
     </li><li name="uk.ac.ed.inf.mois.BaseProcess" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="BaseProcessextendsVarContainerwithAnnotation"></a>
       <a id="BaseProcess:BaseProcess"></a>
@@ -177,6 +194,23 @@ upon it parametrised by time.</p>
       </a>
     </span>
       
+    </li><li name="uk.ac.ed.inf.mois.CatalyticReactionNetwork" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CatalyticReactionNetworkextendsBaseProcesswithReactionNetwork"></a>
+      <a id="CatalyticReactionNetwork:CatalyticReactionNetwork"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="CatalyticReactionNetwork.html"><span class="name">CatalyticReactionNetwork</span></a><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> with <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@CatalyticReactionNetworkextendsBaseProcesswithReactionNetwork" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A trait for reaction networks that have catalysis.</p>
     </li><li name="uk.ac.ed.inf.mois.ConcentrationBasedReactionNetwork" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ConcentrationBasedReactionNetworkextendsBaseProcesswithReactionNetwork"></a>
       <a id="ConcentrationBasedReactionNetwork:ConcentrationBasedReactionNetwork"></a>
@@ -215,7 +249,7 @@ population-based reaction networks).</p>
       <p class="shortcomment cmt">A <code>ConstraintViolation</code> is raised when a restriction on a <code>Var</code>
 is violated.</p>
     </li><li name="uk.ac.ed.inf.mois.DeterministicReactionNetwork" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="DeterministicReactionNetworkextendsODEIntfwithConcentrationBasedReactionNetwork"></a>
+      <a id="DeterministicReactionNetworkextendsBaseODEwithConcentrationBasedReactionNetworkwithKineticCatalyticReactionNetwork"></a>
       <a id="DeterministicReactionNetwork:DeterministicReactionNetwork"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -223,10 +257,10 @@ is violated.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DeterministicReactionNetwork.html"><span class="name">DeterministicReactionNetwork</span></a><span class="result"> extends <a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a> with <a href="ConcentrationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ConcentrationBasedReactionNetwork">ConcentrationBasedReactionNetwork</a></span>
+        <a href="DeterministicReactionNetwork.html"><span class="name">DeterministicReactionNetwork</span></a><span class="result"> extends <a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a> with <a href="ConcentrationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ConcentrationBasedReactionNetwork">ConcentrationBasedReactionNetwork</a> with <a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@DeterministicReactionNetworkextendsODEIntfwithConcentrationBasedReactionNetwork" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@DeterministicReactionNetworkextendsBaseODEwithConcentrationBasedReactionNetworkwithKineticCatalyticReactionNetwork" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -335,6 +369,40 @@ population-based reaction networks).</p>
       </a>
     </span>
       
+    </li><li name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="KineticCatalyticReactionNetworkextendsBaseProcesswithKineticReactionNetworkwithCatalyticReactionNetwork"></a>
+      <a id="KineticCatalyticReactionNetwork:KineticCatalyticReactionNetwork"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="KineticCatalyticReactionNetwork.html"><span class="name">KineticCatalyticReactionNetwork</span></a><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> with <a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a> with <a href="CatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork">CatalyticReactionNetwork</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@KineticCatalyticReactionNetworkextendsBaseProcesswithKineticReactionNetworkwithCatalyticReactionNetwork" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A trait for reaction networks that have catalysis.</p>
+    </li><li name="uk.ac.ed.inf.mois.KineticReactionNetwork" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="KineticReactionNetworkextendsBaseProcesswithReactionNetwork"></a>
+      <a id="KineticReactionNetwork:KineticReactionNetwork"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="KineticReactionNetwork.html"><span class="name">KineticReactionNetwork</span></a><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> with <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@KineticReactionNetworkextendsBaseProcesswithReactionNetwork" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A trait for reaction networks that have kinetic rates.</p>
     </li><li name="uk.ac.ed.inf.mois.LongVar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="LongVarextendsVar[Long]withNumericVar[Long]"></a>
       <a id="LongVar:LongVar"></a>
@@ -427,7 +495,7 @@ the conclusion of each step with the end time and the state.
     </span>
       
     </li><li name="uk.ac.ed.inf.mois.ODE" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="ODEextendsODEIntfwithVarConversions"></a>
+      <a id="ODEextendsBaseODEwithVarConversions"></a>
       <a id="ODE:ODE"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -435,32 +503,68 @@ the conclusion of each step with the end time and the state.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ODE.html"><span class="name">ODE</span></a><span class="result"> extends <a href="ODEIntf.html" class="extype" name="uk.ac.ed.inf.mois.ODEIntf">ODEIntf</a> with <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></span>
+        <a href="ODE.html"><span class="name">ODE</span></a><span class="result"> extends <a href="BaseODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a> with <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@ODEextendsODEIntfwithVarConversions" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@ODEextendsBaseODEwithVarConversions" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
       <p class="shortcomment cmt">A partial implementation of <code>Process</code> that uses the Apache Commons
 Math ODE library to implement its <code>step</code> method.</p>
-    </li><li name="uk.ac.ed.inf.mois.ODEIntf" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="ODEIntfextendsBaseProcesswithFirstOrderDifferentialEquations"></a>
-      <a id="ODEIntf:ODEIntf"></a>
+    </li><li name="uk.ac.ed.inf.mois.PlotFileWriter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PlotFileWriterextendsPlotWriter"></a>
+      <a id="PlotFileWriter:PlotFileWriter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PlotFileWriter.html"><span class="name">PlotFileWriter</span></a><span class="result"> extends <a href="PlotWriter.html" class="extype" name="uk.ac.ed.inf.mois.PlotWriter">PlotWriter</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@PlotFileWriterextendsPlotWriter" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.PlotGUIWriter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PlotGUIWriterextendsPlotWriter"></a>
+      <a id="PlotGUIWriter:PlotGUIWriter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PlotGUIWriter.html"><span class="name">PlotGUIWriter</span></a><span class="result"> extends <a href="PlotWriter.html" class="extype" name="uk.ac.ed.inf.mois.PlotWriter">PlotWriter</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@PlotGUIWriterextendsPlotWriter" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.PlotWriter" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="PlotWriterextendsStepHandlerwithVarConversions"></a>
+      <a id="PlotWriter:PlotWriter"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ODEIntf.html"><span class="name">ODEIntf</span></a><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> with <span class="extype" name="org.apache.commons.math3.ode.FirstOrderDifferentialEquations">FirstOrderDifferentialEquations</span></span>
+        <a href="PlotWriter.html"><span class="name">PlotWriter</span></a><span class="result"> extends <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a> with <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@ODEIntfextendsBaseProcesswithFirstOrderDifferentialEquations" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@PlotWriterextendsStepHandlerwithVarConversions" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A StepHandler may be added to a <code>Process</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A StepHandler may be added to a <code>Process</code>. It then gets called at
+the conclusion of each step with the end time and the state.
+</p></div></div>
     </li><li name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="PopulationBasedReactionNetworkextendsBaseProcesswithReactionNetwork"></a>
       <a id="PopulationBasedReactionNetwork:PopulationBasedReactionNetwork"></a>
