@@ -24,16 +24,17 @@ import java.lang.Math.PI
 import uk.ac.ed.inf.mois.{HamiltonianProcess, Math}
 
 case class Pendulum(m: Double, l: Double) 
-     extends HamiltonianProcess("Pendulum") with Math {
+    extends HamiltonianProcess("Pendulum") with Math {
   val q = Double("ex:q")
   val p = Double("ex:p")
   val g = 9.81
-  H(Seq(q), Seq(p)) := pow(p, 2)/(2*m*pow(l,2)) + m*g*l*(1 - cos(q))
+  H(q)(p) := pow(p, 2)/(2*m*pow(l,2)) + m*g*l*(1 - cos(q))
 }
 
 
 class HamiltonianProcessTest extends FlatSpec with Matchers {
-  "hamiltonian pendulum" should "give correct results" in {
+  "Hamiltonian pendulum" should "give correct results" in {
+
     // Use approximate equality in `should equal`
     val precision = 1e-4
     implicit val doubleEquality =

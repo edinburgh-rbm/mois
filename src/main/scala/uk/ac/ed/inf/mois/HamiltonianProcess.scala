@@ -43,15 +43,15 @@ abstract class HamiltonianProcess(name: String) extends ODE(name) {
    */
   var totalEnergy = 0.0
 
-  case class H(q: Seq[DoubleVar], p: Seq[DoubleVar])
-       extends MultivariateDifferentiableFunction {
+  case class H(q: DoubleVar*)(p: DoubleVar*)
+      extends MultivariateDifferentiableFunction {
     private val phase = q ++ p
     assert(q.size == p.size)
 
     private val unis = new Array[UnivariateFunction](phase.size)
 
     private case class Uni(f: F, i: Integer)
-		 extends UnivariateFunction {
+        extends UnivariateFunction {
       def value(x: Double): Double = {
 	val save = phase(i).value
 	phase(i) := x
@@ -61,7 +61,7 @@ abstract class HamiltonianProcess(name: String) extends ODE(name) {
       }
     }
 
-    def :=(f: => Double) {
+    def := (f: => Double) {
       energy = () => f
       for (i <- 0 until phase.size)
         unis(i) = Uni(energy, i)
