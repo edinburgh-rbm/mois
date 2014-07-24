@@ -16,8 +16,8 @@ trait CatalyticReactionNetwork extends ReactionNetwork {
 
   class ReactionWithCatalyser(
     lhs: Multiset, rhs: Multiset, catalyser: Specie) {
-    def using(mechanism: EnzymeMechanism) =
-      CatalysedReaction(lhs, rhs, catalyser, mechanism)
+    def using[M <: EnzymeMechanism](mechanism: M) =
+      CatalysedReaction[M](lhs, rhs, catalyser, mechanism)
   }
 
   case class CatalysedReaction[Mechanism <: EnzymeMechanism](
@@ -41,7 +41,7 @@ trait KineticCatalyticReactionNetwork extends KineticReactionNetwork
   }
 
   /** Michaelis-Menten mechanism: E + S <->[k1,k2] ES ->[k3] E + P */
-  class MM(k1: Double, k2: Double, k3: Double)
+  case class MM(k1: Double, k2: Double, k3: Double)
       extends KineticMechanism {
     def expand(lhs: Multiset, rhs: Multiset, catalyser: Specie) = {
       require(lhs.multisize == 1, "left-hand side of " +
@@ -59,7 +59,8 @@ trait KineticCatalyticReactionNetwork extends KineticReactionNetwork
     }
   }
 
-  implicit def catalyticToKinetic(r: CatalysedReaction[KineticMechanism]) =
+  implicit def catalyticToKinetic[M <: KineticMechanism](
+    r: CatalysedReaction[M]) =
     r.mechanism.expand(r.lhs, r.rhs, r.catalyser)
 }
 
