@@ -20,7 +20,7 @@ package uk.ac.ed.inf.mois
 import scala.collection.mutable
 import scala.util.matching.Regex
 
-abstract class Model extends VarContainer with Annotation with VarConversions {
+abstract class Model extends VarContainer with VarConversions {
 
   val process: BaseProcess
 
