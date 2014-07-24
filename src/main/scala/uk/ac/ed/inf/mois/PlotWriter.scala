@@ -32,13 +32,14 @@ import javax.swing.{JFrame, WindowConstants}
  * A StepHandler may be added to a `Process`. It then gets called at
  * the conclusion of each step with the end time and the state.
  */
-abstract class PlotWriter(varnames: String*)
-    extends StepHandler with VarConversions {
+abstract class PlotWriter extends StepHandler with VarConversions {
 
-  val series = mutable.Map.empty[Var[_], XYSeries]
+  val vars: Seq[DoubleVarIntf]
+  val series = mutable.Map.empty[DoubleVarIntf, XYSeries]
   var title = "Untitled"
   var ylabel = ""
 
+  // RHZ: This would actually make for a good Var.toString method
   def label(v: Var[_]): String = {
     if (v.meta.annotations contains "long_name") {
       v.meta.annotations("long_name").toString +
@@ -52,14 +53,14 @@ abstract class PlotWriter(varnames: String*)
   }
 
   def init(t: Double, proc: BaseProcess) {
-    if (varnames.size == 0) { // try to plot everything!
-      for (v <- proc.allVars.values
-	   if (v.isInstanceOf[DoubleVarIntf] && !(proc.dimensions contains v))) {
+    if (vars.size == 0) { // try to plot everything!
+      for (v <- proc.state collect { case v: DoubleVarIntf => v }
+	   if !proc.dimensions.contains(v)) {
         series += v -> new XYSeries(label(v))
       }
     } else {
-      for (vname <- varnames) {
-	val v = proc.allVars(VarMeta(vname))
+      for (v <- vars) {
+	// val v = proc.allVars(VarMeta(vname))
 	series += v -> new XYSeries(label(v))
       }
     }
@@ -80,19 +81,15 @@ abstract class PlotWriter(varnames: String*)
   }
 }
 
-class PlotFileWriter(filename: String, varnames: String*)
-    extends PlotWriter(varnames:_*) {
+class PlotFileWriter(val filename: String, val vars: DoubleVarIntf*)
+    extends PlotWriter {
 
   def handleStep(t: Double, proc: BaseProcess) {
-    for ((v, ss) <- series) {
-      ss.add(t, v.asInstanceOf[DoubleVarIntf].value)
-    }
+    for ((v, ss) <- series) ss.add(t, v.value)
   }
 
   override def reset(t: Double, proc: BaseProcess) {
-    for(ss <- series.values) {
-      ss.clear
-    }
+    for(ss <- series.values) ss.clear
   }
 
   override def finish {
@@ -103,8 +100,7 @@ class PlotFileWriter(filename: String, varnames: String*)
   }
 }
 
-class PlotGUIWriter(varnames: String*)
-    extends PlotWriter(varnames:_*) {
+class PlotGUIWriter(val vars: DoubleVarIntf*) extends PlotWriter {
 
   val dimTitle = new TextTitle
 
@@ -175,7 +171,7 @@ class PlotGUIWriter(varnames: String*)
 
   def handleStep(t: Double, proc: BaseProcess) {
     val title = proc.dimensions.keys.mkString(", ")
-    val ds = for ((v, s) <- series) yield (v.asInstanceOf[DoubleVarIntf].value, s)
+    val ds = for ((v, s) <- series) yield (v.value, s)
     java.awt.EventQueue.invokeLater(new GuiHandle(t, ds, title))
   }
 

@@ -126,39 +126,40 @@ object MoisMain {
       c.copy(command = Some("run"))
     } text("Run a model") children(
       opt[Double]('d', "duration") action { (x, c) =>
-	c.copy(duration = Some(x))
+        c.copy(duration = Some(x))
       } required() text("Simulation duration (mandatory)"),
 
       opt[Double]('b', "begin") action { (x, c) =>
-	c.copy(begin = Some(x))
+        c.copy(begin = Some(x))
       } text("Simulation start time (default: 0.0)"),
       
       opt[String]('i', "initial") action { (filename, c) =>
-	val fp = scala.io.Source.fromFile(filename)
-	val json = fp.mkString
-	fp.close()
-	c.copy(initial = Some(json))
+        val fp = scala.io.Source.fromFile(filename)
+        val json = fp.mkString
+        fp.close()
+        c.copy(initial = Some(json))
       } text("Initial conditions filename (JSON)"),
 
       opt[Boolean]('s', "state") action { (x, c) =>
-	c.copy(dumpState = true)
+        c.copy(dumpState = true)
       } text("Dump state at end of simulation"),
 
       opt[String]('o', "output") action { (outspec, c) =>
-	c.copy(stepHandlers = c.stepHandlers ++ Seq(getStepHandler(outspec)))
+        c.copy(stepHandlers = c.stepHandlers :+ getStepHandler(
+          outspec, c.model.get))
       } optional() unbounded() text("Output specification"),
 
       arg[String]("<model>") action { (modelName, c) =>
-	try {
-	  val model = Model(modelName)
-	  c.copy(model = Some(model))
-	} catch {
-	  case e: IllegalArgumentException => {
-	    Console.err.println(e)
-	    c
-	  }
-	}
-      } required () text("Model name"),
+        try {
+          val model = Model(modelName)
+          c.copy(model = Some(model))
+        } catch {
+          case e: IllegalArgumentException => {
+            Console.err.println(e)
+            c
+          }
+        }
+      } required() text("Model name"),
 
       note(""),
       note("Allowed output specifications:"),
@@ -169,91 +170,98 @@ object MoisMain {
       note("\ttsv:<file>\t\tTab-separated values to the given file"),
       note(""),
 
-      checkConfig { c =>
-	if (c.command == Some("run")) {
-	  if (!c.model.isDefined)
-	    failure("Could not find the requested model")
-	  else if (!c.stepHandlers.foldLeft(true)((acc, shopt) => acc && shopt.isDefined))
-	    failure("Bad step handlers")
-	  else 
-	    success
-	} else {
-	  success
-	}
-      }
-    )
+     checkConfig { c =>
+       if (c.command == Some("run")) {
+         if (!c.model.isDefined)
+           failure("Could not find the requested model")
+         else if (!c.stepHandlers.foldLeft(true)(
+           (acc, shopt) => acc && shopt.isDefined))
+           failure("Bad step handlers")
+         else
+           success
+       } else {
+         success
+       }
+     })
 
     checkConfig { c =>
       if (!c.command.isDefined)
-	failure("Must specify a command")
+        failure("Must specify a command")
       else
-	success
+        success
     }
   }
 
-  def getStepHandler(spec: String): Option[StepHandler] = {
+  def getDoubleVars(names: Seq[String], model: Model) =
+    for (name <- names) yield {
+      val v = model.process.allVars(VarMeta(name))
+      require(v.isInstanceOf[DoubleVarIntf],
+        "variable '" + name + "' is not of type Double")
+      v.asInstanceOf[DoubleVarIntf]
+    }
+
+  def getStepHandler(spec: String, model: Model): Option[StepHandler] = {
     val fmtargs = spec split ":"
     val format = fmtargs(0)
     format match {
       case "tsv" => {
-	fmtargs.size match {
-	  case 1 => {
-	    // ugly monkey patch to allow output to stdout when running
-	    // under sbt cli
-	    val osw = new java.io.OutputStreamWriter(System.out, "UTF-8")
-	    val stdout = new java.io.PrintWriter(osw)
-	    Some(new TsvWriter(stdout) {
-	      override def finish {}
-	    })
-	  }
-	  case 2 => {
-	    val fp = new java.io.File(fmtargs(1))
-	    Some(new TsvWriter(new java.io.PrintWriter(fp)))
-	  }
-	  case _ => {
-	    System.err.println("Invalid spec for TSV output")
-	    None
-	  }
-	}
+        fmtargs.size match {
+          case 1 => {
+            // ugly monkey patch to allow output to stdout when running
+            // under sbt cli
+            val osw = new java.io.OutputStreamWriter(System.out, "UTF-8")
+            val stdout = new java.io.PrintWriter(osw)
+            Some(new TsvWriter(stdout) { override def finish {} })
+          }
+          case 2 => {
+            val fp = new java.io.File(fmtargs(1))
+            Some(new TsvWriter(new java.io.PrintWriter(fp)))
+          }
+          case _ => {
+            System.err.println("Invalid spec for TSV output")
+            None
+          }
+        }
       }
       case "netcdf" => {
-	fmtargs.size match {
-	  case 2 => Some(new NetCDFWriter(fmtargs(1)))
-	  case _ => {
-	    System.err.println("Invalid spec for NetCDF output")
-	    None
-	  }
-	}
+        fmtargs.size match {
+          case 2 => Some(new NetCDFWriter(fmtargs(1)))
+          case _ => {
+            System.err.println("Invalid spec for NetCDF output")
+            None
+          }
+        }
       }
       case "png" => {
-	fmtargs.size match {
-	  case 2 => Some(new PlotFileWriter(fmtargs(1)))
-	  case 3 => {
-	    val vars = fmtargs(2) split (",")
-	    Some(new PlotFileWriter(fmtargs(1), vars:_*))
-	  }
-	  case _ => {
-	    System.err.println("Invalid spec for Plot output")
-	    None
-	  }
-	}
+        fmtargs.size match {
+          case 2 => Some(new PlotFileWriter(fmtargs(1)))
+          case 3 => {
+            val varnames = fmtargs(2) split (",")
+            Some(new PlotFileWriter(fmtargs(1),
+              getDoubleVars(varnames, model):_*))
+          }
+          case _ => {
+            System.err.println("Invalid spec for Plot output")
+            None
+          }
+        }
       }
       case "gui" => {
-	  fmtargs.size match {
-	    case 1 => Some(new PlotGUIWriter)
-	    case 2 => {
-	      val vars = fmtargs(1) split (",")
-	      Some(new PlotGUIWriter(vars:_*))
-	    }
-	    case _ => {
-	      System.err.println("Invalid spec for GUI Plot output")
-	      None
-	    }
-	  }
+        fmtargs.size match {
+          case 1 => Some(new PlotGUIWriter)
+          case 2 => {
+            val varnames = fmtargs(1) split (",")
+            Some(new PlotGUIWriter(getDoubleVars(varnames, model):_*))
+          }
+          case _ => {
+            System.err.println("Invalid spec for GUI Plot output")
+            None
+          }
+        }
       }
       case _ => {
-	System.err.println("Unknown output format")
-	None
+        System.err.println("Unknown output format")
+        None
       }
     }
   }

@@ -21,6 +21,7 @@ import scala.collection.mutable
 import scala.util.matching.Regex
 
 abstract class Model extends VarContainer with VarConversions {
+
   val process: BaseProcess
 
   def init(t: Double) {
@@ -55,7 +56,7 @@ object Model {
     im.symbol.toType.toString.split("@")(0)
   }
 
-  def all = {
+  def all: Seq[Model] = {
     val models = mutable.ArrayBuffer.empty[Model]
     val need = typeOf[Model]
     for (model <- (ServiceLoader load classOf[Model]).asScala) {
@@ -67,6 +68,7 @@ object Model {
     }
     models.toSeq
   }
+
   def apply(name: String): Model = {
     val models = all filter(name.r.findFirstIn(_).isDefined)
     models.size match {

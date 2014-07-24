@@ -16,7 +16,6 @@ abstract class DeterministicReactionNetwork(val name: String)
   override def stringPrefix = "DeterministicReactionNetwork"
 
   private val rxns = mutable.ArrayBuffer.empty[KineticReaction]
-  // def reactions(rs: KineticReaction*) = for (r <- rs) rxns += r
   def reactions(rss: Seq[KineticReaction]*) =
     for (rs <- rss; r <- rs) rxns += r
   implicit def rxnToSeq(r: KineticReaction) = Seq(r)
@@ -27,10 +26,6 @@ abstract class DeterministicReactionNetwork(val name: String)
   object Reaction extends ReactionFactory {
     def apply(lhs: Multiset, rhs: Multiset) = new Reaction(lhs, rhs)
   }
-
-  // This is one way, but with the integrator step handler in ODE
-  // this doesn't seem necessary
-  // implicit def getSpecieValue(s: Specie) = eval(s, ys)
 
   override def step(t: Double, dt: Double) {
     if (vars.size != species.size) {

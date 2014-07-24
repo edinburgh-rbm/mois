@@ -18,11 +18,22 @@
 package uk.ac.ed.inf.mois.test
 
 import org.scalatest.{FlatSpec, Matchers}
-import uk.ac.ed.inf.mois.MoisMain
+import uk.ac.ed.inf.mois.{MoisMain, Model, Process}
 import uk.ac.ed.inf.mois.{TsvWriter, NetCDFWriter,
 			  PlotFileWriter, PlotGUIWriter}
 
 class MoisMainTest extends FlatSpec with Matchers {
+
+  val model = new Model {
+    val process = new Process("") {
+      val x = Double("x")
+      val y = Double("y")
+      val z = Double("z")
+      val i = Int("i")
+      def step(t: Double, dt: Double) {}
+    }
+  }
+
   def parse(args: String*) = {
     MoisMain.optParser.parse(args, MoisMain.Config())
   }
@@ -33,74 +44,74 @@ class MoisMainTest extends FlatSpec with Matchers {
   }
   
   "main class" should "understand TSV step handlers for stdout" in {
-    val sh = MoisMain.getStepHandler("tsv:")
+    val sh = MoisMain.getStepHandler("tsv:", model)
     sh.isDefined should be (true)
     sh.get.isInstanceOf[TsvWriter] should be (true)
   }
 
   it should "understand TSV step handlers for files" in {
-    val sh = MoisMain.getStepHandler("tsv:/dev/null")
+    val sh = MoisMain.getStepHandler("tsv:/dev/null", model)
     sh.isDefined should be (true)
     sh.get.isInstanceOf[TsvWriter] should be (true)
   }
 
   it should "not understand mal-formed TSV step handlers" in {
-    val sh = MoisMain.getStepHandler("tsv:/dev/null:xxx")
+    val sh = MoisMain.getStepHandler("tsv:/dev/null:xxx", model)
     sh.isDefined should be (false)
   }
 
   it should "understand NetCDF step handlers" in {
-    val sh = MoisMain.getStepHandler("netcdf:/dev/null")
+    val sh = MoisMain.getStepHandler("netcdf:/dev/null", model)
     sh.isDefined should be (true)
     sh.get.isInstanceOf[NetCDFWriter] should be (true)
   }
 
   it should "not understand NetCDF step handlers with no filename" in {
-    val sh = MoisMain.getStepHandler("netcdf:")
+    val sh = MoisMain.getStepHandler("netcdf:", model)
     sh.isDefined should be (false)
   }
 
   it should "not understand mal-formed NetCDF step handlers" in {
-    val sh = MoisMain.getStepHandler("netcdf:/dev/null:xxx")
+    val sh = MoisMain.getStepHandler("netcdf:/dev/null:xxx", model)
     sh.isDefined should be (false)
   }
 
   it should "understand Plot step handlers" in {
-    val sh = MoisMain.getStepHandler("png:/dev/null")
+    val sh = MoisMain.getStepHandler("png:/dev/null", model)
     sh.isDefined should be (true)
     sh.get.isInstanceOf[PlotFileWriter] should be (true)
   }
 
   it should "understand Plot step handlers with arguments" in {
-    val sh = MoisMain.getStepHandler("png:/dev/null:x,y")
+    val sh = MoisMain.getStepHandler("png:/dev/null:x,y", model)
     sh.isDefined should be (true)
     sh.get.isInstanceOf[PlotFileWriter] should be (true)
   }
 
   it should "not understand mal-formed Plot step handler specs" in {
-    val sh = MoisMain.getStepHandler("png:")
+    val sh = MoisMain.getStepHandler("png:", model)
     sh.isDefined  should be (false)
   }
 
   it should "understand GUI step handlers" in {
-    val sh = MoisMain.getStepHandler("gui")
+    val sh = MoisMain.getStepHandler("gui", model)
     sh.isDefined should be (true)
     sh.get.isInstanceOf[PlotGUIWriter] should be (true)
   }
 
   it should "understand GUI step handlers with arguments" in {
-    val sh = MoisMain.getStepHandler("gui:x,y,z")
+    val sh = MoisMain.getStepHandler("gui:x,y,z", model)
     sh.isDefined should be (true)
     sh.get.isInstanceOf[PlotGUIWriter] should be (true)
   }
 
   it should "parse step handlers from the command line" in {
     val ocfg = parse("model",
-		    "-d", "1",
-		    "-o", "tsv:",
-		    "-o", "netcdf:/dev/null",
-		    "TestModel1")
-    ocfg should not equal (None)
+                     "-d", "1",
+                     "-o", "tsv:",
+                     "-o", "netcdf:/dev/null",
+                     "TestModel1")
+    ocfg should be ('defined)
     val cfg = ocfg.get
     cfg.stepHandlers.size should equal(2)
     cfg.stepHandlers(0).isDefined should be (true)
