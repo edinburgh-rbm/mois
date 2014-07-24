@@ -28,16 +28,30 @@ class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
     TolerantNumerics.tolerantDoubleEquality(precision)
 
   "Goldbeter-Koshland" should "give expected results" in {
-    GbKl.A := 1.0
-    GbKl.B := 1.0
-    GbKl.X := 1.0
-    GbKl.Y := 1.0
-    GbKl.step(0, 50)
 
-    GbKl.X.value should equal (1.0)
-    GbKl.Y.value should equal (1.0)
-    GbKl.A.value should equal (0.5)
-    GbKl.B.value should equal (0.5)
+    import GbKl._
+
+    A := 1.0
+    B := 1.0
+    X := 1.0
+    Y := 1.0
+    step(0, 50)
+
+    val XA = enzymeComplex(X, A)
+    val YB = enzymeComplex(Y, B)
+
+    rxns should equal (Seq(
+      A + X -> XA at 1,
+      XA -> A + X at 1,
+      XA -> B + X at 1,
+      B + Y -> YB at 1,
+      YB -> B + Y at 1,
+      YB -> Y + A at 1))
+
+    (X.value + XA.value) should equal (1.0)
+    (Y.value + YB.value) should equal (1.0)
+    (A.value + XA.value) should equal (1.0)
+    (B.value + YB.value) should equal (1.0)
   }
 }
 

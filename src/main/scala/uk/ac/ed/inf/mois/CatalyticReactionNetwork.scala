@@ -40,6 +40,11 @@ trait KineticCatalyticReactionNetwork extends KineticReactionNetwork
         : Seq[KineticReaction]
   }
 
+  def enzymeComplex(enzyme: Specie, substrates: Specie*) = {
+    val name = (s: Specie) => s.meta.identifier
+    Specie(name(enzyme) + "-" + substrates.map(name).mkString("-"))
+  }
+
   /** Michaelis-Menten mechanism: E + S <->[k1,k2] ES ->[k3] E + P */
   case class MM(k1: Double, k2: Double, k3: Double)
       extends KineticMechanism {
@@ -48,11 +53,10 @@ trait KineticCatalyticReactionNetwork extends KineticReactionNetwork
         "Michaelis-Menten reaction must have only one substrate")
       require(rhs.multisize == 1, "right-hand side of " +
         "Michaelis-Menten reaction must have only one product")
-      def name(s: Specie) = s.meta.identifier
       val (s, _) = lhs.head
       val (p, _) = rhs.head
       val e  = catalyser
-      val es = Specie(name(e) + "-" + name(s))
+      val es = enzymeComplex(e, s)
       List(e + s -> es at k1,
            es -> e + s at k2,
            es -> e + p at k3)

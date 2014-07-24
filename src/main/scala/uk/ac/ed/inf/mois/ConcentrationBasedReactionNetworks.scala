@@ -18,10 +18,12 @@ trait ConcentrationBasedReactionNetwork extends ReactionNetwork {
   }
 
   object Specie extends SpecieFactory {
-    def apply(meta: VarMeta) = {
-      val s = new ConcentrationBasedSpecie(meta)
-      species += meta -> s
-      s
-    }
+    def apply(meta: VarMeta) =
+      if (species contains meta) species(meta)
+      else {
+        val s = new ConcentrationBasedSpecie(meta)
+        species += meta -> s
+        s
+      }
   }
 }

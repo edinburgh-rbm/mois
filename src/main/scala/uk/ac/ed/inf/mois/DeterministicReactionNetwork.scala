@@ -15,7 +15,7 @@ abstract class DeterministicReactionNetwork(val name: String)
 
   override def stringPrefix = "DeterministicReactionNetwork"
 
-  private val rxns = mutable.ArrayBuffer.empty[KineticReaction]
+  val rxns = mutable.ArrayBuffer.empty[KineticReaction]
   def reactions(rss: Seq[KineticReaction]*) =
     for (rs <- rss; r <- rs) rxns += r
   implicit def rxnToSeq(r: KineticReaction) = Seq(r)
