@@ -33,11 +33,11 @@ import collection.mutable
   * Math ODE library to implement its `step` method.
   */
 abstract class ODE(val name: String)
-    extends ODEIntf with VarConversions {
+    extends BaseODE with VarConversions {
   override def stringPrefix = "ODE"
 }
 
-abstract class ODEIntf extends BaseProcess
+abstract class BaseODE extends BaseProcess
     with ode.FirstOrderDifferentialEquations {
   self =>
 
@@ -47,7 +47,7 @@ abstract class ODEIntf extends BaseProcess
   }
 
   /** Adds an ODE definition to the process. */
-  def addODE(v: DoubleVarIntf, f: Derivative) = {
+  protected[mois] def addODE(v: DoubleVarIntf, f: Derivative) = {
     indices += v -> (vars.size)
     vars += v
     funs += f
@@ -117,6 +117,8 @@ abstract class ODEIntf extends BaseProcess
         def handleStep(interp: sampling.StepInterpolator, isLast: Boolean) {
           val t = interp.getCurrentTime()
           val y = interp.getInterpolatedState()
+          // RHZ: I have the feeling that this makes the call to eval
+          // unnecessary and the macro irrelevant
           for (i <- 0 until vars.size)
             vars(i) := y(i)
           for (sh <- stepHandlers)

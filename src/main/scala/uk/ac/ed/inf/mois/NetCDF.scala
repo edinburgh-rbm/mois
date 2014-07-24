@@ -17,6 +17,8 @@
  */
 package uk.ac.ed.inf.mois
 
+import scala.language.existentials
+
 import scala.collection.mutable
 import ucar.nc2
 import ucar.ma2

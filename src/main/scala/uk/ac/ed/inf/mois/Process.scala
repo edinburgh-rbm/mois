@@ -36,7 +36,7 @@ private object ProcessID {
   */
 abstract class BaseProcess extends VarContainer with Annotation {
 
-  val name: String
+  def name: String
   val stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
   val dimensions = mutable.Map.empty[Var[_], Int]
 
@@ -45,8 +45,8 @@ abstract class BaseProcess extends VarContainer with Annotation {
 
   /** Automatically annotate the process with its software name and version */
   protected def addBasicAnnotations = {
-    // XXX why does this not work? Implementation title and version
-    // aways return null for derived classes
+    // XXX why does this not work?  Implementation title and version
+    // always return null for derived classes
     val pkg = getClass.getPackage
     val pkgname = pkg.getImplementationTitle
     val pkgversion = pkg.getImplementationVersion
@@ -61,6 +61,7 @@ abstract class BaseProcess extends VarContainer with Annotation {
     Annotate("class", getClass.getName)
   }
 
+  /** All variables defined in this `BaseProcess`. */
   def state: Seq[Var[_]] = allVars.values.toSeq
 
   /** This function takes the state from where it is at
@@ -111,9 +112,7 @@ abstract class BaseProcess extends VarContainer with Annotation {
     stepHandlers += sh
   }
   
-  /**
-   * Needed for NetCDF et al. TODO: explain better
-   */
+  /** Needed for NetCDF et al. TODO: explain better */
   class Dimension(v: Var[_]) {
     def apply = dimensions(v)
     def update(x: Int) { dimensions(v) = x }

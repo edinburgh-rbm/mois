@@ -11,7 +11,7 @@ trait PopulationBasedReactionNetwork extends ReactionNetwork {
   type Base = Int
   type Specie = PopulationBasedSpecie
 
-  class PopulationBasedSpecie(val meta: VarMeta) extends SpecieIntf {
+  class PopulationBasedSpecie(val meta: VarMeta) extends BaseSpecie {
 
     var value = 0
     type R = Specie

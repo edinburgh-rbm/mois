@@ -21,6 +21,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.ODE
+import java.lang.Math.sin
 
 /** Directly calculated ODE system from Dominik's stuff. */
 object sampleODE extends ODE("sample") {
@@ -29,7 +30,7 @@ object sampleODE extends ODE("sample") {
   val x3 = Double("ex:x3")
   d(x1)/dt := -0.3*x1 - 0.4*x2
   d(x2)/dt := -0.5*x1 - 0.8*x2
-  d(x3)/dt := java.lang.Math.sin(t)
+  d(x3)/dt := sin(t)
 }
 
 class ODETest extends FlatSpec with Matchers {

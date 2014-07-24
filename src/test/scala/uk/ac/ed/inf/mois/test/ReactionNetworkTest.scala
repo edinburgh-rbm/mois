@@ -11,7 +11,7 @@ class ReactionNetworkTest extends FlatSpec with Matchers {
     val name = "ReactionNetwork"
 
     class Reaction(val lhs: Multiset, val rhs: Multiset)
-       extends ReactionIntf
+       extends BaseReaction
 
     object Reaction extends ReactionFactory {
       def apply(lhs: Multiset, rhs: Multiset) =

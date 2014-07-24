@@ -12,7 +12,7 @@ trait ConcentrationBasedReactionNetwork extends ReactionNetwork {
   type Specie = ConcentrationBasedSpecie
 
   class ConcentrationBasedSpecie(val meta: VarMeta)
-      extends SpecieIntf with DoubleVarIntf {
+      extends BaseSpecie with DoubleVarIntf {
     type R = Specie
     override def copy = new ConcentrationBasedSpecie(meta) := value
   }
