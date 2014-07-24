@@ -25,17 +25,19 @@ trait VarCalc extends BaseProcess {
   private val vars = mutable.ArrayBuffer.empty[DoubleVar]
   private val funcs = mutable.ArrayBuffer.empty[Func]
 
-  protected class Calcter(val v: DoubleVar) {
+  protected class Calc(val v: DoubleVar) {
     def := (e: => Double): Unit = {
       vars += v
       funcs += (() => e)
     }
   }
 
-  @inline final def calc(v: DoubleVar) = new Calcter(v)
+  @inline final def calc(v: DoubleVar) = new Calc(v)
 
   protected class CalcVars extends StepHandler {
-    def init(t: Double, proc: BaseProcess) {}
+    def init(t: Double, proc: BaseProcess) {
+      handleStep(t, proc)
+    }
     def handleStep(t: Double, proc: BaseProcess) {
       for ((v, f) <- vars zip funcs) {
 	v := f()

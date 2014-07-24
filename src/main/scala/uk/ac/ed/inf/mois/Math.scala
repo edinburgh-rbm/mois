@@ -57,6 +57,8 @@ trait Math {
   @inline def abs(x: Double) = jm.abs(x)
   @inline def ceil(x: Double) = jm.ceil(x)
   @inline def floor(x: Double) = jm.floor(x)
+  @inline def min(x: Double, y: Double) = jm.min(x, y)
+  @inline def max(x: Double, y: Double) = jm.max(x, y)
 
   @inline def exp(x: Double) = jm.exp(x)
   @inline def pow(x: Double, y: Double) = jm.pow(x, y)

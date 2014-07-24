@@ -25,6 +25,8 @@ scalaVersion := "2.11.1"
 
 scalacOptions ++= Seq( "-deprecation", "-unchecked", "-feature" )
 
+mainClass in Test := Some("uk.ac.ed.inf.mois.MoisMain")
+
 // this is needed to get some dependencies like grizzled-slf4j
 seq(bintrayResolverSettings:_*)
 

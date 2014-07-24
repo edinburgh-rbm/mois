@@ -55,7 +55,10 @@ abstract class BaseProcess extends VarContainer with Annotation {
     }
 
     import uk.ac.ed.inf.{mois => m}
-    Annotate(m.name, m.version)
+    if (m.name != null && m.version != null) {
+      Annotate(m.name, m.version)
+    }
+
     Annotate("name", name)
     Annotate("type", stringPrefix)
     Annotate("class", getClass.getName)
@@ -123,7 +126,7 @@ abstract class BaseProcess extends VarContainer with Annotation {
   }
   object Dimension {
     def apply(v: Var[_], size: Int): Dimension = {
-      dimensions += v -> size
+      dimensions += allVars(v.meta) -> size
       Dimension(v)
     }
     def apply(v: Var[_]): Dimension = new Dimension(v)

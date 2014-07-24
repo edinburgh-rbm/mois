@@ -21,7 +21,14 @@ import org.scalatest.{FlatSpec, Matchers}
 import uk.ac.ed.inf.mois.{Process, Model}
 
 class TestModel1 extends Model {
+  val a = Double("a")
+  a.Annotate("long_name", "The a parameter")
+  a.Annotate("units", "1/u")
   object process extends Process("test model 1") {
+    Annotate("title", "This is TestModel1")
+    val x = Double("x")
+    x.Annotate("long_name", "The x value")
+    x.Annotate("units", "u")
     def step(t: Double, tau: Double) {}
   }
 }
@@ -55,7 +62,7 @@ class ModelTest extends FlatSpec with Matchers {
     }
   }
 
-  it should "find two models when asked for all of them" in {
-    Model.all.size should equal (2)
+  it should "find three models when asked for all of them" in {
+    Model.all.size should equal (3)
   }
 }

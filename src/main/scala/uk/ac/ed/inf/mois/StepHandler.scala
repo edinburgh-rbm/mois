@@ -35,13 +35,19 @@ abstract class StepHandler {
  * all state in a time-indexed dictionary in memory
  */
 class Accumulator extends StepHandler {
-  val history = mutable.Map.empty[Double, Seq[Var[_]]]
+  class Container extends VarContainer
+  val history = mutable.ArrayBuffer.empty[(Double, VarContainer)]
   def handleStep(t: Double, proc: BaseProcess) {
-    history(t) = proc.state.map(_.copy).toList
+    val snapshot = new Container
+    snapshot leftMerge  proc
+    history += ((t, snapshot))
   }
   def init(t: Double, proc: BaseProcess) = handleStep(t, proc)
   // TODO: Should the Accumulator interpolate?
-  def apply(t: Double) = history(t)
+  def apply(t: Double) = {
+    // FIXME really stupid linear search
+    history.filter(_._1 <= t).last._2
+  }
 }
 
 /**

@@ -38,8 +38,8 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
    * We have a concept of "dimension" so we have to organise our variables
    * a bit differently.
    */
-  private var doubleDims: Array[DoubleVar] = null
-  private var doubles: Array[DoubleVar] = null
+  private var doubleDims: Array[DoubleVarIntf] = null
+  private var doubles: Array[DoubleVarIntf] = null
   private var floatDims: Array[FloatVar] = null
   private var floats: Array[FloatVar] = null
   private var intDims: Array[IntVar] = null
@@ -89,7 +89,7 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
     time = fp.addVariable(null, "time", ma2.DataType.DOUBLE, "time")
     shapeBuf += 0
 
-    val dbuf = mutable.ArrayBuffer.empty[DoubleVar]
+    val dbuf = mutable.ArrayBuffer.empty[DoubleVarIntf]
     val fbuf = mutable.ArrayBuffer.empty[FloatVar]
     val ibuf = mutable.ArrayBuffer.empty[IntVar]
     for (v <- proc.dimensions.keys.toSeq.sortBy(_.meta)) {
@@ -101,7 +101,7 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
 	case _: Double =>
 	  val cv = fp.addVariable(null, v.meta.toString, ma2.DataType.DOUBLE, v.meta.toString)
 	  cdfvars += v -> cv
-	  dbuf +=  v.asInstanceOf[DoubleVar]
+	  dbuf +=  v.asInstanceOf[DoubleVarIntf]
 	case _: Float =>
 	  val cv = v -> fp.addVariable(null, v.meta.toString, ma2.DataType.FLOAT, v.meta.toString)
 	  cdfvars += cv
@@ -125,7 +125,22 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
 			  intDims.map(_.meta.toString)).mkString(" ")
 
     def notDim(v: Var[_]) = !(proc.dimensions contains v)
-    doubles = proc.doubleVars.values.toSeq.filter(notDim).sortBy(_.meta).toArray
+
+    // XXX pain in the backside, have to dig through all the vars because
+    // of the chemical reaction network defining its own sub-class of 
+    // doubles!!
+    //
+    // it should be like this:
+    //
+    // doubles = proc.doubleVars.values.toSeq.filter(notDim).sortBy(_.meta).toArray
+    //
+    // instead it is like this:
+    doubles = proc.allVars.values.toSeq
+      .filter(_.isInstanceOf[DoubleVarIntf])
+      .filter(notDim)
+      .map(_.asInstanceOf[DoubleVarIntf])
+      .sortBy(_.meta)
+      .toArray
     floats = proc.floatVars.values.toSeq.filter(notDim).sortBy(_.meta).toArray
     ints = proc.intVars.values.toSeq.filter(notDim).sortBy(_.meta).toArray
 
