@@ -114,10 +114,13 @@ class MoisMainTest extends FlatSpec with Matchers {
     ocfg should be ('defined)
     val cfg = ocfg.get
     cfg.stepHandlers.size should equal(2)
-    cfg.stepHandlers(0).isDefined should be (true)
-    cfg.stepHandlers(0).get.isInstanceOf[TsvWriter] should be (true)
-    cfg.stepHandlers(1).isDefined should be (true)
-    cfg.stepHandlers(1).get.isInstanceOf[NetCDFWriter] should be (true)
+    val model = cfg.model.get
+    val sh1 = cfg.stepHandlers(0)(model)
+    val sh2 = cfg.stepHandlers(1)(model)
+    sh1.isDefined should be (true)
+    sh1.get.isInstanceOf[TsvWriter] should be (true)
+    sh2.isDefined should be (true)
+    sh2.get.isInstanceOf[NetCDFWriter] should be (true)
   }
 
   it should "print out information about a model" in {

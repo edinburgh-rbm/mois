@@ -74,7 +74,8 @@ object MoisMain {
     val command: Option[String] = None,
     val begin: Option[Double] = Some(0.0),
     val duration: Option[Double] = None,
-    val stepHandlers: Seq[Option[StepHandler]] = Seq[Option[StepHandler]](),
+    val stepHandlers: Seq[Model => Option[StepHandler]] =
+      Seq.empty[Model => Option[StepHandler]],
     val dumpState: Boolean = false,
     val model: Option[Model] = None,
     val params: Option[String] = None,
@@ -145,8 +146,8 @@ object MoisMain {
       } text("Dump state at end of simulation"),
 
       opt[String]('o', "output") action { (outspec, c) =>
-        c.copy(stepHandlers = c.stepHandlers :+ getStepHandler(
-          outspec, c.model.get))
+        c.copy(stepHandlers = c.stepHandlers :+ { model: Model =>
+          getStepHandler(outspec, model) })
       } optional() unbounded() text("Output specification"),
 
       arg[String]("<model>") action { (modelName, c) =>
@@ -174,8 +175,9 @@ object MoisMain {
        if (c.command == Some("run")) {
          if (!c.model.isDefined)
            failure("Could not find the requested model")
-         else if (!c.stepHandlers.foldLeft(true)(
-           (acc, shopt) => acc && shopt.isDefined))
+         else if (c.stepHandlers exists (sh => !sh(c.model.get).isDefined))
+           // RHZ: We might want to memoise the result of sh() by
+           // storing MemoisedThunk instead of () => StepHandler
            failure("Bad step handlers")
          else
            success
@@ -310,7 +312,7 @@ object MoisMain {
 
     // set up output
     for (sh <- cfg.stepHandlers)
-      model.process.addStepHandler(sh.get)
+      model.process.addStepHandler(sh(model).get)
 
     // set initial conditions
     if(cfg.initial.isDefined)
