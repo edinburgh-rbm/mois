@@ -9,19 +9,19 @@ trait ConcentrationBasedReactionNetwork extends ReactionNetwork {
   override def stringPrefix = "ConcentrationBasedReactionNetwork"
 
   type Base = Double
-  type Specie = ConcentrationBasedSpecie
+  type Species = ConcentrationBasedSpecies
 
-  class ConcentrationBasedSpecie(val meta: VarMeta)
-      extends BaseSpecie with DoubleVarIntf {
-    type R = Specie
-    override def copy = new ConcentrationBasedSpecie(meta) := value
+  class ConcentrationBasedSpecies(val meta: VarMeta)
+      extends BaseSpecies with DoubleVarIntf {
+    type R = Species
+    override def copy = new ConcentrationBasedSpecies(meta) := value
   }
 
-  object Specie extends SpecieFactory {
+  object Species extends SpeciesFactory {
     def apply(meta: VarMeta) =
       if (species contains meta) species(meta)
       else {
-        val s = new ConcentrationBasedSpecie(meta)
+        val s = new ConcentrationBasedSpecies(meta)
         species += meta -> s
         s
       }

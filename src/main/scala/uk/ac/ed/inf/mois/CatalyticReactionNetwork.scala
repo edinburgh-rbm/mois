@@ -10,18 +10,18 @@ trait CatalyticReactionNetwork extends ReactionNetwork {
   abstract class EnzymeMechanism
 
   trait CatalysableReaction extends BaseReaction {
-    def catalysedBy(catalyser: Specie) =
+    def catalysedBy(catalyser: Species) =
       new ReactionWithCatalyser(lhs, rhs, catalyser)
   }
 
   class ReactionWithCatalyser(
-    lhs: Multiset, rhs: Multiset, catalyser: Specie) {
+    lhs: Multiset, rhs: Multiset, catalyser: Species) {
     def using[M <: EnzymeMechanism](mechanism: M) =
       CatalysedReaction[M](lhs, rhs, catalyser, mechanism)
   }
 
   case class CatalysedReaction[Mechanism <: EnzymeMechanism](
-    lhs: Multiset, rhs: Multiset, catalyser: Specie,
+    lhs: Multiset, rhs: Multiset, catalyser: Species,
     mechanism: Mechanism) extends SimpleReaction
 }
 
@@ -37,19 +37,19 @@ trait KineticCatalyticReactionNetwork
     * catalytic reaction into a set of `KineticReaction`s.
     */
   trait KineticMechanism extends EnzymeMechanism {
-    def expand(lhs: Multiset, rhs: Multiset, catalyser: Specie)
+    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species)
         : Seq[KineticReaction]
   }
 
-  def enzymeComplex(enzyme: Specie, substrates: Specie*) = {
-    val name = (s: Specie) => s.meta.identifier
-    Specie(name(enzyme) + "-" + substrates.map(name).mkString("-"))
+  def enzymeComplex(enzyme: Species, substrates: Species*) = {
+    val name = (s: Species) => s.meta.identifier
+    Species(name(enzyme) + "-" + substrates.map(name).mkString("-"))
   }
 
   /** Michaelis-Menten mechanism: E + S <->[k1,k2] ES ->[k3] E + P */
   case class MM(k1: Double, k2: Double, k3: Double)
       extends KineticMechanism {
-    def expand(lhs: Multiset, rhs: Multiset, catalyser: Specie) = {
+    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
       require(lhs.multisize == 1, "left-hand side of reaction " +
         lhs + " -> " + rhs + " must have only one substrate to use " +
         "Michaelis-Menten (MM) mechanism.")
@@ -69,7 +69,7 @@ trait KineticCatalyticReactionNetwork
   /** Quasi-steady-state approximation. */
   case class QSS(vmax: Double, km: Double)
       extends KineticMechanism {
-    def expand(lhs: Multiset, rhs: Multiset, catalyser: Specie) =
+    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) =
       List(lhs -> rhs `at!` vmax * count(lhs) / (km + count(lhs)))
   }
 

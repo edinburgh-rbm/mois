@@ -15,53 +15,46 @@ trait ReactionNetwork extends BaseProcess {
   // (Int or Long) or concentrations (Float or Double).
   // This doesn't allow for hybrid models.
   type Base // for counting number of ocurrences of species
-  type Specie <: BaseSpecie
+  type Species <: BaseSpecies
   type Reaction <: BaseReaction
 
-  val species = VarMap.empty[Base, Specie]
+  val species = VarMap.empty[Base, Species]
   override def allVars = super.allVars ++ species
-
-  // private val rxns = mutable.ArrayBuffer.empty[Reaction]
-  // def reactions(rs: Reaction*) = for (r <- rs) {
-  //   rxns += r
-  //   for (s <- r.lhs) species += s
-  //   for (s <- r.rhs) species += s
-  // }
 
   // -- Species --
 
-  trait BaseSpecie extends NumericVar[Base] {
-    this: Specie =>
+  trait BaseSpecies extends NumericVar[Base] {
+    this: Species =>
 
     var value: Base
 
-    type R >: this.type <: Specie
+    type R >: this.type <: Species
 
     // -- Multiset creation methods --
     def + (p: Multiset) = p + this
-    def + (s: Specie) = Multiset(this) + s
+    def + (s: Species) = Multiset(this) + s
     def * (m: Int) = Multiset(this -> m)
 
     // -- Reaction creation methods --
     def -> (p: Multiset) = Reaction(Multiset(this), p)
-    def -> (s: Specie) = Reaction(Multiset(this), Multiset(s))
+    def -> (s: Species) = Reaction(Multiset(this), Multiset(s))
     def -> () = Reaction(Multiset(this), Multiset())
 
-    override def stringPrefix = "Specie"
+    override def stringPrefix = "Species"
   }
 
   // -- Multisets --
 
-  class Multiset private (val species: Map[Specie, Int])
-      extends Map[Specie, Int] {
+  class Multiset private (val species: Map[Species, Int])
+      extends Map[Species, Int] {
 
     override def toString = (for ((s, n) <- species) yield
       n + "*" + s.meta).mkString(" + ")
 
     // -- Map methods --
-    def get(s: Specie) = species get s
+    def get(s: Species) = species get s
     def iterator = species.iterator
-    def + [A >: Int](kv: (Specie, A)) = {
+    def + [A >: Int](kv: (Species, A)) = {
       val (s, x) = kv
       x match {
         case i: Int => species get s match {
@@ -71,27 +64,27 @@ trait ReactionNetwork extends BaseProcess {
         case _ => species + kv
       }
     }
-    def - (s: Specie) = species get s match {
+    def - (s: Species) = species get s match {
       case Some(i) => if (i == 1) new Multiset(species - s)
                       else new Multiset(species + (s -> (i-1)))
       case None => species
     }
-    override def default(s: Specie) = 0
-    override def foreach[U](f: ((Specie, Int)) => U) =
+    override def default(s: Species) = 0
+    override def foreach[U](f: ((Species, Int)) => U) =
       species foreach f
     override def empty = Multiset()
     override def size = species.size
     def multisize = species.values.sum
 
     // -- Multiset creation methods --
-    def + (kv: (Specie, Int)): Multiset = {
+    def + (kv: (Species, Int)): Multiset = {
       val (s, i) = kv
       species get s match {
         case Some(j) => new Multiset(species + (s -> (i+j)))
         case None => new Multiset(species + kv)
       }
     }
-    def + (s: Specie): Multiset = this + (s, 1)
+    def + (s: Species): Multiset = this + (s, 1)
     def + (that: Multiset): Multiset =
       if (this.size >= that.size)
         that.foldLeft(this)({ case (m, kv) => m + kv })
@@ -102,22 +95,22 @@ trait ReactionNetwork extends BaseProcess {
 
     // -- Reaction creation methods --
     def -> (m: Multiset) = Reaction(this, m)
-    def -> (s: Specie) = Reaction(this, Multiset(s))
+    def -> (s: Species) = Reaction(this, Multiset(s))
     def -> () = Reaction(this, Multiset())
   }
 
   object Multiset {
-    def apply(s: (Specie, Int), species: (Specie, Int)*): Multiset =
+    def apply(s: (Species, Int), species: (Species, Int)*): Multiset =
       species.foldLeft(empty + s)({ case (m, s) => m + s })
-    def apply(species: Specie*) = new Multiset(
+    def apply(species: Species*) = new Multiset(
       species.groupBy(x => x).map({ case (s, ss) => (s, ss.size) }))
-    def empty = new Multiset(Map.empty[Specie, Int])
+    def empty = new Multiset(Map.empty[Species, Int])
   }
 
   implicit class MultisetMaker(n: Int) {
-    def * (s: Specie) = Multiset(s -> n)
+    def * (s: Species) = Multiset(s -> n)
     def * (p: Multiset) = p * n
-    def apply(s: Specie) = Multiset(s -> n)
+    def apply(s: Species) = Multiset(s -> n)
     def apply(p: Multiset) = p * n
   }
 
@@ -134,29 +127,29 @@ trait ReactionNetwork extends BaseProcess {
         (this.lhs == that.lhs) && (this.rhs == that.rhs)
       case _ => false
     }
-    def apply(s: Specie) = rhs(s) - lhs(s)
+    def apply(s: Species) = rhs(s) - lhs(s)
   }
 
   abstract class BaseReaction extends SimpleReaction {
 
     // -- Append species to the right-hand side --
     def + (m: Multiset) = Reaction(lhs, rhs + m)
-    def + (s: Specie) = Reaction(lhs, rhs + s)
+    def + (s: Species) = Reaction(lhs, rhs + s)
     def * (n: Int) = Reaction(lhs, rhs * n)
   }
 
   implicit class ReactionMaker(u: Unit) {
     def -> (m: Multiset) = Reaction(Multiset.empty, m)
-    def -> (s: Specie) = Reaction(Multiset.empty, Multiset(s))
+    def -> (s: Species) = Reaction(Multiset.empty, Multiset(s))
   }
 
   // -- Factories --
 
-  abstract class SpecieFactory {
-    def apply(meta: VarMeta): Specie
+  abstract class SpeciesFactory {
+    def apply(meta: VarMeta): Species
   }
 
-  val Specie: SpecieFactory
+  val Species: SpeciesFactory
 
   abstract class ReactionFactory {
     def apply(lhs: Multiset, rhs: Multiset): Reaction

@@ -24,12 +24,12 @@ class ReactionNetworkTest extends FlatSpec with Matchers {
 
     // -- Brusselator --
 
-    val A = Specie("A")
-    val B = Specie("B")
-    val D = Specie("D")
-    val E = Specie("E")
-    val X = Specie("X")
-    val Y = Specie("Y")
+    val A = Species("A")
+    val B = Species("B")
+    val D = Species("D")
+    val E = Species("E")
+    val X = Species("X")
+    val Y = Species("Y")
 
     val r1  = A -> X
     val r2a = 2 * X + Y -> 3 * X

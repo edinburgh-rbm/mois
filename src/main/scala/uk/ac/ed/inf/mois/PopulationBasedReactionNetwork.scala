@@ -9,13 +9,13 @@ trait PopulationBasedReactionNetwork extends ReactionNetwork {
   override def stringPrefix = "PopulationBasedReactionNetwork"
 
   type Base = Int
-  type Specie = PopulationBasedSpecie
+  type Species = PopulationBasedSpecies
 
-  class PopulationBasedSpecie(val meta: VarMeta) extends BaseSpecie {
+  class PopulationBasedSpecies(val meta: VarMeta) extends BaseSpecies {
 
     var value = 0
-    type R = Specie
-    override def copy = new PopulationBasedSpecie(meta) := value
+    type R = Species
+    override def copy = new PopulationBasedSpecies(meta) := value
 
     def += (x: Int) = update (value + x)
     def -= (x: Int) = update (value - x)
@@ -24,9 +24,9 @@ trait PopulationBasedReactionNetwork extends ReactionNetwork {
     def %= (x: Int) = update (value % x)
   }
 
-  object Specie extends SpecieFactory {
+  object Species extends SpeciesFactory {
     def apply(meta: VarMeta) = {
-      val s = new PopulationBasedSpecie(meta)
+      val s = new PopulationBasedSpecies(meta)
       species += meta -> s
       s
     }

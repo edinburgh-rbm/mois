@@ -9,10 +9,10 @@ import org.scalactic.TolerantNumerics
 object Brusselator
   extends DeterministicReactionNetwork("Brusselator") {
 
-  val A = Specie("A")
-  val B = Specie("B")
-  val X = Specie("X")
-  val Y = Specie("Y")
+  val A = Species("A")
+  val B = Species("B")
+  val X = Species("X")
+  val Y = Species("Y")
 
   reactions(
     A -> X + A at 1.0,

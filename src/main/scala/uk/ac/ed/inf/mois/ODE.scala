@@ -17,8 +17,7 @@
  */
 package uk.ac.ed.inf.mois
 
-import language.experimental.macros
-import reflect.macros.Context
+import language.implicitConversions
 
 import org.apache.commons.math3.ode
 import org.apache.commons.math3.ode.sampling
@@ -43,18 +42,21 @@ abstract class BaseODE
   self =>
 
   /** A class to define derivatives of `Var`s. */
-  protected class FunMaker(val v: DoubleVarIntf) {
+  protected class AddODE(val vs: Seq[DoubleVarIntf]) {
 
     /** Adds an ODE definition to the process. */
-    def := (f: => Double): Unit = {
-      vars += v
-      funs += (() => f)
+    def := (fs: (() => Double)*): Unit = {
+      for ((v, f) <- vs zip fs) {
+        vars += v
+        funs += f
+      }
     }
   }
+  implicit def bynameToFun(f: => Double) = () => f
 
   /** Adds an ODE definition to the current `ODE`. */
-  protected def d(v: DoubleVarIntf) = new FunMaker(v) {
-    def / (d: dt.type) = new FunMaker(v)
+  protected def d(vs: DoubleVarIntf*) = new AddODE(vs) {
+    def / (d: dt.type) = new AddODE(vs)
   }
 
   /** Object `dt` is used for writing ODEs with syntax: d(v1)/dt = ... */
