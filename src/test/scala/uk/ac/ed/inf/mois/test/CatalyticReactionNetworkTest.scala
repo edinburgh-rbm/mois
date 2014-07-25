@@ -7,10 +7,10 @@ import org.scalactic.TolerantNumerics
 
 object GbKl extends DeterministicReactionNetwork("Goldbeter-Koshland") {
 
-  val A = Specie("A") := 1.0
-  val B = Specie("B") := 1.0
-  val X = Specie("X") := 1.0
-  val Y = Specie("Y") := 1.0
+  val A = Specie("A")
+  val B = Specie("B")
+  val X = Specie("X")
+  val Y = Specie("Y")
   
   reactions(
     A -> B catalysedBy X using MM(1, 1, 1),
@@ -20,6 +20,10 @@ object GbKl extends DeterministicReactionNetwork("Goldbeter-Koshland") {
 
 class GbKlModel extends Model {
   val process = GbKl
+  GbKl.A := 1.0
+  GbKl.B := 1.0
+  GbKl.X := 1.0
+  GbKl.Y := 1.0
 }
   
 class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
