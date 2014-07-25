@@ -53,6 +53,7 @@ abstract class BaseODE
     }
   }
   implicit def bynameToFun(f: => Double) = () => f
+  implicit def varToFun(f: DoubleVarIntf) = () => f.value
 
   /** Adds an ODE definition to the current `ODE`. */
   protected def d(vs: DoubleVarIntf*) = new AddODE(vs) {
