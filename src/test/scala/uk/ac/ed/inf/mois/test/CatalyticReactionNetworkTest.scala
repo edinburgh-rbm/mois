@@ -33,7 +33,7 @@ class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
 
     import GbKl._
 
-    step(0, 50)
+    step(0, 5)
 
     val XA = enzymeComplex(X, A)
     val YB = enzymeComplex(Y, B)
