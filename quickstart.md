@@ -36,4 +36,4 @@ git clone https://github.com/edinburgh-rbm/mois-examples
 
 Now proceed as in the [guide to running mois]
 
-[guide to running mois](/mois-examples/running.html)
+[guide to running mois]: /mois-examples/running.html
