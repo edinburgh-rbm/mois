@@ -13,6 +13,7 @@ https://github.com/edinburgh-rbm/moi-sim.git
 
   * [Examples and Narrative Documentation](https://edinburgh-rbm.github.io/mois-examples/)
   * [API Documentation](https://edinburgh-rbm.github.io/mois/api/current/#uk.ac.ed.inf.mois.package)
+  * [Quickstart Guide](quickstart.html)
 
 Building and Releasing
 ======================
