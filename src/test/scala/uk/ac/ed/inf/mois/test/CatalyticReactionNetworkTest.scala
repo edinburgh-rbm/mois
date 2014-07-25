@@ -1,26 +1,28 @@
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{DeterministicReactionNetwork, PlotFileWriter}
+import uk.ac.ed.inf.mois.{DeterministicReactionNetwork, Model, PlotFileWriter}
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
+object GbKl extends DeterministicReactionNetwork("Goldbeter-Koshland") {
+
+  val A = Specie("A") := 1.0
+  val B = Specie("B") := 1.0
+  val X = Specie("X") := 1.0
+  val Y = Specie("Y") := 1.0
+  
+  reactions(
+    A -> B catalysedBy X using MM(1, 1, 1),
+    B -> A catalysedBy Y using MM(1, 1, 1)
+  )
+}
+
+class GbKlModel extends Model {
+  val process = GbKl
+}
+  
 class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
-
-  object GbKl extends DeterministicReactionNetwork("Goldbeter-Koshland") {
-
-    val A = Specie("A")
-    val B = Specie("B")
-    val X = Specie("X")
-    val Y = Specie("Y")
-
-    addStepHandler(new PlotFileWriter("goldbeter-koshland.png"))
-
-    reactions(
-      A -> B catalysedBy X using MM(1, 1, 1),
-      B -> A catalysedBy Y using MM(1, 1, 1)
-    )
-  }
 
   // Use approximate equality in `should equal`
   val precision = 1e-3
@@ -31,10 +33,6 @@ class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
 
     import GbKl._
 
-    A := 1.0
-    B := 1.0
-    X := 1.0
-    Y := 1.0
     step(0, 50)
 
     val XA = enzymeComplex(X, A)
