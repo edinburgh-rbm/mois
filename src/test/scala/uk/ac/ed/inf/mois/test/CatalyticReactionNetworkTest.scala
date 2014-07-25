@@ -37,6 +37,11 @@ class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
 
     import GbKl._
 
+    A := 1.0
+    B := 1.0
+    X := 1.0
+    Y := 1.0
+
     step(0, 5)
 
     val XA = enzymeComplex(X, A)

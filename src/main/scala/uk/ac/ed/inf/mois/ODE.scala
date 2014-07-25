@@ -32,23 +32,25 @@ import collection.mutable
 /** A partial implementation of `Process` that uses the Apache Commons
   * Math ODE library to implement its `step` method.
   */
-abstract class ODE(val name: String)
-    extends BaseODE with VarConversions {
+abstract class ODE(val name: String) extends BaseODE {
   override def stringPrefix = "ODE"
 }
 
-abstract class BaseODE extends BaseProcess
-    with ode.FirstOrderDifferentialEquations {
+abstract class BaseODE
+    extends BaseProcess
+       with ode.FirstOrderDifferentialEquations
+       with VarConversions {
   self =>
 
   /** A class to define derivatives of `Var`s. */
   protected class FunMaker(val v: DoubleVarIntf) {
-    def := (e: Double): Unit = macro ODEMacros.createFun
+    // def := (e: Double): Unit = macro ODEMacros.createFun
+    def := (f: => Double): Unit = addODE(v, () => f)
   }
 
   /** Adds an ODE definition to the process. */
   protected[mois] def addODE(v: DoubleVarIntf, f: Derivative) = {
-    indices += v -> (vars.size)
+    // indices += v -> (vars.size)
     vars += v
     funs += f
   }
@@ -64,19 +66,20 @@ abstract class BaseODE extends BaseProcess
   /** `Var` used to construct derivatives that depend on time. */
   var t = 0.0
 
-  @inline final def eval(v: DoubleVarIntf, ys: Array[Double]): Double =
-    // if (indices contains v) ys(indices(v)) else v.value
-    indices get v map ys getOrElse v.value
+  // @inline final def eval(v: DoubleVarIntf, ys: Array[Double]): Double =
+  //   // if (indices contains v) ys(indices(v)) else v.value
+  //   indices get v map ys getOrElse v.value
 
   /** A map that returns the index of a `Var` in `vars`. */
-  val indices = mutable.Map.empty[DoubleVarIntf, Int] withDefault (v =>
-    throw new IllegalArgumentException("No differential equation " +
-      "defined for " + v + ".  Define one using d(v) := ..."))
+  // val indices = mutable.Map.empty[DoubleVarIntf, Int] withDefault (v =>
+  //   throw new IllegalArgumentException("No differential equation " +
+  //     "defined for " + v + ".  Define one using d(v) := ..."))
 
   /** An array with all `Var`s for which to integrate. */
   val vars = mutable.ArrayBuffer.empty[DoubleVarIntf]
 
-  type Derivative = Array[Double] => Double
+  // type Derivative = Array[Double] => Double
+  type Derivative = () => Double
 
   /** Functions defining the derivatives of the variables in `vars`.
     * The two arrays are indexed equally.
@@ -111,21 +114,21 @@ abstract class BaseODE extends BaseProcess
     val i = integrator()
 
     // only add step handlers if we have them
-    if (stepHandlers.size > 0) {
-      i.addStepHandler(new sampling.StepHandler {
-        def init(t0: Double, y0: Array[Double], t: Double) {}
-        def handleStep(interp: sampling.StepInterpolator, isLast: Boolean) {
-          val t = interp.getCurrentTime()
-          val y = interp.getInterpolatedState()
-          // RHZ: I have the feeling that this makes the call to eval
-          // unnecessary and the macro irrelevant
-          for (i <- 0 until vars.size)
-            vars(i) := y(i)
-          for (sh <- stepHandlers)
-            sh.handleStep(t, self)
-        }
-      })
-    }
+    // if (stepHandlers.size > 0) {
+    // i.addStepHandler(new sampling.StepHandler {
+    //   def init(t0: Double, y0: Array[Double], t: Double) {}
+    //   def handleStep(interp: sampling.StepInterpolator, isLast: Boolean) {
+    //     val t = interp.getCurrentTime()
+    //     val y = interp.getInterpolatedState()
+    //     // RHZ: I have the feeling that this makes the call to eval
+    //     // unnecessary and the macro irrelevant
+    //     for (i <- 0 until vars.size)
+    //       vars(i) := y(i)
+    //     for (sh <- stepHandlers)
+    //       sh.handleStep(t, self)
+    //   }
+    // })
+    // }
 
     // conduct the integration
     i.integrate(this, time, doubleY, time+tau, doubleY)
@@ -144,7 +147,8 @@ abstract class BaseODE extends BaseProcess
     t = time
     for (i <- 0 until ydots.size) {
       assume(funs isDefinedAt i, "no derivative defined for " + vars(i))
-      ydots(i) = funs(i)(ys)
+      vars(i) := ys(i)
+      ydots(i) = funs(i)() //(ys)
     }
   }
 
@@ -156,6 +160,7 @@ abstract class BaseODE extends BaseProcess
   @inline override def apply(t: Double, tau: Double) = step(t, tau)
 }
 
+/*
 object ODEMacros {
   def createFun(c: Context)(e: c.Expr[Double]): c.Expr[Unit] = {
     import c.universe._
@@ -179,3 +184,5 @@ object ODEMacros {
     c.Expr[Unit](c.resetLocalAttrs(q"addODE($v, $fun)"))
   }
 }
+*/
+

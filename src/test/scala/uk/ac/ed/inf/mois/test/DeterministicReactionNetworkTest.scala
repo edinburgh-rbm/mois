@@ -43,6 +43,11 @@ class DeterministicReactionNetworkTest extends FlatSpec with Matchers {
 
   "Brusselator" should "give expected results" in {
 
+    Brusselator.A := 1.0
+    Brusselator.B := 1.7
+    Brusselator.X := 1.0
+    Brusselator.Y := 1.0
+
     val acc = new Accumulator
     Brusselator.addStepHandler(acc)
     Brusselator.step(0, 50)

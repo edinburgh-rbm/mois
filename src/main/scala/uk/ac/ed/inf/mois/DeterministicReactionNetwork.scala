@@ -3,6 +3,7 @@ package uk.ac.ed.inf.mois
 import scala.language.implicitConversions
 
 import collection.mutable
+import scala.math.pow
 
 /** Base trait for all reaction networks that use concentrations of
   * molecules as a measure for species (as opposed to
@@ -27,14 +28,19 @@ abstract class DeterministicReactionNetwork(val name: String)
     def apply(lhs: Multiset, rhs: Multiset) = new Reaction(lhs, rhs)
   }
 
+  implicit val count: Multiset => Double = m => (
+    for ((s, n) <- m) yield pow(s, n)).product
+
   override def step(t: Double, dt: Double) {
     if (vars.size != species.size) {
       funs.clear
       vars.clear
-      indices.clear
+      // indices.clear
       // compute derivates
       for ((m, s) <- species)
-        addODE(s, ys => (for (rxn <- rxns if rxn(s) != 0) yield
+        // d(s) := (for (rxn <- rxns if rxn(s) != 0) yield
+        //   rxn(s) * rxn.rate).sum
+        addODE(s, () => (for (rxn <- rxns if rxn(s) != 0) yield
           rxn(s) * rxn.rate).sum)
     }
     super.step(t, dt)

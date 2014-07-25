@@ -67,9 +67,10 @@ trait KineticCatalyticReactionNetwork
   }
 
   /** Quasi-steady-state approximation. */
-  case class QSS(vmax: Double, km: Double) extends KineticMechanism {
+  case class QSS(vmax: Double, km: Double)
+      extends KineticMechanism {
     def expand(lhs: Multiset, rhs: Multiset, catalyser: Specie) =
-      List(lhs -> rhs `at!` vmax * s / (km + s))
+      List(lhs -> rhs `at!` vmax * count(lhs) / (km + count(lhs)))
   }
 
   implicit def catalyticToKinetic[M <: KineticMechanism](
