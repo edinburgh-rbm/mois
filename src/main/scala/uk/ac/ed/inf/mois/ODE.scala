@@ -44,15 +44,12 @@ abstract class BaseODE
 
   /** A class to define derivatives of `Var`s. */
   protected class FunMaker(val v: DoubleVarIntf) {
-    // def := (e: Double): Unit = macro ODEMacros.createFun
-    def := (f: => Double): Unit = addODE(v, () => f)
-  }
 
-  /** Adds an ODE definition to the process. */
-  protected[mois] def addODE(v: DoubleVarIntf, f: Derivative) = {
-    // indices += v -> (vars.size)
-    vars += v
-    funs += f
+    /** Adds an ODE definition to the process. */
+    def := (f: => Double): Unit = {
+      vars += v
+      funs += (() => f)
+    }
   }
 
   /** Adds an ODE definition to the current `ODE`. */
@@ -66,19 +63,9 @@ abstract class BaseODE
   /** `Var` used to construct derivatives that depend on time. */
   var t = 0.0
 
-  // @inline final def eval(v: DoubleVarIntf, ys: Array[Double]): Double =
-  //   // if (indices contains v) ys(indices(v)) else v.value
-  //   indices get v map ys getOrElse v.value
-
-  /** A map that returns the index of a `Var` in `vars`. */
-  // val indices = mutable.Map.empty[DoubleVarIntf, Int] withDefault (v =>
-  //   throw new IllegalArgumentException("No differential equation " +
-  //     "defined for " + v + ".  Define one using d(v) := ..."))
-
   /** An array with all `Var`s for which to integrate. */
   val vars = mutable.ArrayBuffer.empty[DoubleVarIntf]
 
-  // type Derivative = Array[Double] => Double
   type Derivative = () => Double
 
   /** Functions defining the derivatives of the variables in `vars`.
@@ -95,7 +82,6 @@ abstract class BaseODE
     new DormandPrince853Integrator(minStep, maxStep,
       absoluteTolerance, relativeTolerance)
 
-  // RHZ: for me to remember what these numbers are
   private val minStep = 1e-8
   private val maxStep = 100
   private val absoluteTolerance = 1e-10
@@ -148,7 +134,7 @@ abstract class BaseODE
     for (i <- 0 until ydots.size) {
       assume(funs isDefinedAt i, "no derivative defined for " + vars(i))
       vars(i) := ys(i)
-      ydots(i) = funs(i)() //(ys)
+      ydots(i) = funs(i)()
     }
   }
 
@@ -159,30 +145,4 @@ abstract class BaseODE
 
   @inline override def apply(t: Double, tau: Double) = step(t, tau)
 }
-
-/*
-object ODEMacros {
-  def createFun(c: Context)(e: c.Expr[Double]): c.Expr[Unit] = {
-    import c.universe._
-    // v is the variable for which we are defining the ODE
-    // this is just to make the generated code nicer, it could be
-    // just val v = q"${c.prefix.tree}.v" as well
-    val v = c.prefix.tree match {
-      case q"$x.this.d($v)" => v
-      case q"$x.this.d($v)./($y.this.dt)" => v
-      case _ => q"${c.prefix.tree}.v"
-    }
-    // transformer that replaces Vars by a call to ODE.eval
-    object transformer extends Transformer {
-      override def transform(tree: Tree): Tree = tree match {
-        case q"$p.this.getVarValue[$t]($v)" => q"eval($v, ys)"
-        case _ => super.transform(tree)
-      }
-    }
-    // construct function
-    val fun = q"(ys => ${transformer.transform(e.tree)})"
-    c.Expr[Unit](c.resetLocalAttrs(q"addODE($v, $fun)"))
-  }
-}
-*/
 

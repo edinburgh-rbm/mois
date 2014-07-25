@@ -35,13 +35,10 @@ abstract class DeterministicReactionNetwork(val name: String)
     if (vars.size != species.size) {
       funs.clear
       vars.clear
-      // indices.clear
       // compute derivates
       for ((m, s) <- species)
-        // d(s) := (for (rxn <- rxns if rxn(s) != 0) yield
-        //   rxn(s) * rxn.rate).sum
-        addODE(s, () => (for (rxn <- rxns if rxn(s) != 0) yield
-          rxn(s) * rxn.rate).sum)
+        d(s) := (for (rxn <- rxns if rxn(s) != 0) yield
+          rxn(s) * rxn.rate).sum
     }
     super.step(t, dt)
   }
