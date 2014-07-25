@@ -27,20 +27,70 @@ object sampleODE extends ODE("sample") with Math {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   val x3 = Double("ex:x3")
+  val x4 = Double("ex:x4")
   d(x1)/dt := -0.3*x1 - 0.4*x2
   d(x2)/dt := -0.5*x1 - 0.8*x2
   d(x3)/dt := sin(t)
+  d(x4)/dt := x1
+}
+
+/** Directly calculated ODE system from Dominik's stuff. */
+object sampleODE2 extends ODE("sample2") with Math {
+  val x1 = Double("ex:x1")
+  val x2 = Double("ex:x2")
+  val x3 = Double("ex:x3")
+  val x4 = Double("ex:x4")
+  d(x1)/dt := (
+    -0.3*x1 - 0.4*x2,
+    -0.5*x1 - 0.8*x2,
+    sin(t),
+    x1
+  )
 }
 
 class ODETest extends FlatSpec with Matchers {
+  // Use approximate equality in `should equal`
+  val precision = 1e-4
+  implicit val doubleEquality =
+    TolerantNumerics.tolerantDoubleEquality(precision)
 
   "sample ODE" should "give Dominik's expected results" in {
 
-    // Use approximate equality in `should equal`
-    val precision = 1e-4
-    implicit val doubleEquality =
-      TolerantNumerics.tolerantDoubleEquality(precision)
+    sampleODE.x1 := 25.0
+    sampleODE.x2 := 50.0
+    sampleODE.x3 := 0.0
 
+    sampleODE.x1.value should equal (25.0)
+    sampleODE.x2.value should equal (50.0)
+    sampleODE.x3.value should equal (0.0)
+
+    // Integrate from t1 = 0 to t2 = 50
+    sampleODE.step(0, 50)
+
+    sampleODE.x1.value should equal (-0.1398)
+    sampleODE.x2.value should equal (0.0916)
+    sampleODE.x3.value should equal (0.0350)
+
+    // Integrate from t1 = 50 to t2 = 150
+    sampleODE.step(50, 100)
+
+    sampleODE.x1.value should equal (-0.0032)
+    sampleODE.x2.value should equal (0.0021)
+    sampleODE.x3.value should equal (0.3007)
+
+    // reset the initial conditions
+    sampleODE.x1 := 25.0
+    sampleODE.x2 := 50.0
+    sampleODE.x3 := 0.0
+
+    // make sure we get the same results
+    sampleODE.step(0, 50.0)
+    sampleODE.x1.value should equal (-0.1398)
+    sampleODE.x2.value should equal (0.0916)
+    sampleODE.x3.value should equal (0.0350)
+  }
+  
+  it should "also give the results with fancy syntax" in {
     sampleODE.x1 := 25.0
     sampleODE.x2 := 50.0
     sampleODE.x3 := 0.0
