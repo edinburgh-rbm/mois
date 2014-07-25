@@ -27,8 +27,9 @@ trait CatalyticReactionNetwork extends ReactionNetwork {
 
 
 /** A trait for reaction networks that have catalysis. */
-trait KineticCatalyticReactionNetwork extends KineticReactionNetwork
-    with CatalyticReactionNetwork {
+trait KineticCatalyticReactionNetwork
+    extends KineticReactionNetwork
+       with CatalyticReactionNetwork {
 
   type Reaction <: UnratedReaction with CatalysableReaction
 
@@ -49,10 +50,12 @@ trait KineticCatalyticReactionNetwork extends KineticReactionNetwork
   case class MM(k1: Double, k2: Double, k3: Double)
       extends KineticMechanism {
     def expand(lhs: Multiset, rhs: Multiset, catalyser: Specie) = {
-      require(lhs.multisize == 1, "left-hand side of " +
-        "Michaelis-Menten reaction must have only one substrate")
-      require(rhs.multisize == 1, "right-hand side of " +
-        "Michaelis-Menten reaction must have only one product")
+      require(lhs.multisize == 1, "left-hand side of reaction " +
+        lhs + " -> " + rhs + " must have only one substrate to use " +
+        "Michaelis-Menten (MM) mechanism.")
+      require(rhs.multisize == 1, "right-hand side of reaction " +
+        lhs + " -> " + rhs + " must have only one product to use " +
+        "Michaelis-Menten (MM) mechanism.")
       val (s, _) = lhs.head
       val (p, _) = rhs.head
       val e  = catalyser
@@ -61,6 +64,12 @@ trait KineticCatalyticReactionNetwork extends KineticReactionNetwork
            es -> e + s at k2,
            es -> e + p at k3)
     }
+  }
+
+  /** Quasi-steady-state approximation. */
+  case class QSS(vmax: Double, km: Double) extends KineticMechanism {
+    def expand(lhs: Multiset, rhs: Multiset, catalyser: Specie) =
+      List(lhs -> rhs `at!` vmax * s / (km + s))
   }
 
   implicit def catalyticToKinetic[M <: KineticMechanism](

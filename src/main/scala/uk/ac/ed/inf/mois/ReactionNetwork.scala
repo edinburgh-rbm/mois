@@ -55,9 +55,8 @@ trait ReactionNetwork extends BaseProcess {
   class Multiset private (val species: Map[Specie, Int])
       extends Map[Specie, Int] {
 
-    override def toString = "Multiset(" +
-      (for ((s, n) <- species)
-       yield s.meta + " -> " + n).mkString(", ") + ")"
+    override def toString = (for ((s, n) <- species) yield
+      n + "*" + s.meta).mkString(" + ")
 
     // -- Map methods --
     def get(s: Specie) = species get s
