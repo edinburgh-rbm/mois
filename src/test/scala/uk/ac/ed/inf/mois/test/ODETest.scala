@@ -40,7 +40,7 @@ object sampleODE2 extends ODE("sample2") with Math {
   val x2 = Double("ex:x2")
   val x3 = Double("ex:x3")
   val x4 = Double("ex:x4")
-  d(x1)/dt := (
+  d(x1, x2, x3, x4)/dt := (
     -0.3*x1 - 0.4*x2,
     -0.5*x1 - 0.8*x2,
     sin(t),
@@ -91,37 +91,49 @@ class ODETest extends FlatSpec with Matchers {
   }
   
   it should "also give the results with fancy syntax" in {
-    sampleODE.x1 := 25.0
-    sampleODE.x2 := 50.0
-    sampleODE.x3 := 0.0
+    sampleODE2.x1 := 25.0
+    sampleODE2.x2 := 50.0
+    sampleODE2.x3 := 0.0
 
-    sampleODE.x1.value should equal (25.0)
-    sampleODE.x2.value should equal (50.0)
-    sampleODE.x3.value should equal (0.0)
+    sampleODE2.x1.value should equal (25.0)
+    sampleODE2.x2.value should equal (50.0)
+    sampleODE2.x3.value should equal (0.0)
 
     // Integrate from t1 = 0 to t2 = 50
-    sampleODE.step(0, 50)
+    sampleODE2.step(0, 50)
 
-    sampleODE.x1.value should equal (-0.1398)
-    sampleODE.x2.value should equal (0.0916)
-    sampleODE.x3.value should equal (0.0350)
+    sampleODE2.x1.value should equal (-0.1398)
+    sampleODE2.x2.value should equal (0.0916)
+    sampleODE2.x3.value should equal (0.0350)
 
     // Integrate from t1 = 50 to t2 = 150
-    sampleODE.step(50, 100)
+    sampleODE2.step(50, 100)
 
-    sampleODE.x1.value should equal (-0.0032)
-    sampleODE.x2.value should equal (0.0021)
-    sampleODE.x3.value should equal (0.3007)
+    sampleODE2.x1.value should equal (-0.0032)
+    sampleODE2.x2.value should equal (0.0021)
+    sampleODE2.x3.value should equal (0.3007)
 
     // reset the initial conditions
-    sampleODE.x1 := 25.0
-    sampleODE.x2 := 50.0
-    sampleODE.x3 := 0.0
+    sampleODE2.x1 := 25.0
+    sampleODE2.x2 := 50.0
+    sampleODE2.x3 := 0.0
 
     // make sure we get the same results
-    sampleODE.step(0, 50.0)
-    sampleODE.x1.value should equal (-0.1398)
-    sampleODE.x2.value should equal (0.0916)
-    sampleODE.x3.value should equal (0.0350)
+    sampleODE2.step(0, 50.0)
+    sampleODE2.x1.value should equal (-0.1398)
+    sampleODE2.x2.value should equal (0.0916)
+    sampleODE2.x3.value should equal (0.0350)
+  }
+
+  it should "error with fancy syntax incorrectly applied" in {
+    intercept[IllegalArgumentException] {
+      class Wrong extends ODE("Wrong") {
+	val x1 = Double("x1")
+	val x2 = Double("x2")
+
+	d(x1) := (x1, x2)
+      }
+      val wrong = new Wrong
+    }
   }
 }

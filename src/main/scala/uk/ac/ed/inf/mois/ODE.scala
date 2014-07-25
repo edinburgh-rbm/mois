@@ -46,6 +46,8 @@ abstract class BaseODE
 
     /** Adds an ODE definition to the process. */
     def := (fs: (() => Double)*): Unit = {
+      if (fs.size != vs.size)
+	throw new IllegalArgumentException("lhs and rhs of ODE system must have same size")
       for ((v, f) <- vs zip fs) {
         vars += v
         funs += f
