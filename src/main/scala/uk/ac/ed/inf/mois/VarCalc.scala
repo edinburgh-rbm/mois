@@ -40,7 +40,7 @@ trait VarCalc extends BaseProcess {
     }
     def handleStep(t: Double, proc: BaseProcess) {
       for ((v, f) <- vars zip funcs) {
-	v := f()
+        v := f()
       }
     }
   }

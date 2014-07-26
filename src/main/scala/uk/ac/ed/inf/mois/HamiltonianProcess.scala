@@ -53,11 +53,11 @@ abstract class HamiltonianProcess(name: String) extends ODE(name) {
     private case class Uni(f: F, i: Integer)
         extends UnivariateFunction {
       def value(x: Double): Double = {
-	val save = phase(i).value
-	phase(i) := x
-	val answer = f()
-	phase(i) := save
-	answer
+        val save = phase(i).value
+        phase(i) := x
+        val answer = f()
+        phase(i) := save
+        answer
       }
     }
 
@@ -78,17 +78,17 @@ abstract class HamiltonianProcess(name: String) extends ODE(name) {
     def value(point: Array[DerivativeStructure]): DerivativeStructure = {
       val partials = new Array[Double](point.size)
       for (i <- 0 until point.size) {
-	val pval: DerivativeStructure = differentiator.differentiate(unis(i)).value(point(i))
-	partials(i) = pval.getAllDerivatives()(1+i)
+        val pval: DerivativeStructure = differentiator.differentiate(unis(i)).value(point(i))
+        partials(i) = pval.getAllDerivatives()(1+i)
       }
       totalEnergy = energy()
       new DerivativeStructure(point.size, 1, Seq(totalEnergy) ++ partials: _*)
     }
   }
 
-  override def computeDerivatives(time: Double, 
-				  qp: Array[Double],
-				  dqp: Array[Double]) {
+  override def computeDerivatives(time: Double,
+                                  qp: Array[Double],
+                                  dqp: Array[Double]) {
     val dH = gradH.value(qp)
     val nq = qp.size/2
     for (i <- 0 until nq) {
@@ -97,4 +97,3 @@ abstract class HamiltonianProcess(name: String) extends ODE(name) {
     }
   }
 }
-

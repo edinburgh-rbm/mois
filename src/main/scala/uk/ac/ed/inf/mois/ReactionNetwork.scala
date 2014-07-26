@@ -157,4 +157,3 @@ trait ReactionNetwork extends BaseProcess {
 
   val Reaction: ReactionFactory
 }
-

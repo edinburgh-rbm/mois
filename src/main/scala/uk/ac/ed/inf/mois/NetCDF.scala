@@ -66,14 +66,14 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
     // add user-defined annotations
     for ((k, v) <- proc.annotations) {
       v match {
-	case n: Number =>
-	  fp.addGroupAttribute(null, new nc2.Attribute(k, n))
-	case s: String =>
-	  fp.addGroupAttribute(null, new nc2.Attribute(k, s))
-	case l: List[_] =>
-	  fp.addGroupAttribute(null, new nc2.Attribute(k, l.asJava))
-	case _ =>
-	  fp.addGroupAttribute(null, new nc2.Attribute(k, v.toString))
+        case n: Number =>
+          fp.addGroupAttribute(null, new nc2.Attribute(k, n))
+        case s: String =>
+          fp.addGroupAttribute(null, new nc2.Attribute(k, s))
+        case l: List[_] =>
+          fp.addGroupAttribute(null, new nc2.Attribute(k, l.asJava))
+        case _ =>
+          fp.addGroupAttribute(null, new nc2.Attribute(k, v.toString))
       }
     }
 
@@ -98,20 +98,20 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
       shapeBuf += length
 
       v.value match {
-	case _: Double =>
-	  val cv = fp.addVariable(null, v.meta.toString, ma2.DataType.DOUBLE, v.meta.toString)
-	  cdfvars += v -> cv
-	  dbuf +=  v.asInstanceOf[DoubleVarIntf]
-	case _: Float =>
-	  val cv = v -> fp.addVariable(null, v.meta.toString, ma2.DataType.FLOAT, v.meta.toString)
-	  cdfvars += cv
-	  fbuf += v.asInstanceOf[FloatVar]
-	case _: Int =>
-	  val cv = v -> fp.addVariable(null, v.meta.toString, ma2.DataType.INT, v.meta.toString)
-	  cdfvars += cv
-	  ibuf += v.asInstanceOf[IntVar]
-	case _ =>
-	  throw new IllegalArgumentException("Only numeric types supported as dimensions for now")
+        case _: Double =>
+          val cv = fp.addVariable(null, v.meta.toString, ma2.DataType.DOUBLE, v.meta.toString)
+          cdfvars += v -> cv
+          dbuf +=  v.asInstanceOf[DoubleVarIntf]
+        case _: Float =>
+          val cv = v -> fp.addVariable(null, v.meta.toString, ma2.DataType.FLOAT, v.meta.toString)
+          cdfvars += cv
+          fbuf += v.asInstanceOf[FloatVar]
+        case _: Int =>
+          val cv = v -> fp.addVariable(null, v.meta.toString, ma2.DataType.INT, v.meta.toString)
+          cdfvars += cv
+          ibuf += v.asInstanceOf[IntVar]
+        case _ =>
+          throw new IllegalArgumentException("Only numeric types supported as dimensions for now")
       }
       proc.dimensions(v) = 0
     }
@@ -121,13 +121,13 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
 
     val shape = Array.fill(proc.dimensions.size+1)(1) //shapeBuf.toArray
     val dims = "time " + (doubleDims.map(_.meta.toString) ++
-			  floatDims.map(_.meta.toString) ++
-			  intDims.map(_.meta.toString)).mkString(" ")
+                          floatDims.map(_.meta.toString) ++
+                          intDims.map(_.meta.toString)).mkString(" ")
 
     def notDim(v: Var[_]) = !(proc.dimensions contains v)
 
     // XXX pain in the backside, have to dig through all the vars because
-    // of the chemical reaction network defining its own sub-class of 
+    // of the chemical reaction network defining its own sub-class of
     // doubles!!
     //
     // it should be like this:
@@ -161,16 +161,16 @@ class NetCDFWriter(filename: String) extends StepHandler with VarConversions {
     // annotate the variables
     for ((v, cv) <- cdfvars) {
       for ((k, v) <- v.meta.annotations) {
-	v match {
-	  case n: Number =>
-	    cv.addAttribute(new nc2.Attribute(k, n))
-	  case s: String =>
-	    cv.addAttribute(new nc2.Attribute(k, s))
-	  case l: List[_] =>
-	    cv.addAttribute(new nc2.Attribute(k, l.asJava))
-	  case _ =>
-	    cv.addAttribute(new nc2.Attribute(k, v.toString))
-	}
+        v match {
+          case n: Number =>
+            cv.addAttribute(new nc2.Attribute(k, n))
+          case s: String =>
+            cv.addAttribute(new nc2.Attribute(k, s))
+          case l: List[_] =>
+            cv.addAttribute(new nc2.Attribute(k, l.asJava))
+          case _ =>
+            cv.addAttribute(new nc2.Attribute(k, v.toString))
+        }
       }
     }
 

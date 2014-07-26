@@ -63,7 +63,7 @@ object Model {
       val im = currentMirror reflect model
       val typ = im.symbol.toType
       if (typ weak_<:< need) {
-	  models += model
+          models += model
       }
     }
     models.toSeq
@@ -75,9 +75,7 @@ object Model {
       case 0 => throw new IllegalArgumentException(s"no such model $name")
       case 1 => models(0)
       case _ => throw new IllegalArgumentException(s"$name is ambiguous, found\n\t" +
-						   models.mkString("\n\t"))
+                                                   models.mkString("\n\t"))
     }
   }
 }
-
-

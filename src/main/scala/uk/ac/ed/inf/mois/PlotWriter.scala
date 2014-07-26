@@ -43,10 +43,10 @@ abstract class PlotWriter extends StepHandler with VarConversions {
   def label(v: Var[_]): String = {
     if (v.meta.annotations contains "long_name") {
       v.meta.annotations("long_name").toString +
-	(if (v.meta.annotations contains "units")
-	  " (" + v.meta.annotations("units").toString + ")"
-	else 
-	  "")
+        (if (v.meta.annotations contains "units")
+          " (" + v.meta.annotations("units").toString + ")"
+        else
+          "")
     } else {
       v.meta.identifier
     }
@@ -55,20 +55,20 @@ abstract class PlotWriter extends StepHandler with VarConversions {
   def init(t: Double, proc: BaseProcess) {
     if (vars.size == 0) { // try to plot everything!
       for (v <- proc.state collect { case v: DoubleVarIntf => v }
-	   if !proc.dimensions.contains(v)) {
+           if !proc.dimensions.contains(v)) {
         series += v -> new XYSeries(label(v))
       }
     } else {
       for (v <- vars) {
-	// val v = proc.allVars(VarMeta(vname))
-	series += v -> new XYSeries(label(v))
+        // val v = proc.allVars(VarMeta(vname))
+        series += v -> new XYSeries(label(v))
       }
     }
 
     title = if (proc.annotations contains "title")
-	      proc.annotations("title").toString
-	    else
-	      proc.name
+              proc.annotations("title").toString
+            else
+              proc.name
   }
 
   val dataset = new XYSeriesCollection
@@ -138,8 +138,8 @@ class PlotGUIWriter(val vars: DoubleVarIntf*) extends PlotWriter {
       for ((d, s) <- ds)
         s.add(t, d)
       if (count % 200 == 0) {
-	dataset.seriesChanged(new SeriesChangeEvent(this))
-	dimTitle.setText(title)
+        dataset.seriesChanged(new SeriesChangeEvent(this))
+        dimTitle.setText(title)
       }
       count += 1
     }
@@ -148,7 +148,7 @@ class PlotGUIWriter(val vars: DoubleVarIntf*) extends PlotWriter {
   class GuiReset extends Runnable {
     override def run {
       for(ss <- series.values) {
-	ss.clear
+        ss.clear
       }
       dataset.seriesChanged(new SeriesChangeEvent(this))
     }

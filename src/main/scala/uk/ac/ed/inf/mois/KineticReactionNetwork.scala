@@ -47,4 +47,3 @@ trait KineticReactionNetwork extends ReactionNetwork {
         new RateLawReaction(lhs, rhs, k)
     }
 }
-

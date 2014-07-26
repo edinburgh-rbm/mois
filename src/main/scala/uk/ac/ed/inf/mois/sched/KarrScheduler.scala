@@ -34,11 +34,11 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) with VarConve
   private def zeroAccumulator(group: ProcessGroup) {
     if (accumulator.size == 0) {
       for ((m, v) <- group.doubleVars) {
-	accumulator(m) = (v.copy := 0.0)
+        accumulator(m) = (v.copy := 0.0)
       }
     } else {
       for (v <- accumulator.values) {
-	v := 0.0
+        v := 0.0
       }
     }
   }
@@ -46,10 +46,10 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) with VarConve
   override def init(group: ProcessGroup) {
     if (demand.size == 0) {
       for (p <- group.processes) {
-	demand(p) = new Acc
-	for ((m, v) <- p.doubleVars) {
-	  demand(p)(m) = v.copy
-	}
+        demand(p) = new Acc
+        for ((m, v) <- p.doubleVars) {
+          demand(p)(m) = v.copy
+        }
       }
     }
   }
@@ -87,11 +87,11 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) with VarConve
     } else {
       // we have a total demand, so give this process its portion
       for ((m, v) <- proc.doubleVars) {
-	if (totalDemand(m).value != 0.0) {
+        if (totalDemand(m).value != 0.0) {
           v := group.doubleVars(m) * demand(proc)(m) / totalDemand(m)
-	} else {
-	  v := group.doubleVars(m)
-	}
+        } else {
+          v := group.doubleVars(m)
+        }
       }
     }
 
@@ -106,9 +106,9 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) with VarConve
       val dvdt = (s1(m) - s0(m)) / dt
       // demand means a negative gradient
       if (dvdt < 0)
-	demand(proc)(m) := dvdt
+        demand(proc)(m) := dvdt
       else
-	demand(proc)(m) := 0.0
+        demand(proc)(m) := 0.0
     }
 
 /*

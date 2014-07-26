@@ -77,4 +77,3 @@ trait KineticCatalyticReactionNetwork
     r: CatalysedReaction[M]) =
     r.mechanism.expand(r.lhs, r.rhs, r.catalyser)
 }
-

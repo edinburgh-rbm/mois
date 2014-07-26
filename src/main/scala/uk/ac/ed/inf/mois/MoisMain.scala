@@ -92,28 +92,28 @@ object MoisMain {
     cmd("info") action { (_, c) =>
       c.copy(command = Some("info"))
     } text("Get information on a model") children(
-	arg[String]("<model>") action { (modelName, c) =>
-	  try {
-	    val model = Model(modelName)
-	    c.copy(model = Some(model))
-	  } catch {
-	    case e: IllegalArgumentException => {
-	      Console.err.println(e)
-	      c
-	    }
-	  }
-	} required () text("Model name"),
+        arg[String]("<model>") action { (modelName, c) =>
+          try {
+            val model = Model(modelName)
+            c.copy(model = Some(model))
+          } catch {
+            case e: IllegalArgumentException => {
+              Console.err.println(e)
+              c
+            }
+          }
+        } required () text("Model name"),
 
-	checkConfig { c =>
-	  if (c.command == Some("info")) {
-	    if (!c.model.isDefined)
-	      failure("Could not find the requested model")
-	    else
-	      success
-	  } else {
-	    success
-	  }
-	}
+        checkConfig { c =>
+          if (c.command == Some("info")) {
+            if (!c.model.isDefined)
+              failure("Could not find the requested model")
+            else
+              success
+          } else {
+            success
+          }
+        }
       )
     note("") // spacer
 
@@ -133,7 +133,7 @@ object MoisMain {
       opt[Double]('b', "begin") action { (x, c) =>
         c.copy(begin = Some(x))
       } text("Simulation start time (default: 0.0)"),
-      
+
       opt[String]('i', "initial") action { (filename, c) =>
         val fp = scala.io.Source.fromFile(filename)
         val json = fp.mkString
@@ -275,17 +275,17 @@ object MoisMain {
     for (v <- model.allVars.values) {
       println(String.format("    %s", v))
       for ((k, a) <- v.meta.annotations)
-	println(String.format("%24s: %s", k, a.toString))
+        println(String.format("%24s: %s", k, a.toString))
     }
 
     println("process tree:")
     def prprocess(proc: BaseProcess, prefix: String) {
       for ((k,a) <- model.process.annotations)
-	println(String.format("%s%16s: %s", prefix, k, a.toString))
+        println(String.format("%s%16s: %s", prefix, k, a.toString))
       println(String.format("%s%16s:", prefix, "variables"))
       for (v <- model.process.state) {
-	println(String.format("%s          %s", prefix, v))
-	for ((k, a) <- v.meta.annotations) 
+        println(String.format("%s          %s", prefix, v))
+        for ((k, a) <- v.meta.annotations)
           println(String.format("%s%32s: %s", prefix, k, a.toString))
       }
     }
@@ -294,19 +294,19 @@ object MoisMain {
 
   def list(cfg: Config) {
     println("Known models:\n\t" +
-	    Model.all
-	      .sortBy(_.toString)
-	      .map(_.toString.split("@")(0))
-	      .mkString("\n\t"))
+            Model.all
+              .sortBy(_.toString)
+              .map(_.toString.split("@")(0))
+              .mkString("\n\t"))
   }
 
   def run(cfg: Config) {
     // get the model
     val model = cfg.model.get
-    
+
     // get simulation start
     val begin = cfg.begin.get
-    
+
     // get duration
     val duration = cfg.duration.get
 
@@ -317,7 +317,7 @@ object MoisMain {
     // set initial conditions
     if(cfg.initial.isDefined)
       model.process.fromJSON(cfg.initial.get)
-    
+
     // run the simulation
     model.init(begin)
     model.run(begin, duration)
@@ -333,12 +333,12 @@ object MoisMain {
   def main(args: Array[String]) {
     optParser.parse(args, Config()) map { cfg =>
       cfg.command.get match {
-	case "info" => info(cfg)
-	case "list" => list(cfg)
-	case "run" => run(cfg)
+        case "info" => info(cfg)
+        case "list" => list(cfg)
+        case "run" => run(cfg)
       }
     } getOrElse {
-      // some kind of specific error processing? 
+      // some kind of specific error processing?
     }
   }
 }

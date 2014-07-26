@@ -71,7 +71,7 @@ abstract class BaseProcess extends VarContainer with Annotation {
     * time t to where it is at t + tau. This must be supplied
     * by concrete sub-classes.
     */
-  def step(t: Double, tau: Double) 
+  def step(t: Double, tau: Double)
 
   /** A wrapper around the user defined step function to calculate
     * changes.
@@ -114,7 +114,7 @@ abstract class BaseProcess extends VarContainer with Annotation {
   def addStepHandler(sh: StepHandler) {
     stepHandlers += sh
   }
-  
+
   /** Needed for NetCDF et al. TODO: explain better */
   class Dimension(v: Var[_]) {
     def apply = dimensions(v)
@@ -134,10 +134,9 @@ abstract class BaseProcess extends VarContainer with Annotation {
 
   def stringPrefix = "BaseProcess"
   override def toString = stringPrefix + "(" + name + ")"
-}  
+}
 
 abstract class Process(val name: String)
     extends BaseProcess with VarConversions {
   override def stringPrefix = "Process"
 }
-

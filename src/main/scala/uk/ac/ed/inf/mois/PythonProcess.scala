@@ -37,44 +37,44 @@ abstract class PythonProcess(name: String) extends Process(name) {
     private val interp = new PythonInterpreter
     def applyDynamic(func: String)(args: DoubleVar*) = {
       try {
-	interp.exec(s"from $module import $func")
+        interp.exec(s"from $module import $func")
       } catch {
-	case e: PyException =>
-	  throw new IllegalArgumentException(e.toString)
+        case e: PyException =>
+          throw new IllegalArgumentException(e.toString)
       }
 
       val fh = interp.get(func)
       if (fh == null)
-	throw new IllegalArgumentException(s"no such python function ${module}.${func}")
+        throw new IllegalArgumentException(s"no such python function ${module}.${func}")
 
       def wrapper(t: Double, tau: Double, vs: DoubleVar*) {
-	val pyArgs = 
-	(Seq(t, tau).map(new PyFloat(_)) ++ args.map(new PyFloat(_)))
-	  .toArray
-	  .asInstanceOf[Array[PyObject]]
-	try {
-	  val pyResult = fh.__call__(pyArgs)
-	  if (pyResult.isSequenceType) {
-	    if (pyResult.__len__ != vs.length)
-	      throw new IllegalArgumentException(s"expected ${module}.${func} to return " +
-						 s"${vs.length} items and got " +
-						 s"${pyResult.__len__}")
-	    for (i <- 0 until vs.length) {
-	      vs(i) := pyResult.__getitem__(i).asDouble
-	    }
-	  } else {
-	    vs.length match {
-	      case 0 =>
-	      case 1 => vs(0) := pyResult.asDouble
-	      case _ =>
-		throw new IllegalArgumentException(s"${module}.${func} didn't return a " +
-						   s"sequence and ${vs.length} values required")
-	    }
-	  }
-	} catch {
-	  case e: PyException =>
-	    throw new IllegalArgumentException(e.toString)
-	}
+        val pyArgs =
+        (Seq(t, tau).map(new PyFloat(_)) ++ args.map(new PyFloat(_)))
+          .toArray
+          .asInstanceOf[Array[PyObject]]
+        try {
+          val pyResult = fh.__call__(pyArgs)
+          if (pyResult.isSequenceType) {
+            if (pyResult.__len__ != vs.length)
+              throw new IllegalArgumentException(s"expected ${module}.${func} to return " +
+                                                 s"${vs.length} items and got " +
+                                                 s"${pyResult.__len__}")
+            for (i <- 0 until vs.length) {
+              vs(i) := pyResult.__getitem__(i).asDouble
+            }
+          } else {
+            vs.length match {
+              case 0 =>
+              case 1 => vs(0) := pyResult.asDouble
+              case _ =>
+                throw new IllegalArgumentException(s"${module}.${func} didn't return a " +
+                                                   s"sequence and ${vs.length} values required")
+            }
+          }
+        } catch {
+          case e: PyException =>
+            throw new IllegalArgumentException(e.toString)
+        }
       }
       wrapper _
     }
