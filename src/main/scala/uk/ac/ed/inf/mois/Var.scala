@@ -100,7 +100,7 @@ abstract class Var[T] {
   object AddConstraint {
     def and(c: Constraint) = must(c)
   }
-  
+
   /** Adds a constraint to this variable. */
   def must(constraint: Constraint) = {
     constraints += constraint
@@ -299,17 +299,17 @@ trait VarContainer {
 
     def jval[T](v: Var[T]): JValue = {
       v.value match {
-	case i: Int => JInt(i)
-	case l: Long => JInt(l)
+        case i: Int => JInt(i)
+        case l: Long => JInt(l)
         case f: Float => JDouble(f)
-	case d: Double => JDouble(d)
-	case b: Boolean => JBool(b)
+        case d: Double => JDouble(d)
+        case b: Boolean => JBool(b)
       }
     }
     // RHZ: Why not just Serialization.write(v.meta) instead?  That
     // way we don't have to change this code when VarMeta changes.
     val json = for ((_, v) <- this.allVars) yield
-      ("value" -> jval(v)) ~ 
+      ("value" -> jval(v)) ~
       ("meta" -> ("identifier" -> v.meta.identifier))
     pretty(render(json))
   }
