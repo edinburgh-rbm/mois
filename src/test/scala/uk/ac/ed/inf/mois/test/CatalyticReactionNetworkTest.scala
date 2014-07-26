@@ -11,7 +11,7 @@ object GbKl extends DeterministicReactionNetwork("Goldbeter-Koshland") {
   val B = Species("B")
   val X = Species("X")
   val Y = Species("Y")
-  
+
   reactions(
     A -> B catalysedBy X using MM(1, 1, 1),
     B -> A catalysedBy Y using MM(1, 1, 1)
@@ -25,7 +25,7 @@ class GbKlModel extends Model {
   GbKl.X := 1.0
   GbKl.Y := 1.0
 }
-  
+
 class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
 
   // Use approximate equality in `should equal`
@@ -61,4 +61,3 @@ class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
     (B.value + YB.value) should equal (1.0)
   }
 }
-

@@ -20,7 +20,7 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import uk.ac.ed.inf.mois.{MoisMain, Model, Process}
 import uk.ac.ed.inf.mois.{TsvWriter, NetCDFWriter,
-			  PlotFileWriter, PlotGUIWriter}
+                          PlotFileWriter, PlotGUIWriter}
 
 class MoisMainTest extends FlatSpec with Matchers {
 
@@ -42,7 +42,7 @@ class MoisMainTest extends FlatSpec with Matchers {
     MoisMain.main(args.toArray)
     true
   }
-  
+
   "main class" should "understand TSV step handlers for stdout" in {
     val sh = MoisMain.getStepHandler("tsv:", model)
     sh.isDefined should be (true)

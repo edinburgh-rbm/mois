@@ -1,7 +1,7 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.{DeterministicReactionNetwork, Accumulator,
-			  Model, DoubleVarIntf => D}
+                          Model, DoubleVarIntf => D}
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
@@ -57,4 +57,3 @@ class DeterministicReactionNetworkTest extends FlatSpec with Matchers {
     Brusselator.Y.value should equal (1.7)
   }
 }
-

@@ -54,7 +54,7 @@ class NetCDFTest extends FlatSpec with Matchers with BeforeAndAfter {
       x3 := 0
       reset(0)
       for (t <- 0 until 4) {
-	p(t, 1)
+        p(t, 1)
       }
       Dimension(x4) += 1
       x4 += 10
@@ -65,5 +65,3 @@ class NetCDFTest extends FlatSpec with Matchers with BeforeAndAfter {
     (1) should not equal (0)
   }
 }
-
-

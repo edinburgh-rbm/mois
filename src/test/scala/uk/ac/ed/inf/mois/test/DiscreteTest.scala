@@ -49,7 +49,7 @@ class DiscreteProcessTest extends FlatSpec with Matchers {
     henon.y.value should equal (0.0)
 
     henon.step(0, 5)
-    
+
     henon.x.value should equal (0.3475)
     henon.y.value should equal (0.1663)
   }

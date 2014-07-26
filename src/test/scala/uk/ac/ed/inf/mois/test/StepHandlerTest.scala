@@ -79,4 +79,3 @@ class TsvWriterTest extends FlatSpec with Matchers {
     buffer.toString should be (expected)
   }
 }
-

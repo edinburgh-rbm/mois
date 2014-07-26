@@ -59,4 +59,3 @@ class ProcessTest extends FlatSpec with Matchers {
     p.x3.value should be (false)
   }
 }
-

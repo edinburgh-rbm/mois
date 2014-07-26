@@ -79,4 +79,3 @@ class ReactionNetworkTest extends FlatSpec with Matchers {
     r2a should equal (r2b)
   }
 }
-

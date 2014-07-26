@@ -89,7 +89,7 @@ class ODETest extends FlatSpec with Matchers {
     sampleODE.x2.value should equal (0.0916)
     sampleODE.x3.value should equal (0.0350)
   }
-  
+
   it should "also give the results with fancy syntax" in {
     sampleODE2.x1 := 25.0
     sampleODE2.x2 := 50.0
@@ -128,10 +128,10 @@ class ODETest extends FlatSpec with Matchers {
   it should "error with fancy syntax incorrectly applied" in {
     intercept[IllegalArgumentException] {
       class Wrong extends ODE("Wrong") {
-	val x1 = Double("x1")
-	val x2 = Double("x2")
+        val x1 = Double("x1")
+        val x2 = Double("x2")
 
-	d(x1) := (x1, x2)
+        d(x1) := (x1, x2)
       }
       val wrong = new Wrong
     }

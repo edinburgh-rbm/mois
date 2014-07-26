@@ -23,7 +23,7 @@ import org.scalactic.TolerantNumerics
 import java.lang.Math.PI
 import uk.ac.ed.inf.mois.{HamiltonianProcess, Math}
 
-case class Pendulum(m: Double, l: Double) 
+case class Pendulum(m: Double, l: Double)
     extends HamiltonianProcess("Pendulum") with Math {
   val q = Double("ex:q")
   val p = Double("ex:p")
