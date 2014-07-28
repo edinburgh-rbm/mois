@@ -21,6 +21,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{Model, ODE, ProcessGroup}
+import uk.ac.ed.inf.mois.{VarContainer, VarConversions, VarMeta}
 import uk.ac.ed.inf.mois.sched.{WeisseScheduler}
 
 class CoupledOscillator(w: Double, k: Double)
@@ -73,24 +74,39 @@ class CoupledOscillatorGroupModel extends Model {
 }
 
 /** Run the two versions of the system of ODEs with the NaiveScheduler. */
-class WeisseSchedulerTest extends FlatSpec with Matchers {
+class WeisseSchedulerTest extends FlatSpec with Matchers with VarConversions {
 
   // Use approximate equality in `should equal`
   val precision = 1e-3
   implicit val doubleEquality =
     TolerantNumerics.tolerantDoubleEquality(precision)
 
+  import scala.math.abs
+  implicit def stringToMeta(s: String) = VarMeta(s)
+
+  def maxerr(p1: VarContainer, p2: VarContainer) =
+    Seq("x1", "x2", "x3", "x4")
+      .map(v => abs(1-p1.doubleVars("c:" + v)/p2.doubleVars("d:" + v)))
+      .max
+
   "coupled oscillator" should "give similar results directly as with weisse" in {
     val direct = new CoupledOscillatorModel
-
-    direct.process.step(0, 50)
-    println(direct.process.state.toList.sortBy(_.meta))
-
     val group = new CoupledOscillatorGroupModel
 
-    group.process.step(0, 50)
-    println(group.process.state.toList.sortBy(_.meta))
+    direct.process.step(0, 1)
+    group.process.step(0, 1)
 
-    (1) should not be (0)
+    (maxerr(direct.process, group.process) < 0.07) should  be (true)
+  }
+
+  ignore should "give right answers in the longer term too" in {
+    val direct = new CoupledOscillatorModel
+    val group = new CoupledOscillatorGroupModel
+
+    direct.process.step(0, 10)
+    group.process.step(0, 10)
+
+    println(maxerr(direct.process, group.process))
+    (maxerr(direct.process, group.process) < 0.07) should  be (true)
   }
 }
