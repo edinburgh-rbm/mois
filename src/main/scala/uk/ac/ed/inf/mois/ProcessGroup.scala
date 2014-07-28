@@ -54,10 +54,12 @@ class ProcessGroup(val name: String) extends BaseProcess {
   def step(t0: Double, tau: Double) {
     scheduler.init(this)
     var t = t0
+    var dt = tau
     while (t < t0+tau) {
-      t += scheduler(t, tau, this)
+      dt = scheduler(t, dt, this)
       for (sh <- stepHandlers)
         sh.handleStep(t, this)
+      t += dt
     }
   }
 
@@ -75,10 +77,12 @@ class ProcessGroup(val name: String) extends BaseProcess {
   /** Override reset hook by calling all of our children's before our own */
   override def reset(t: Double) {
     for (p <- processes) p.reset(t)
+    super.reset(t)
   }
 
   /** Override finish hook by calling all of our children's before our own */
   override def finish {
     for (p <- processes) p.finish
+    super.finish
   }
 }
