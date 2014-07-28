@@ -45,17 +45,18 @@ abstract class DeterministicReactionNetwork(val name: String)
     def apply(lhs: Multiset, rhs: Multiset) = new Reaction(lhs, rhs)
   }
 
-  implicit val count: Multiset => Double = m => (
-    for ((s, n) <- m) yield pow(s, n)).product
+  def count(m: Multiset): Double =
+    (for ((s, n) <- m) yield pow(s.value, n)).product
 
   override def step(t: Double, dt: Double) {
     if (vars.size != species.size) {
       funs.clear
       vars.clear
       // compute derivates
-      for ((m, s) <- species)
+      for ((m, s) <- species) {
         d(s) := (for (rxn <- rxns if rxn(s) != 0) yield
           rxn(s) * rxn.rate).sum
+      }
     }
     super.step(t, dt)
   }

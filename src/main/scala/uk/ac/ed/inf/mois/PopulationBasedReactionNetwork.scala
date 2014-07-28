@@ -48,4 +48,6 @@ trait PopulationBasedReactionNetwork extends ReactionNetwork {
       s
     }
   }
+
+  val numericBase = implicitly[Numeric[Int]]
 }

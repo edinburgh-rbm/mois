@@ -49,6 +49,7 @@ object sampleODE2 extends ODE("sample2") with Math {
 }
 
 class ODETest extends FlatSpec with Matchers {
+
   // Use approximate equality in `should equal`
   val precision = 1e-4
   implicit val doubleEquality =

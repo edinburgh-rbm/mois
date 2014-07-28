@@ -173,4 +173,14 @@ trait ReactionNetwork extends BaseProcess {
   }
 
   val Reaction: ReactionFactory
+
+  // -- Conversions --
+
+  val numericBase: Numeric[Base]
+
+  object MultisetConversion {
+    implicit def multisetToDouble(m: Multiset): Base =
+      (for ((s, n) <- m) yield numericBase.plus(
+        numericBase.fromInt(n), s.value)).product(numericBase)
+  }
 }
