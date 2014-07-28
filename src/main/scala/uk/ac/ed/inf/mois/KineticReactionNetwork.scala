@@ -38,7 +38,7 @@ trait KineticReactionNetwork extends ReactionNetwork {
         : KineticReaction
   }
 
-  implicit val count: Multiset => Double
+  def count(m: Multiset): Double
 
   class MassActionReaction(
     val lhs: Multiset, val rhs: Multiset, val k: () => Double)

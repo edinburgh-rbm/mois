@@ -31,14 +31,14 @@ import collection.mutable
 /** A partial implementation of `Process` that uses the Apache Commons
   * Math ODE library to implement its `step` method.
   */
-abstract class ODE(val name: String) extends BaseODE {
+abstract class ODE(val name: String)
+    extends BaseODE with VarConversions {
   override def stringPrefix = "ODE"
 }
 
 abstract class BaseODE
     extends BaseProcess
-       with ode.FirstOrderDifferentialEquations
-       with VarConversions {
+       with ode.FirstOrderDifferentialEquations {
   self =>
 
   /** A class to define derivatives of `Var`s. */
