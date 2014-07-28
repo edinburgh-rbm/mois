@@ -89,7 +89,7 @@ class WeisseScheduler(
     }
 
     // use absolute error for variables near 0 and relative for others
-    def errf(v: DoubleVar) = {
+    def estimateError(v: DoubleVar) = {
       val x0_i = abs(x0(v.meta))
       val dx_i = abs(dx(v.meta))
       if (x0_i > threshold) // relative error
@@ -97,7 +97,7 @@ class WeisseScheduler(
       else
         dx_i
     }
-    val err = x0.values.map(errf(_)).max
+    val err = x0.values.map(estimateError(_)).max
 
     val new_dt = max(dt_min, min(dt_max, rho * dt * tolerance / err))
 
