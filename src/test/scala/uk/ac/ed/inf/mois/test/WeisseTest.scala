@@ -96,6 +96,8 @@ class WeisseSchedulerTest extends FlatSpec with Matchers with VarConversions {
     direct.process.step(0, 1)
     group.process.step(0, 1)
 
+    println(direct.process.doubleVars.values.toSeq.sortBy(_.meta))
+    println(group.process.doubleVars.values.toSeq.sortBy(_.meta))
     (maxerr(direct.process, group.process) < 0.07) should  be (true)
   }
 

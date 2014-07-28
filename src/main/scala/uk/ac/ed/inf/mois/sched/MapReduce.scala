@@ -32,7 +32,7 @@ abstract class MapReduceScheduler(step: Double) extends Scheduler {
   def r(acc: Acc, proc: BaseProcess): Acc
 
   def before(t: Double, dt: Double, acc: Acc, group: ProcessGroup) = dt
-  def after(t: Double, dt: Double, acc: Acc, group: ProcessGroup) = dt
+  def after(t: Double, dt: Double, acc: Acc, group: ProcessGroup) = (t+dt, dt)
 
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
     val acc = accumulator

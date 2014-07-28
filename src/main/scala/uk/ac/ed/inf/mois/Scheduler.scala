@@ -19,5 +19,10 @@ package uk.ac.ed.inf.mois
 
 abstract class Scheduler {
   def init(group: ProcessGroup) {}
-  def apply(t: Double, tau: Double, group: ProcessGroup): Double
+  /**
+    * A single iteration of the scheduler must return the time
+    * after the iteration, and a suggested time step for the next
+    * iteration
+    */
+  def apply(t: Double, tau: Double, group: ProcessGroup): (Double, Double)
 }

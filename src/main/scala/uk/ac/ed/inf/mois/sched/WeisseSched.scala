@@ -53,10 +53,11 @@ class WeisseScheduler(
 
     val new_dt = max(dt_min, min(dt_max, rho * dt * tolerance / err))
 
+    // return
     if (err < tolerance) {
       // all good, update group variables
       group.doubleVars <<< (x0 + dx)
-      new_dt
+      (t+dt, new_dt)
     } else {
       // error too large, try again. attention tail recursion!
       if (dt == new_dt)
