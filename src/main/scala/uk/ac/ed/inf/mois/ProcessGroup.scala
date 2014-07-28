@@ -57,9 +57,9 @@ class ProcessGroup(val name: String) extends BaseProcess {
     var dt = tau
     while (t < t0+tau) {
       dt = scheduler(t, dt, this)
+      t += dt
       for (sh <- stepHandlers)
         sh.handleStep(t, this)
-      t += dt
     }
   }
 
