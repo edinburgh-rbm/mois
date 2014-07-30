@@ -42,11 +42,13 @@ trait PopulationBasedReactionNetwork extends ReactionNetwork {
   }
 
   object Species extends SpeciesFactory {
-    def apply(meta: VarMeta) = {
-      val s = new PopulationBasedSpecies(meta)
-      species += meta -> s
-      s
-    }
+    def apply(meta: VarMeta) =
+      if (species contains meta) species(meta)
+      else {
+        val s = new PopulationBasedSpecies(meta)
+        species += meta -> s
+        s
+      }
   }
 
   val numericBase = implicitly[Numeric[Int]]
