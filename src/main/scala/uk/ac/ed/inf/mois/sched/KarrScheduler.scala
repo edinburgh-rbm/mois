@@ -67,14 +67,14 @@ class KarrScheduler(step: Double) extends MapReduceScheduler(step) with VarConve
     totalDemand = acc.copy
     if (first) {
       first = false
-      0
+      (t, dt)
     } else {
       // update the process group's state
       // this should be written as
       // group.doubleVars <<< totalDemand map(_ * dt)
       for ((m, v) <- totalDemand)
         group.doubleVars(m) := v * dt
-      dt
+      (t+dt, dt)
     }
   }
 

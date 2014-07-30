@@ -128,4 +128,40 @@ class VarTest extends FlatSpec with Matchers
     x2 := 1
     x1.value should not equal (x2.value)
   }
+
+  "containers of vars" should "support bulk operations (for doubles)" in {
+    class VC extends VarContainer {
+      val x = Double("x")
+      val y = Double("y")
+    }
+
+    val vc1 = new VC
+    val vc2 = new VC
+    vc1.x := 10
+    vc2.y := 20
+
+    import vc1.{x,y} // just for convenient access
+    val v1 = vc1.doubleVars
+    val v2 = vc2.doubleVars
+
+    val v3 = v1 + v2
+    v1(x).value should be (10)
+    v1(y).value should be (0)
+    v2(x).value should be (0)
+    v2(y).value should be (20)
+    v3(x).value should be (10)
+    v3(y).value should be (20)
+
+    v1 +:= v3
+    v1(x).value should be (20)
+    v1(y).value should be (20)
+
+    v2 /:= v1
+    v2(x).value should be (0)
+    v2(y).value should be (1)
+
+    v3 -:= v2
+    v3(x).value should be (10)
+    v3(y).value should be (19)
+  }
 }

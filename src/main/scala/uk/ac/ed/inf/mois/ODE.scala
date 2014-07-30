@@ -105,21 +105,20 @@ abstract class BaseODE
     val i = integrator()
 
     // only add step handlers if we have them
-    // if (stepHandlers.size > 0) {
-    // i.addStepHandler(new sampling.StepHandler {
-    //   def init(t0: Double, y0: Array[Double], t: Double) {}
-    //   def handleStep(interp: sampling.StepInterpolator, isLast: Boolean) {
-    //     val t = interp.getCurrentTime()
-    //     val y = interp.getInterpolatedState()
-    //     // RHZ: I have the feeling that this makes the call to eval
-    //     // unnecessary and the macro irrelevant
-    //     for (i <- 0 until vars.size)
-    //       vars(i) := y(i)
-    //     for (sh <- stepHandlers)
-    //       sh.handleStep(t, self)
-    //   }
-    // })
-    // }
+    // this block is ***required*** do not remove
+    if (stepHandlers.size > 0) {
+      i.addStepHandler(new sampling.StepHandler {
+        def init(t0: Double, y0: Array[Double], t: Double) {}
+        def handleStep(interp: sampling.StepInterpolator, isLast: Boolean) {
+          val t = interp.getCurrentTime()
+          val y = interp.getInterpolatedState()
+          for (i <- 0 until vars.size)
+            vars(i) := y(i)
+          for (sh <- stepHandlers)
+            sh.handleStep(t, self)
+        }
+      })
+    }
 
     // conduct the integration
     i.integrate(this, time, doubleY, time+tau, doubleY)

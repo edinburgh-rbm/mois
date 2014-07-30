@@ -52,13 +52,15 @@ class ProcessGroup(val name: String) extends BaseProcess {
     * state table and time parameters.
     */
   def step(t0: Double, tau: Double) {
-    scheduler.init(this)
-    var t = t0
-    while (t < t0+tau) {
-      t += scheduler(t, tau, this)
-      for (sh <- stepHandlers)
-        sh.handleStep(t, this)
-    }
+    _step(t0, tau, t0+tau)
+  }
+
+  private def _step(t0: Double, tau: Double, end: Double) {
+    val (t, dt) = scheduler(t0, tau, this)
+    for (sh <- stepHandlers)
+      sh.handleStep(t, this)
+    if (t < end)
+      _step(t, dt, end)
   }
 
   /** Override the `apply` method because we take on responsibility
@@ -68,6 +70,7 @@ class ProcessGroup(val name: String) extends BaseProcess {
 
   /** Override init hook by calling all of our children's before our own */
   override def init(t: Double) {
+    scheduler.init(this)
     for (p <- processes) p.init(t)
     super.init(t)
   }
@@ -75,10 +78,12 @@ class ProcessGroup(val name: String) extends BaseProcess {
   /** Override reset hook by calling all of our children's before our own */
   override def reset(t: Double) {
     for (p <- processes) p.reset(t)
+    super.reset(t)
   }
 
   /** Override finish hook by calling all of our children's before our own */
   override def finish {
     for (p <- processes) p.finish
+    super.finish
   }
 }

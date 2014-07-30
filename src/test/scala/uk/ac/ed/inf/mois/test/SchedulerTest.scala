@@ -119,6 +119,7 @@ class KarrSchedulerTest extends FlatSpec with Matchers {
     Double("ex:x1") := 25.0
     Double("ex:x2") := 50.0
 
+    pg.init(0)
     pg.step(0, 50)
   }
 }

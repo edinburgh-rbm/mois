@@ -243,6 +243,54 @@ object VarMap {
 trait VarConversions {
   @inline implicit def Var2Meta(v: Var[_]) = v.meta
   @inline implicit def getVarValue[T](v: Var[T]) = v.value
+
+  /** implicit utility class for extra operations on a group of DoubleVars */
+  implicit class DoubleVarMap(vm: VarMap[Double, DoubleVar]) {
+    /** return an instance with the same variable identifiers,
+      * but all values set to zero */
+    def zeros = {
+      val nvm = VarMap.empty[Double, DoubleVar]
+      for (m <- vm.keys)
+        nvm += m -> new DoubleVar(m)
+      nvm
+    }
+    def +(other: VarMap[Double, DoubleVar]) = {
+      val nvm = vm.copy
+      nvm +:= other
+    }
+    def -(other: VarMap[Double, DoubleVar]) = {
+      val nvm = vm.copy
+      nvm -:= other
+    }
+    def *(other: VarMap[Double, DoubleVar]) = {
+      val nvm = vm.copy
+      nvm *:= other
+    }
+    def /(other: VarMap[Double, DoubleVar]) = {
+      val nvm = vm.copy
+      nvm /:= other
+    }
+    def +:=(other: VarMap[Double, DoubleVar]) = {
+      for (v <- vm.values if other contains v.meta)
+        v += other(v.meta)
+      vm
+    }
+    def -:=(other: VarMap[Double, DoubleVar]) = {
+      for (v <- vm.values if other contains v.meta)
+          v -= other(v.meta)
+      vm
+    }
+    def *:=(other: VarMap[Double, DoubleVar]) = {
+      for (v <- vm.values if other contains v.meta)
+        v *= other(v.meta)
+      vm
+    }
+    def /:=(other: VarMap[Double, DoubleVar]) = {
+      for (v <- vm.values if other contains v.meta)
+        v /= other(v.meta)
+      vm
+    }
+  }
 }
 
 trait VarContainer {

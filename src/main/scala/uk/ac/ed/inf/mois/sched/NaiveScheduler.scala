@@ -28,6 +28,6 @@ class NaiveScheduler(step: Double) extends Scheduler {
       child.step(t, step)
       group <<< child
     }
-    step
+    (t+step, step)
   }
 }
