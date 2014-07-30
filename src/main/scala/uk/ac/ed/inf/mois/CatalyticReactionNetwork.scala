@@ -69,10 +69,10 @@ trait KineticCatalyticReactionNetwork
     def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
       require(lhs.multisize == 1, "left-hand side of reaction " +
         lhs + " -> " + rhs + " must have only one substrate to use " +
-        "Michaelis-Menten (MM) mechanism.")
+        "Michaelis-Menten mechanism (MM).")
       require(rhs.multisize == 1, "right-hand side of reaction " +
         lhs + " -> " + rhs + " must have only one product to use " +
-        "Michaelis-Menten (MM) mechanism.")
+        "Michaelis-Menten mechanism (MM).")
       val (s, _) = lhs.head
       val (p, _) = rhs.head
       val e  = catalyser
@@ -114,10 +114,10 @@ trait KineticCatalyticReactionNetwork
     def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
       require(lhs.multisize == 2, "left-hand side of reaction " +
         lhs + " -> " + rhs + " must have exactly two substrates " +
-        "to use the ternary-complex mechanism (TC).")
+        "to use the ternary-complex mechanism (TCRandom).")
       require(rhs.multisize == 2, "right-hand side of reaction " +
         lhs + " -> " + rhs + " must have exactly two products " +
-        "to use the ternary-complex mechanism (TC).")
+        "to use the ternary-complex mechanism (TCRandom).")
       val Seq(s1, s2) = lhs.multiseq
       val Seq(p1, p2) = rhs.multiseq
       val e = catalyser
@@ -172,10 +172,10 @@ trait KineticCatalyticReactionNetwork
     def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
       require(lhs.multisize == 2, "left-hand side of reaction " +
         lhs + " -> " + rhs + " must have exactly two substrates " +
-        "to use the ternary-complex mechanism (TC).")
+        "to use the ternary-complex mechanism (TCOrdered).")
       require(rhs.multisize == 2, "right-hand side of reaction " +
         lhs + " -> " + rhs + " must have exactly two products " +
-        "to use the ternary-complex mechanism (TC).")
+        "to use the ternary-complex mechanism (TCOrdered).")
       val Seq(s1, s2) = lhs.multiseq
       val Seq(p1, p2) = rhs.multiseq
       val e = catalyser
@@ -193,6 +193,58 @@ trait KineticCatalyticReactionNetwork
            ep2 + p1 -> ep12 at bind3,
            ep2 -> e + p2 at unbind4,
            e + p2 -> ep2 at bind4)
+    }
+  }
+
+  /** Ping-pong mechanism.  See
+    * en.wikipedia.org/wiki/Enzyme_kinetics#Ping-pong_mechanisms
+    *
+    * @param bind1 kinetic rate for binding of first substrate.
+    * @param unbind1 kinetic rate for unbinding of first substrate.
+    * @param bind2 kinetic rate for binding of second substrate.
+    * @param unbind2 kinetic rate for unbinding of second substrate.
+    * @param fwdCat kinetic rate for forward catalytic step.
+    * @param bwdCat kinetic rate for backward catalytic step.
+    * @param bind3 kinetic rate for binding of first product.
+    * @param unbind3 kinetic rate for unbinding of first product.
+    * @param bind4 kinetic rate for binding of second product.
+    * @param unbind4 kinetic rate for unbinding of second product.
+    */
+  case class PP(
+    bind1: Double, unbind1: Double,
+    fwd1: Double, bwd1: Double,
+    bind3: Double, unbind3: Double,
+    bind2: Double, unbind2: Double,
+    fwd2: Double, bwd2: Double,
+    bind4: Double, unbind4: Double)
+      extends KineticMechanism {
+    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
+      require(lhs.multisize == 2, "left-hand side of reaction " +
+        lhs + " -> " + rhs + " must have exactly two substrates " +
+        "to use the ping-pong mechanism (PP).")
+      require(rhs.multisize == 2, "right-hand side of reaction " +
+        lhs + " -> " + rhs + " must have exactly two products " +
+        "to use the ping-pong mechanism (PP).")
+      val Seq(s1, s2) = lhs.multiseq
+      val Seq(p1, p2) = rhs.multiseq
+      val e1 = catalyser
+      val e2 = Species(e1.meta.identifier + "'")
+      val e1s1 = enzymeComplex(e1, s1)
+      val e2p1 = enzymeComplex(e2, p1)
+      val e2s2 = enzymeComplex(e2, s2)
+      val e1p2 = enzymeComplex(e1, p2)
+      List(e1 + s1 -> e1s1 at bind1,
+           e1s1 -> e1 + s1 at unbind1,
+           e1s1 -> e2p1 at fwd1,
+           e2p1 -> e1s1 at bwd1,
+           e2p1 -> e2 + p1 at unbind3,
+           e2 + p1 -> e2p1 at bind3,
+           e2 + s2 -> e2s2 at bind2,
+           e2s2 -> e2 + s2 at unbind2,
+           e2s2 -> e1p2 at fwd2,
+           e1p2 -> e2s2 at bwd2,
+           e1p2 -> e1 + p2 at unbind4,
+           e1 + p2 -> e1p2 at bind4)
     }
   }
 
