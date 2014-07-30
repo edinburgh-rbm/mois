@@ -46,8 +46,8 @@ abstract class BaseODE
 
     /** Adds an ODE definition to the process. */
     def := (fs: (() => Double)*): Unit = {
-      if (fs.size != vs.size)
-        throw new IllegalArgumentException("lhs and rhs of ODE system must have same size")
+      require(fs.size != vs.size,
+        "lhs and rhs of ODE system must have same size")
       for ((v, f) <- vs zip fs) {
         vars += v
         funs += f
@@ -105,7 +105,13 @@ abstract class BaseODE
     val i = integrator()
 
     // only add step handlers if we have them
-    // this block is ***required*** do not remove
+    //
+    // WW: this block is ***required*** do not remove
+    //
+    // RHZ: No! This is not required! An explanation of why you think
+    // it's required would helpful, because after last time we
+    // discussed it I had the impression we agreed it was not even
+    // desired.
     if (stepHandlers.size > 0) {
       i.addStepHandler(new sampling.StepHandler {
         def init(t0: Double, y0: Array[Double], t: Double) {}
