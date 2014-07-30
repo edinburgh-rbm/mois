@@ -119,7 +119,7 @@ abstract class BaseODE
     // be called only once per call to step.  They should handle mois
     // steps, not someone's else steps.  This clearly violates both.
     //
-    // WW: because it is required to be able to produce a trace of
+    // WW: Because it is required to be able to produce a trace of
     // output for an ODE process. There might be another way to do this
     // by manipulating the way the process is run but until that exists
     // and we are satisfied with it, do not remove the ability to
@@ -128,6 +128,11 @@ abstract class BaseODE
     //
     // We agreed that it was a bit ugly and should go away but not
     // without an alternative
+    //
+    // RHZ: The alternative is our step method!  If you need a thousand
+    // points between time 0 and 10, just run it like:
+    // val s = 0.01; for (i <- 0.0 until 10.0 by s) step(i, i+s)
+    //
     if (stepHandlers.size > 0) {
       i.addStepHandler(new sampling.StepHandler {
         def init(t0: Double, y0: Array[Double], t: Double) {}
