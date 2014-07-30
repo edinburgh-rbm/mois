@@ -29,8 +29,9 @@ trait KineticReactionNetwork extends ReactionNetwork {
 
   trait KineticReaction extends BaseReaction {
     def rate: Double
-    override def toString =
-      "KineticReaction(" + lhs + ", " + rhs + ", " + rate + ")"
+    override def stringPrefix = "KineticReaction"
+    override def toString = stringPrefix +
+      "(" + lhs + ", " + rhs + ", " + rate + ")"
   }
 
   trait KineticReactionFactory {
@@ -43,6 +44,7 @@ trait KineticReactionNetwork extends ReactionNetwork {
   class MassActionReaction(
     val lhs: Multiset, val rhs: Multiset, val k: () => Double)
       extends KineticReaction {
+    override def stringPrefix = "MassActionReaction"
     def rate = count(lhs) * k()
   }
 
@@ -55,6 +57,7 @@ trait KineticReactionNetwork extends ReactionNetwork {
   class RateLawReaction(
     val lhs: Multiset, val rhs: Multiset, val k: () => Double)
       extends KineticReaction {
+    override def stringPrefix = "RateLawReaction"
     def rate = k()
   }
 

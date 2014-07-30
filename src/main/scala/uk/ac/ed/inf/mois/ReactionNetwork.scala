@@ -138,7 +138,8 @@ trait ReactionNetwork extends BaseProcess {
     val lhs: Multiset
     val rhs: Multiset
 
-    override def toString = "Reaction(" + lhs + ", " + rhs + ")"
+    def stringPrefix = "Reaction"
+    override def toString = stringPrefix + "(" + lhs + ", " + rhs + ")"
     override def equals(that: Any) = that match {
       case that: BaseReaction =>
         (this.lhs == that.lhs) && (this.rhs == that.rhs)
