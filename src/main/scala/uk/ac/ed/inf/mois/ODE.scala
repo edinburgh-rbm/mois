@@ -112,6 +112,13 @@ abstract class BaseODE
     // it's required would helpful, because after last time we
     // discussed it I had the impression we agreed it was not even
     // desired.
+    //
+    // The reason I think it's *wrong* to do this is that mois should
+    // treat all processes as black boxes.  Also, mois step handlers
+    // in my opinion should have the following guarantee: they will
+    // be called only once per call to step.  They should handle mois
+    // steps, not someone's else steps.  This clearly violates both.
+    //
     if (stepHandlers.size > 0) {
       i.addStepHandler(new sampling.StepHandler {
         def init(t0: Double, y0: Array[Double], t: Double) {}
