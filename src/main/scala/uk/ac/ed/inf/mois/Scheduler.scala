@@ -18,11 +18,12 @@
 package uk.ac.ed.inf.mois
 
 abstract class Scheduler {
+
   def init(group: ProcessGroup) {}
-  /**
-    * A single iteration of the scheduler must return the time
+
+  /** A single iteration of the scheduler must return the time
     * after the iteration, and a suggested time step for the next
-    * iteration
+    * iteration.
     */
   def apply(t: Double, tau: Double, group: ProcessGroup): (Double, Double)
 }

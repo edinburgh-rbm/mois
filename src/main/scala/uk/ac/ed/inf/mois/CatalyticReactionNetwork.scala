@@ -90,7 +90,113 @@ trait KineticCatalyticReactionNetwork
       List(lhs -> rhs `at!` vmax * count(lhs) / (km + count(lhs)))
   }
 
-  implicit def catalyticToKinetic[M <: KineticMechanism](
-    r: CatalysedReaction[M]) =
+  /** Ternary-complex mechanism in random order.  See
+    * en.wikipedia.org/wiki/Enzyme_kinetics#Ternary-complex_mechanisms
+    *
+    * @param bind1 kinetic rate for binding of first substrate.
+    * @param unbind1 kinetic rate for unbinding of first substrate.
+    * @param bind2 kinetic rate for binding of second substrate.
+    * @param unbind2 kinetic rate for unbinding of second substrate.
+    * @param fwdCat kinetic rate for forward catalytic step.
+    * @param bwdCat kinetic rate for backward catalytic step.
+    * @param bind3 kinetic rate for binding of first product.
+    * @param unbind3 kinetic rate for unbinding of first product.
+    * @param bind4 kinetic rate for binding of second product.
+    * @param unbind4 kinetic rate for unbinding of second product.
+    */
+  case class TCRandom(
+    bind1: Double, unbind1: Double,
+    bind2: Double, unbind2: Double,
+    fwdCat: Double, bwdCat: Double,
+    bind3: Double, unbind3: Double,
+    bind4: Double, unbind4: Double)
+      extends KineticMechanism {
+    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
+      require(lhs.multisize == 2, "left-hand side of reaction " +
+        lhs + " -> " + rhs + " must have exactly two substrates " +
+        "to use the ternary-complex mechanism (TC).")
+      require(rhs.multisize == 2, "right-hand side of reaction " +
+        lhs + " -> " + rhs + " must have exactly two products " +
+        "to use the ternary-complex mechanism (TC).")
+      val Seq(s1, s2) = lhs.multiseq
+      val Seq(p1, p2) = rhs.multiseq
+      val e = catalyser
+      val es1 = enzymeComplex(e, s1)
+      val es2 = enzymeComplex(e, s2)
+      val es12 = enzymeComplex(es1, s2)
+      val ep1 = enzymeComplex(e, p1)
+      val ep2 = enzymeComplex(e, p2)
+      val ep12 = enzymeComplex(ep1, p2)
+      List(e + s1 -> es1 at bind1,
+           e + s2 -> es2 at bind2,
+           es1 -> e + s1 at unbind1,
+           es2 -> e + s2 at unbind2,
+           es2 + s1 -> es12 at bind1,
+           es1 + s2 -> es12 at bind2,
+           es12 -> es2 + s1 at unbind1,
+           es12 -> es1 + s2 at unbind2,
+           es12 -> ep12 at fwdCat,
+           ep12 -> es12 at bwdCat,
+           ep12 -> ep2 + p1 at unbind3,
+           ep12 -> ep1 + p2 at unbind4,
+           ep2 + p1 -> ep12 at bind3,
+           ep1 + p2 -> ep12 at bind4,
+           ep1 -> e + p1 at unbind3,
+           ep2 -> e + p2 at unbind4,
+           e + p1 -> ep1 at bind3,
+           e + p2 -> ep2 at bind4)
+    }
+  }
+
+  /** Ternary-complex mechanism in random order.  See
+    * en.wikipedia.org/wiki/Enzyme_kinetics#Ternary-complex_mechanisms
+    *
+    * @param bind1 kinetic rate for binding of first substrate.
+    * @param unbind1 kinetic rate for unbinding of first substrate.
+    * @param bind2 kinetic rate for binding of second substrate.
+    * @param unbind2 kinetic rate for unbinding of second substrate.
+    * @param fwdCat kinetic rate for forward catalytic step.
+    * @param bwdCat kinetic rate for backward catalytic step.
+    * @param bind3 kinetic rate for binding of first product.
+    * @param unbind3 kinetic rate for unbinding of first product.
+    * @param bind4 kinetic rate for binding of second product.
+    * @param unbind4 kinetic rate for unbinding of second product.
+    */
+  case class TCOrdered(
+    bind1: Double, unbind1: Double,
+    bind2: Double, unbind2: Double,
+    fwdCat: Double, bwdCat: Double,
+    bind3: Double, unbind3: Double,
+    bind4: Double, unbind4: Double)
+      extends KineticMechanism {
+    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
+      require(lhs.multisize == 2, "left-hand side of reaction " +
+        lhs + " -> " + rhs + " must have exactly two substrates " +
+        "to use the ternary-complex mechanism (TC).")
+      require(rhs.multisize == 2, "right-hand side of reaction " +
+        lhs + " -> " + rhs + " must have exactly two products " +
+        "to use the ternary-complex mechanism (TC).")
+      val Seq(s1, s2) = lhs.multiseq
+      val Seq(p1, p2) = rhs.multiseq
+      val e = catalyser
+      val es1 = enzymeComplex(e, s1)
+      val es12 = enzymeComplex(es1, s2)
+      val ep2 = enzymeComplex(e, p2)
+      val ep12 = enzymeComplex(ep2, p1)
+      List(e + s1 -> es1 at bind1,
+           es1 -> e + s1 at unbind1,
+           es1 + s2 -> es12 at bind2,
+           es12 -> es1 + s2 at unbind2,
+           es12 -> ep12 at fwdCat,
+           ep12 -> es12 at bwdCat,
+           ep12 -> ep2 + p1 at unbind3,
+           ep2 + p1 -> ep12 at bind3,
+           ep2 -> e + p2 at unbind4,
+           e + p2 -> ep2 at bind4)
+    }
+  }
+
+  implicit def catalyticToKinetic[
+    M <: KineticMechanism](r: CatalysedReaction[M]) =
     r.mechanism.expand(r.lhs, r.rhs, r.catalyser)
 }

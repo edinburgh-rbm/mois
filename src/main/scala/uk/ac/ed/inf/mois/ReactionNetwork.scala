@@ -91,7 +91,9 @@ trait ReactionNetwork extends BaseProcess {
       species foreach f
     override def empty = Multiset()
     override def size = species.size
-    def multisize = species.values.sum
+    def multisize: Int = species.values.sum
+    def multiseq: Seq[Species] =
+      (for ((s, n) <- species; _ <- 1 to n) yield s).toSeq
 
     // -- Multiset creation methods --
     def + (kv: (Species, Int)): Multiset = {

@@ -34,8 +34,9 @@ class StochasticReactionNetworkTest extends FlatSpec with Matchers {
     val XA = enzymeComplex(X, A)
     val YB = enzymeComplex(Y, B)
 
-    for (i <- 1e-7 to 1e-6 by 1e-7) {
-      step(i, i+1)
+    val s = 1e-7
+    for (i <- 0.0 until 1e-6 by s) {
+      step(i, i+s)
 
       (X.value + XA.value) should equal (10000)
       (Y.value + YB.value) should equal (10000)
