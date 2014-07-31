@@ -181,10 +181,10 @@ trait KineticCatalyticReactionNetwork
       val (s2, (bind2, unbind2)) = b
       val (p1, (bind3, unbind3)) = p
       val (p2, (bind4, unbind4)) = q
-      require(lhs contains s1 && lhs contains s2,
+      require((lhs contains s1) && (lhs contains s2),
         "left-hand side of reaction " + lhs + " -> " + rhs +
         " doesn't contains species " + s1 + " or " + s2)
-      require(rhs contains p1 && rhs contains p2,
+      require((rhs contains p1) && (rhs contains p2),
         "right-hand side of reaction " + lhs + " -> " + rhs +
         " doesn't contains species " + p1 + " or " + p2)
       val e = catalyser
