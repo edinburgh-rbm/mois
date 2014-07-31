@@ -65,8 +65,8 @@ class ProcessGroup(val name: String) extends BaseProcess {
     throw new Exception("unimplemented")
   }
 
-  /** The `step` method of the [[BaseProcess]] interface calls the
-    * [[Scheduler]] on the list of processes together with the group
+  /** The [[BaseProcess.step]] method of the [[BaseProcess]] interface calls
+    * the [[Scheduler]] on the list of processes together with the group
     * state table and time parameters.
     */
   def step(t0: Double, tau: Double) {
@@ -81,8 +81,8 @@ class ProcessGroup(val name: String) extends BaseProcess {
       _step(t, dt, end)
   }
 
-  /** Override the `apply` method because we take on responsibility
-    * for calling the step handlers.
+  /** Override the [[BaseProcess.apply]] method because we take on
+    * responsibility for calling the step handlers.
     */
   @inline override def apply(t: Double, tau: Double) = step(t, tau)
 
