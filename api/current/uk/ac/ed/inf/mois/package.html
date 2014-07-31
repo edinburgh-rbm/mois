@@ -164,7 +164,7 @@ units and so forth.
       </a>
     </span>
       
-    </li><li name="uk.ac.ed.inf.mois.BaseProcess" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="BaseProcessextendsVarContainerwithAnnotation"></a>
       <a id="BaseProcess:BaseProcess"></a>
       <h4 class="signature">
@@ -180,8 +180,17 @@ units and so forth.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">A <code>Process</code> is basically a <code>State</code> and a function that operates
-upon it parametrised by time.</p>
+      <p class="shortcomment cmt">A <code>BaseProcess</code> is basically a container of mutable variables
+(<a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>) and a function that operates them parametrised
+by time.</p><div class="fullcomment"><div class="comment cmt"><p>A <code>BaseProcess</code> is basically a container of mutable variables
+(<a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>) and a function that operates them parametrised
+by time.</p><p>A <code>BaseProcess</code> may also be parametrised by other values in addition
+to time. These are called <a href="BaseProcess$Dimension.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess.Dimension">BaseProcess.Dimension</a>s and are of
+fixed size -- unlike time which is unlimited.</p><p>A <code>BaseProcess</code> also has a list of <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>s that run each
+time step after the computation, their purpose is post-processing
+and output of the data.</p><p>A <code>BaseProcess</code> may be <a href="BaseProcess.html#annotate(k:String,v:Any):Unit" class="extmbr" name="uk.ac.ed.inf.mois.BaseProcess#annotate">BaseProcess.annotate</a>d so that it may
+be self-documenting and introspectable.
+</p></div></div>
     </li><li name="uk.ac.ed.inf.mois.BooleanVar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="BooleanVarextendsVar[Boolean]"></a>
       <a id="BooleanVar:BooleanVar"></a>
@@ -622,10 +631,17 @@ concentration-based reaction networks).</p>
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">A <code>ProcessGroup</code> is a list of <code>Process</code>es and a <code>Scheduler</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A <code>ProcessGroup</code> is a list of <code>Process</code>es and a <code>Scheduler</code>.
-It presents the same interface as a <code>Process</code> and so hierarchies
-of them can be built.
-</p></div></div>
+      <p class="shortcomment cmt">A <code>ProcessGroup</code> is a list of <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a>es and a <a href="Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a>.</p><div class="fullcomment"><div class="comment cmt"><p>A <code>ProcessGroup</code> is a list of <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a>es and a <a href="Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a>.
+It presents the same interface as a <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> and so hierarchies
+of them can be built.</p><p>It is typically created like so</p><pre><span class="kw">import</span> uk.ac.ed.inf.mois.ProcessGroup
+<span class="kw">import</span> uk.ac.ed.inf.mois.sched.WeisseScheduler
+
+<span class="kw">val</span> group = <span class="kw">new</span> ProcessGroup(<span class="lit">"my group"</span>)
+group.scheduler = <span class="kw">new</span> WeisseScheduler(tolerance=<span class="num">0.1</span>)
+
+group += <span class="kw">new</span> SomeSortOfProcess
+group += <span class="kw">new</span> SomeOtherSortOfProcess
+...</pre></div></div>
     </li><li name="uk.ac.ed.inf.mois.PythonProcess" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="PythonProcessextendsProcess"></a>
       <a id="PythonProcess:PythonProcess"></a>

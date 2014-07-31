@@ -47,10 +47,17 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <code>ProcessGroup</code> is a list of <code>Process</code>es and a <code>Scheduler</code>.
-It presents the same interface as a <code>Process</code> and so hierarchies
-of them can be built.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <code>ProcessGroup</code> is a list of <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a>es and a <a href="Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a>.
+It presents the same interface as a <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> and so hierarchies
+of them can be built.</p><p>It is typically created like so</p><pre><span class="kw">import</span> uk.ac.ed.inf.mois.ProcessGroup
+<span class="kw">import</span> uk.ac.ed.inf.mois.sched.WeisseScheduler
+
+<span class="kw">val</span> group = <span class="kw">new</span> ProcessGroup(<span class="lit">"my group"</span>)
+group.scheduler = <span class="kw">new</span> WeisseScheduler(tolerance=<span class="num">0.1</span>)
+
+group += <span class="kw">new</span> SomeSortOfProcess
+group += <span class="kw">new</span> SomeOtherSortOfProcess
+...</pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a>, <a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a>, <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -90,7 +97,7 @@ of them can be built.
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="uk.ac.ed.inf.mois.ProcessGroup#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="uk.ac.ed.inf.mois.ProcessGroup#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(name:String):uk.ac.ed.inf.mois.ProcessGroup"></a>
       <a id="&lt;init&gt;:ProcessGroup"></a>
       <h4 class="signature">
@@ -106,7 +113,8 @@ of them can be built.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>the name of the process
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -188,22 +196,22 @@ of them can be built.
     </span>
       <p class="shortcomment cmt">The += operator adds a process to the group.</p>
     </li><li name="uk.ac.ed.inf.mois.ProcessGroup#-=" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="-=(proc:uk.ac.ed.inf.mois.BaseProcess):uk.ac.ed.inf.mois.ProcessGroup"></a>
-      <a id="-=(BaseProcess):ProcessGroup"></a>
+      <a id="-=(proc:uk.ac.ed.inf.mois.BaseProcess):Nothing"></a>
+      <a id="-=(BaseProcess):Nothing"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $minus$eq" class="name">-=</span><span class="params">(<span name="proc">proc: <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></span>)</span><span class="result">: <a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a></span>
+        <span title="gt4s: $minus$eq" class="name">-=</span><span class="params">(<span name="proc">proc: <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></span>)</span><span class="result">: <span class="extype" name="scala.Nothing">Nothing</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ProcessGroup@-=(proc:uk.ac.ed.inf.mois.BaseProcess):uk.ac.ed.inf.mois.ProcessGroup" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ProcessGroup@-=(proc:uk.ac.ed.inf.mois.BaseProcess):Nothing" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">The -= operator removes a process from the group.</p>
+      <p class="shortcomment cmt">(Unimplemented) The -= operator removes a process from the group.</p>
     </li><li name="uk.ac.ed.inf.mois.VarContainer#&lt;&lt;&lt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;&lt;&lt;(right:uk.ac.ed.inf.mois.VarContainer):Unit"></a>
       <a id="&lt;&lt;&lt;(VarContainer):Unit"></a>
@@ -416,7 +424,10 @@ of them can be built.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+      <p class="shortcomment cmt">Add a <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a> to the list
+</p><div class="fullcomment"><div class="comment cmt"><p>Add a <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a> to the list
+</p></div><dl class="paramcmts block"><dt class="param">sh</dt><dd class="cmt"><p>the step handler, evidently
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.VarContainer#addVar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addVar(nv:uk.ac.ed.inf.mois.BooleanVar):uk.ac.ed.inf.mois.BooleanVar"></a>
       <a id="addVar(BooleanVar):BooleanVar"></a>
@@ -569,10 +580,10 @@ of them can be built.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">Override the <code>apply</code> method because we take on responsibility
-for calling the step handlers.</p><div class="fullcomment"><div class="comment cmt"><p>Override the <code>apply</code> method because we take on responsibility
-for calling the step handlers.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd><dt>Annotations</dt><dd>
+      <p class="shortcomment cmt">Override the <a href="BaseProcess.html#apply(t:Double,tau:Double):Unit" class="extmbr" name="uk.ac.ed.inf.mois.BaseProcess#apply">BaseProcess.apply</a> method because we take on
+responsibility for calling the step handlers.</p><div class="fullcomment"><div class="comment cmt"><p>Override the <a href="BaseProcess.html#apply(t:Double,tau:Double):Unit" class="extmbr" name="uk.ac.ed.inf.mois.BaseProcess#apply">BaseProcess.apply</a> method because we take on
+responsibility for calling the step handlers.</p></div><dl class="paramcmts block"><dt class="param">t</dt><dd class="cmt"><p>the time at the beginning of the step
+</p></dd><dt class="param">tau</dt><dd class="cmt"><p>the size of the step (delta-t)</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -649,7 +660,7 @@ for calling the step handlers.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+      <p class="shortcomment cmt">a list of dimensions and their size/index</p><div class="fullcomment"><div class="comment cmt"><p>a list of dimensions and their size/index</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.VarContainer#doubleVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="doubleVars:uk.ac.ed.inf.mois.VarMap[Double,uk.ac.ed.inf.mois.DoubleVar]"></a>
       <a id="doubleVars:VarMap[Double,DoubleVar]"></a>
@@ -829,7 +840,7 @@ finds to this VarContainer.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">Override init hook by calling all of our children's before our own</p><div class="fullcomment"><div class="comment cmt"><p>Override init hook by calling all of our children's before our own</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+      <p class="shortcomment cmt">Override init hook by calling all of our children's before our own</p><div class="fullcomment"><div class="comment cmt"><p>Override init hook by calling all of our children's before our own</p></div><dl class="paramcmts block"><dt class="param">t</dt><dd class="cmt"><p>the time at the beginning of the simulation</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.VarContainer#intVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="intVars:uk.ac.ed.inf.mois.VarMap[Int,uk.ac.ed.inf.mois.IntVar]"></a>
       <a id="intVars:VarMap[Int,IntVar]"></a>
@@ -931,7 +942,9 @@ finds to this VarContainer.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+      <p class="shortcomment cmt">the name of the process
+</p><div class="fullcomment"><div class="comment cmt"><p>the name of the process
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -983,23 +996,6 @@ finds to this VarContainer.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.BaseProcess#pid" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="pid:Int"></a>
-      <a id="pid:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">pid</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ProcessGroup@pid:Int" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Automatically assigned (locally) unique process identifier</p><div class="fullcomment"><div class="comment cmt"><p>Automatically assigned (locally) unique process identifier</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.ProcessGroup#processes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="processes:scala.collection.mutable.ArrayBuffer[uk.ac.ed.inf.mois.BaseProcess]"></a>
       <a id="processes:ArrayBuffer[BaseProcess]"></a>
@@ -1016,7 +1012,7 @@ finds to this VarContainer.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">The list of child processes</p>
     </li><li name="uk.ac.ed.inf.mois.ProcessGroup#reset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="reset(t:Double):Unit"></a>
       <a id="reset(Double):Unit"></a>
@@ -1033,7 +1029,7 @@ finds to this VarContainer.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">Override reset hook by calling all of our children's before our own</p><div class="fullcomment"><div class="comment cmt"><p>Override reset hook by calling all of our children's before our own</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+      <p class="shortcomment cmt">Override reset hook by calling all of our children's before our own</p><div class="fullcomment"><div class="comment cmt"><p>Override reset hook by calling all of our children's before our own</p></div><dl class="paramcmts block"><dt class="param">t</dt><dd class="cmt"><p>the new time</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.ProcessGroup#scheduler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="scheduler:uk.ac.ed.inf.mois.Scheduler"></a>
       <a id="scheduler:Scheduler"></a>
@@ -1050,7 +1046,7 @@ finds to this VarContainer.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">The scheduler</p>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#state" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="state:Seq[uk.ac.ed.inf.mois.Var[_]]"></a>
       <a id="state:Seq[Var[_]]"></a>
@@ -1084,12 +1080,11 @@ finds to this VarContainer.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">The <code>step</code> method of the <code>Process</code> interface calls the
-<code>Scheduler</code> on the list of processes together with the group
-state table and time parameters.</p><div class="fullcomment"><div class="comment cmt"><p>The <code>step</code> method of the <code>Process</code> interface calls the
-<code>Scheduler</code> on the list of processes together with the group
-state table and time parameters.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+      <p class="shortcomment cmt">The <a href="BaseProcess.html#step(t:Double,tau:Double):Unit" class="extmbr" name="uk.ac.ed.inf.mois.BaseProcess#step">BaseProcess.step</a> method of the <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> interface calls
+the <a href="Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a> on the list of processes together with the group
+state table and time parameters.</p><div class="fullcomment"><div class="comment cmt"><p>The <a href="BaseProcess.html#step(t:Double,tau:Double):Unit" class="extmbr" name="uk.ac.ed.inf.mois.BaseProcess#step">BaseProcess.step</a> method of the <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> interface calls
+the <a href="Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a> on the list of processes together with the group
+state table and time parameters.</p></div><dl class="paramcmts block"><dt class="param">tau</dt><dd class="cmt"><p>the size of the step (delta-t)</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#stepHandlers" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stepHandlers:scala.collection.mutable.ArrayBuffer[uk.ac.ed.inf.mois.StepHandler]"></a>
       <a id="stepHandlers:ArrayBuffer[StepHandler]"></a>
@@ -1106,7 +1101,7 @@ state table and time parameters.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+      <p class="shortcomment cmt">the list of handlers that run after each step</p><div class="fullcomment"><div class="comment cmt"><p>the list of handlers that run after each step</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.ProcessGroup#stringPrefix" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="stringPrefix:String"></a>
       <a id="stringPrefix:String"></a>

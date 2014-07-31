@@ -47,8 +47,14 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <code>Process</code> is basically a <code>State</code> and a function that operates
-upon it parametrised by time.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A <code>BaseProcess</code> is basically a container of mutable variables
+(<a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>) and a function that operates them parametrised
+by time.</p><p>A <code>BaseProcess</code> may also be parametrised by other values in addition
+to time. These are called <a href="BaseProcess$Dimension.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess.Dimension">BaseProcess.Dimension</a>s and are of
+fixed size -- unlike time which is unlimited.</p><p>A <code>BaseProcess</code> also has a list of <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>s that run each
+time step after the computation, their purpose is post-processing
+and output of the data.</p><p>A <code>BaseProcess</code> may be <a href="#annotate(k:String,v:Any):Unit" class="extmbr" name="uk.ac.ed.inf.mois.BaseProcess#annotate">BaseProcess.annotate</a>d so that it may
+be self-documenting and introspectable.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a>, <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
@@ -152,7 +158,7 @@ upon it parametrised by time.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">a process is required to have a name (XXX: really? why?)</p>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#step" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="step(t:Double,tau:Double):Unit"></a>
       <a id="step(Double,Double):Unit"></a>
@@ -172,8 +178,11 @@ upon it parametrised by time.
       <p class="shortcomment cmt">This function takes the state from where it is at
 time t to where it is at t + tau.</p><div class="fullcomment"><div class="comment cmt"><p>This function takes the state from where it is at
 time t to where it is at t + tau. This must be supplied
-by concrete sub-classes.
-</p></div></div>
+by concrete sub-classes. Except for testing, it is always
+called via the <a href="#apply(t:Double,tau:Double):Unit" class="extmbr" name="uk.ac.ed.inf.mois.BaseProcess#apply">BaseProcess.apply</a> method so that any
+<a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>s also get executed.
+</p></div><dl class="paramcmts block"><dt class="param">t</dt><dd class="cmt"><p>the time at the beginning of the step</p></dd><dt class="param">tau</dt><dd class="cmt"><p>the size of the step (delta-t)
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -409,7 +418,7 @@ by concrete sub-classes.
       </a>
     </span>
       <p class="shortcomment cmt">Automatically annotate the process with its software name and version</p><div class="fullcomment"><div class="comment cmt"><p>Automatically annotate the process with its software name and version</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.BaseProcess#addStepHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#addStepHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addStepHandler(sh:uk.ac.ed.inf.mois.StepHandler):Unit"></a>
       <a id="addStepHandler(StepHandler):Unit"></a>
       <h4 class="signature">
@@ -425,7 +434,10 @@ by concrete sub-classes.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Add a <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a> to the list
+</p><div class="fullcomment"><div class="comment cmt"><p>Add a <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a> to the list
+</p></div><dl class="paramcmts block"><dt class="param">sh</dt><dd class="cmt"><p>the step handler, evidently
+</p></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.VarContainer#addVar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addVar(nv:uk.ac.ed.inf.mois.BooleanVar):uk.ac.ed.inf.mois.BooleanVar"></a>
       <a id="addVar(BooleanVar):BooleanVar"></a>
@@ -562,7 +574,7 @@ by concrete sub-classes.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.BaseProcess#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="apply(t:Double,tau:Double):Unit"></a>
       <a id="apply(Double,Double):Unit"></a>
       <h4 class="signature">
@@ -579,7 +591,12 @@ by concrete sub-classes.
       </a>
     </span>
       <p class="shortcomment cmt">A wrapper around the user defined step function to calculate
-changes.</p>
+changes.</p><div class="fullcomment"><div class="comment cmt"><p>A wrapper around the user defined step function to calculate
+changes. This wrapper is the main way that the step function
+should be called and it has the additional responsibility of
+calling any <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>s.
+</p></div><dl class="paramcmts block"><dt class="param">t</dt><dd class="cmt"><p>the time at the beginning of the step</p></dd><dt class="param">tau</dt><dd class="cmt"><p>the size of the step (delta-t)
+</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -653,7 +670,7 @@ changes.</p>
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">a list of dimensions and their size/index</p>
     </li><li name="uk.ac.ed.inf.mois.VarContainer#doubleVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="doubleVars:uk.ac.ed.inf.mois.VarMap[Double,uk.ac.ed.inf.mois.DoubleVar]"></a>
       <a id="doubleVars:VarMap[Double,DoubleVar]"></a>
@@ -745,7 +762,8 @@ changes.</p>
       </a>
     </span>
       <p class="shortcomment cmt">Finish hook.</p><div class="fullcomment"><div class="comment cmt"><p>Finish hook. Expected to be called once at the end of theprocess.
-Finishes the step handlers
+Finishes the step handlers. Remember to call <code>super.finish</code> if you
+override this!
 </p></div></div>
     </li><li name="uk.ac.ed.inf.mois.VarContainer#floatVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="floatVars:uk.ac.ed.inf.mois.VarMap[Float,uk.ac.ed.inf.mois.FloatVar]"></a>
@@ -836,8 +854,11 @@ finds to this VarContainer.
       </a>
     </span>
       <p class="shortcomment cmt">Initialisation hook.</p><div class="fullcomment"><div class="comment cmt"><p>Initialisation hook. Expected to be called once before the process
-runs for the first time. Initialises step handlers.
-</p></div></div>
+runs for the first time. Initialises step handlers and adds
+basic annotations. Remember to call <code>super.init(t)</code> if you override
+this!
+</p></div><dl class="paramcmts block"><dt class="param">t</dt><dd class="cmt"><p>the time at the beginning of the simulation
+</p></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.VarContainer#intVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="intVars:uk.ac.ed.inf.mois.VarMap[Int,uk.ac.ed.inf.mois.IntVar]"></a>
       <a id="intVars:VarMap[Int,IntVar]"></a>
@@ -974,23 +995,6 @@ runs for the first time. Initialises step handlers.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.BaseProcess#pid" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="pid:Int"></a>
-      <a id="pid:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">pid</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseProcess@pid:Int" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Automatically assigned (locally) unique process identifier</p>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#reset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="reset(t:Double):Unit"></a>
       <a id="reset(Double):Unit"></a>
@@ -1010,7 +1014,8 @@ runs for the first time. Initialises step handlers.
       <p class="shortcomment cmt">Reset hook.</p><div class="fullcomment"><div class="comment cmt"><p>Reset hook. May be called as necessary. Resets the step handlers.
 May be overridden in sub-classes to reset internal state. Rember
 to call <code>super.reset(t)</code> if you do this!
-</p></div></div>
+</p></div><dl class="paramcmts block"><dt class="param">t</dt><dd class="cmt"><p>the new time
+</p></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#state" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="state:Seq[uk.ac.ed.inf.mois.Var[_]]"></a>
       <a id="state:Seq[Var[_]]"></a>
@@ -1044,7 +1049,7 @@ to call <code>super.reset(t)</code> if you do this!
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">the list of handlers that run after each step</p>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#stringPrefix" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="stringPrefix:String"></a>
       <a id="stringPrefix:String"></a>
