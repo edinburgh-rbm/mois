@@ -298,11 +298,13 @@ than ^ defined in this way!</p></div><dl class="attributes block"> <dt>Definitio
     </span>
       <p class="shortcomment cmt">A single iteration of the scheduler must return the time
 after the iteration, and a suggested time step for the next
-iteration
-</p><div class="fullcomment"><div class="comment cmt"><p>A single iteration of the scheduler must return the time
+iteration.</p><div class="fullcomment"><div class="comment cmt"><p>A single iteration of the scheduler must return the time
 after the iteration, and a suggested time step for the next
-iteration
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.sched.WeisseScheduler">WeisseScheduler</a> → <a href="../Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a></dd></dl></div>
+iteration. The parameter <code>tau</code> is treated as advice and the
+scheduler may run for a shorter time in order to be able to
+adapt the step size to control errors.
+</p></div><dl class="paramcmts block"><dt class="param">t</dt><dd class="cmt"><p>the starting time for the step</p></dd><dt class="param">tau</dt><dd class="cmt"><p>the (suggested) size of the step</p></dd><dt class="param">group</dt><dd class="cmt"><p>the process group to run</p></dd><dt>returns</dt><dd class="cmt"><p>time at end of step and new step size
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.sched.WeisseScheduler">WeisseScheduler</a> → <a href="../Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -721,7 +723,9 @@ iteration
         <img src="../../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.sched.WeisseScheduler">WeisseScheduler</a> → <a href="../Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a></dd></dl></div>
+      <p class="shortcomment cmt">Perform any required initialisation.</p><div class="fullcomment"><div class="comment cmt"><p>Perform any required initialisation.
+</p></div><dl class="paramcmts block"><dt class="param">group</dt><dd class="cmt"><p>the process group this scheduler is to run
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.sched.WeisseScheduler">WeisseScheduler</a> → <a href="../Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>

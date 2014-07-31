@@ -664,7 +664,7 @@ species as variables and let you define reactions using them.
 This is the base class for DeterministicReactionNetwork,
 StochasticReactionNetwork and FBA.
 </p></div></div>
-    </li><li name="uk.ac.ed.inf.mois.Scheduler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.Scheduler" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="SchedulerextendsAnyRef"></a>
       <a id="Scheduler:Scheduler"></a>
       <h4 class="signature">
@@ -680,7 +680,11 @@ StochasticReactionNetwork and FBA.
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A Scheduler is used by <a href="ProcessGroup.html" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> to run the member
+processes.</p><div class="fullcomment"><div class="comment cmt"><p>A Scheduler is used by <a href="ProcessGroup.html" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> to run the member
+processes. The important method is <a href="Scheduler.html#apply(t:Double,tau:Double,group:uk.ac.ed.inf.mois.ProcessGroup):(Double,Double)" class="extmbr" name="uk.ac.ed.inf.mois.Scheduler#apply">Scheduler.apply</a> which
+runs all of the processes for one time step.
+</p></div></div>
     </li><li name="uk.ac.ed.inf.mois.StepHandler" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="StepHandlerextendsAnyRef"></a>
       <a id="StepHandler:StepHandler"></a>

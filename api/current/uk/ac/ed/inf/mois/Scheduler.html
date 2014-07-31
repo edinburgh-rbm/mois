@@ -47,7 +47,10 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A Scheduler is used by <a href="ProcessGroup.html" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a> to run the member
+processes. The important method is <a href="#apply(t:Double,tau:Double,group:uk.ac.ed.inf.mois.ProcessGroup):(Double,Double)" class="extmbr" name="uk.ac.ed.inf.mois.Scheduler#apply">Scheduler.apply</a> which
+runs all of the processes for one time step.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
@@ -114,7 +117,7 @@
 
         <div id="values" class="values members">
               <h3>Abstract Value Members</h3>
-              <ol><li name="uk.ac.ed.inf.mois.Scheduler#apply" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+              <ol><li name="uk.ac.ed.inf.mois.Scheduler#apply" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="apply(t:Double,tau:Double,group:uk.ac.ed.inf.mois.ProcessGroup):(Double,Double)"></a>
       <a id="apply(Double,Double,ProcessGroup):(Double,Double)"></a>
       <h4 class="signature">
@@ -132,8 +135,13 @@
     </span>
       <p class="shortcomment cmt">A single iteration of the scheduler must return the time
 after the iteration, and a suggested time step for the next
-iteration
-</p>
+iteration.</p><div class="fullcomment"><div class="comment cmt"><p>A single iteration of the scheduler must return the time
+after the iteration, and a suggested time step for the next
+iteration. The parameter <code>tau</code> is treated as advice and the
+scheduler may run for a shorter time in order to be able to
+adapt the step size to control errors.
+</p></div><dl class="paramcmts block"><dt class="param">t</dt><dd class="cmt"><p>the starting time for the step</p></dd><dt class="param">tau</dt><dd class="cmt"><p>the (suggested) size of the step</p></dd><dt class="param">group</dt><dd class="cmt"><p>the process group to run</p></dd><dt>returns</dt><dd class="cmt"><p>time at end of step and new step size
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -321,7 +329,7 @@ iteration
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.Scheduler#init" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="uk.ac.ed.inf.mois.Scheduler#init" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="init(group:uk.ac.ed.inf.mois.ProcessGroup):Unit"></a>
       <a id="init(ProcessGroup):Unit"></a>
       <h4 class="signature">
@@ -337,7 +345,9 @@ iteration
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">Perform any required initialisation.</p><div class="fullcomment"><div class="comment cmt"><p>Perform any required initialisation.
+</p></div><dl class="paramcmts block"><dt class="param">group</dt><dd class="cmt"><p>the process group this scheduler is to run
+</p></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
