@@ -148,20 +148,20 @@ trait KineticCatalyticReactionNetwork
     }
   }
 
-  /** Ternary-complex mechanism where `firstSubstrate` is bound first
-    * and `firstProduct` is released first.  See
+  // TODO: By giving all the species involved in the reaction as
+  // parameters to TCOrdered we are basically specifying the reaction
+  // twice.  This could be solved by using an ordered map for
+  // multisets and reverting TCOrdered to its first implementation.
+  /** Ternary-complex mechanism where `a` is bound first, then `b`,
+    * then `p` is released and finally `q` is released.  See
     * en.wikipedia.org/wiki/Enzyme_kinetics#Ternary-complex_mechanisms
     *
-    * @param bind1 kinetic rate for binding of first substrate.
-    * @param unbind1 kinetic rate for unbinding of first substrate.
-    * @param bind2 kinetic rate for binding of second substrate.
-    * @param unbind2 kinetic rate for unbinding of second substrate.
+    * @param a first substrate and its binding and unbinding rate.
+    * @param b second substrate and its binding and unbinding rate.
     * @param fwdCat kinetic rate for forward catalytic step.
     * @param bwdCat kinetic rate for backward catalytic step.
-    * @param bind3 kinetic rate for binding of first product.
-    * @param unbind3 kinetic rate for unbinding of first product.
-    * @param bind4 kinetic rate for binding of second product.
-    * @param unbind4 kinetic rate for unbinding of second product.
+    * @param p first product and its binding and unbinding rate.
+    * @param q second product and its binding and unbinding rate.
     */
   case class TCOrdered(
     a: (Species, (Double, Double)),
