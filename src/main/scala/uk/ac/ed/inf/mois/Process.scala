@@ -19,18 +19,6 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 
-/**
- * A process ID factory, used to ensure that processes have a unique
- * identifier
- */
-private object ProcessID {
-  var id: Int = 0
-  def alloc = {
-    id += 1
-    id
-  }
-}
-
 /** A `Process` is basically a `State` and a function that operates
   * upon it parametrised by time.
   */
@@ -39,9 +27,6 @@ abstract class BaseProcess extends VarContainer with Annotation {
   def name: String
   val stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
   val dimensions = mutable.Map.empty[Var[_], Int]
-
-  /** Automatically assigned (locally) unique process identifier */
-  val pid = ProcessID.alloc
 
   /** Automatically annotate the process with its software name and version */
   protected def addBasicAnnotations = {

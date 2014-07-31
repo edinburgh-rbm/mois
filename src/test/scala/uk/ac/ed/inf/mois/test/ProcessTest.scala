@@ -34,14 +34,6 @@ class ProcessTest extends FlatSpec with Matchers {
     }
   }
 
-  "process" should "be assigned an increasing id" in {
-    val p1 = new P
-    val p2 = new P
-//    println(p1.pid)
-//    println(p2.pid)
-    (p2.pid > p1.pid) should be (true)
-  }
-
   it should "run and do arithmetic" in {
     val p = new P
     p.x1 := 2.0
