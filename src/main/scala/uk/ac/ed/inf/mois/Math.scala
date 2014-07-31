@@ -62,6 +62,7 @@ trait Math {
 
   @inline def exp(x: Double) = jm.exp(x)
   @inline def pow(x: Double, y: Double) = jm.pow(x, y)
+  @inline def sqrt(x: Double) = jm.sqrt(x)
   @inline def ln(x: Double) = jm.log(x)
   @inline def log(x: Double): Double = log(x, 10)
   @inline def log(x: Double, base: Double): Double = jm.log(x)/jm.log(base)
