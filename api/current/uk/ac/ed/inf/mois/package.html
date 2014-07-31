@@ -184,12 +184,14 @@ units and so forth.
 (<a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>) and a function that operates them parametrised
 by time.</p><div class="fullcomment"><div class="comment cmt"><p>A <code>BaseProcess</code> is basically a container of mutable variables
 (<a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>) and a function that operates them parametrised
-by time.</p><p>A <code>BaseProcess</code> may also be parametrised by other values in addition
-to time. These are called <a href="BaseProcess$Dimension.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess.Dimension">BaseProcess.Dimension</a>s and are of
-fixed size -- unlike time which is unlimited.</p><p>A <code>BaseProcess</code> also has a list of <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>s that run each
+by time. It may be <a href="BaseProcess.html#annotate(k:String,v:Any):Unit" class="extmbr" name="uk.ac.ed.inf.mois.BaseProcess#annotate">BaseProcess.annotate</a>d so that it may
+be self-documenting and introspectable.</p><p>A <code>BaseProcess</code> also has a list of <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>s that run each
 time step after the computation, their purpose is post-processing
-and output of the data.</p><p>A <code>BaseProcess</code> may be <a href="BaseProcess.html#annotate(k:String,v:Any):Unit" class="extmbr" name="uk.ac.ed.inf.mois.BaseProcess#annotate">BaseProcess.annotate</a>d so that it may
-be self-documenting and introspectable.
+and output of the data.</p><p>It is possible to parametrise by other values in addition
+to time. For example to run the same simulation several times with
+different initial conditions. Such variables are called
+<a href="BaseProcess$Dimension.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess.Dimension">BaseProcess.Dimension</a>s and are of fixed size -- unlike time which
+has unlimited range.
 </p></div></div>
     </li><li name="uk.ac.ed.inf.mois.BooleanVar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="BooleanVarextendsVar[Boolean]"></a>
