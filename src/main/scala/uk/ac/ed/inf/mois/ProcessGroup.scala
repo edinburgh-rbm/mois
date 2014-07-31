@@ -19,15 +19,33 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 
-/** A `ProcessGroup` is a list of `Process`es and a `Scheduler`.
-  * It presents the same interface as a `Process` and so hierarchies
+/** A `ProcessGroup` is a list of [[BaseProcess]]es and a [[Scheduler]].
+  * It presents the same interface as a [[BaseProcess]] and so hierarchies
   * of them can be built.
+  *
+  * It is typically created like so
+  *
+  * {{{
+  * import uk.ac.ed.inf.mois.ProcessGroup
+  * import uk.ac.ed.inf.mois.sched.WeisseScheduler
+  *
+  * val group = new ProcessGroup("my group")
+  * group.scheduler = new WeisseScheduler(tolerance=0.1)
+  *
+  * group += new SomeSortOfProcess
+  * group += new SomeOtherSortOfProcess
+  * ...
+  * }}}
+  *
+  * @param name the name of the process
   */
 class ProcessGroup(val name: String) extends BaseProcess {
 
   override def stringPrefix = "ProcessGroup"
 
+  /** The list of child processes */
   var processes = mutable.ArrayBuffer.empty[BaseProcess]
+  /** The scheduler */
   var scheduler: Scheduler = null
 
   /** The += operator adds a process to the group. */
@@ -40,15 +58,15 @@ class ProcessGroup(val name: String) extends BaseProcess {
     this
   }
 
-  /** The -= operator removes a process from the group. */
+  /** (Unimplemented) The -= operator removes a process from the group. */
   def -= (proc: BaseProcess) = {
     // TODO: needed for process migration. Keeping state
     // coherent is important here
-    this
+    throw new Exception("unimplemented")
   }
 
-  /** The `step` method of the `Process` interface calls the
-    * `Scheduler` on the list of processes together with the group
+  /** The `step` method of the [[BaseProcess]] interface calls the
+    * [[Scheduler]] on the list of processes together with the group
     * state table and time parameters.
     */
   def step(t0: Double, tau: Double) {
