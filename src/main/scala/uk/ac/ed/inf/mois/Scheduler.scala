@@ -17,13 +17,28 @@
  */
 package uk.ac.ed.inf.mois
 
+/** A Scheduler is used by [[ProcessGroup]] to run the member
+  * processes. The important method is [[Scheduler.apply]] which
+  * runs all of the processes for one time step.
+  */
 abstract class Scheduler {
 
+  /** Perform any required initialisation.
+    *
+    * @param group the process group this scheduler is to run
+    */
   def init(group: ProcessGroup) {}
 
   /** A single iteration of the scheduler must return the time
     * after the iteration, and a suggested time step for the next
-    * iteration.
+    * iteration. The parameter `tau` is treated as advice and the
+    * scheduler may run for a shorter time in order to be able to
+    * adapt the step size to control errors.
+    *
+    * @param t the starting time for the step
+    * @param tau the (suggested) size of the step
+    * @param group the process group to run
+    * @return time at end of step and new step size
     */
   def apply(t: Double, tau: Double, group: ProcessGroup): (Double, Double)
 }
