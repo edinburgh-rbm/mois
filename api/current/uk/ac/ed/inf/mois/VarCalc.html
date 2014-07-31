@@ -43,13 +43,13 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <span class="name">VarCalc</span><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></span>
+        <span class="name">VarCalc</span><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> with <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a>, <a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a>, <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a>, <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a>, <a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a>, <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -67,7 +67,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="uk.ac.ed.inf.mois.VarCalc"><span>VarCalc</span></li><li class="in" name="uk.ac.ed.inf.mois.BaseProcess"><span>BaseProcess</span></li><li class="in" name="uk.ac.ed.inf.mois.Annotation"><span>Annotation</span></li><li class="in" name="uk.ac.ed.inf.mois.VarContainer"><span>VarContainer</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="uk.ac.ed.inf.mois.VarCalc"><span>VarCalc</span></li><li class="in" name="uk.ac.ed.inf.mois.VarConversions"><span>VarConversions</span></li><li class="in" name="uk.ac.ed.inf.mois.BaseProcess"><span>BaseProcess</span></li><li class="in" name="uk.ac.ed.inf.mois.Annotation"><span>Annotation</span></li><li class="in" name="uk.ac.ed.inf.mois.VarContainer"><span>VarContainer</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -140,6 +140,23 @@
       </a>
     </span>
       <p class="shortcomment cmt">Needed for NetCDF et al.</p><div class="fullcomment"><div class="comment cmt"><p>Needed for NetCDF et al. TODO: explain better</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarConversions.DoubleVarMap" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="DoubleVarMapextendsAnyRef"></a>
+      <a id="DoubleVarMap:DoubleVarMap"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="VarConversions$DoubleVarMap.html"><span class="name">DoubleVarMap</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.VarConversions@DoubleVarMapextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">implicit utility class for extra operations on a group of DoubleVars</p><div class="fullcomment"><div class="comment cmt"><p>implicit utility class for extra operations on a group of DoubleVars</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.VarCalc.Func" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Func=()=&gt;Double"></a>
       <a id="Func:Func"></a>
@@ -415,6 +432,26 @@ by concrete sub-classes.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarConversions#Var2Meta" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Var2Meta(v:uk.ac.ed.inf.mois.Var[_]):uk.ac.ed.inf.mois.VarMeta"></a>
+      <a id="Var2Meta(Var[_]):VarMeta"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Var2Meta</span><span class="params">(<span name="v">v: <a href="Var.html" class="extype" name="uk.ac.ed.inf.mois.Var">Var</a>[_]</span>)</span><span class="result">: <a href="VarMeta.html" class="extype" name="uk.ac.ed.inf.mois.VarMeta">VarMeta</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.VarCalc@Var2Meta(v:uk.ac.ed.inf.mois.Var[_]):uk.ac.ed.inf.mois.VarMeta" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@inline</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -850,6 +887,26 @@ finds to this VarContainer.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarConversions#getVarValue" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getVarValue[T](v:uk.ac.ed.inf.mois.Var[T]):T"></a>
+      <a id="getVarValue[T](Var[T]):T"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getVarValue</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="v">v: <a href="Var.html" class="extype" name="uk.ac.ed.inf.mois.Var">Var</a>[<span class="extype" name="uk.ac.ed.inf.mois.VarConversions.getVarValue.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="uk.ac.ed.inf.mois.VarConversions.getVarValue.T">T</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.VarCalc@getVarValue[T](v:uk.ac.ed.inf.mois.Var[T]):T" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -1239,7 +1296,9 @@ to call <code>super.reset(t)</code> if you do this!
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="uk.ac.ed.inf.mois.BaseProcess">
+        <div class="parent" name="uk.ac.ed.inf.mois.VarConversions">
+              <h3>Inherited from <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.BaseProcess">
               <h3>Inherited from <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></h3>
             </div><div class="parent" name="uk.ac.ed.inf.mois.Annotation">
               <h3>Inherited from <a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a></h3>

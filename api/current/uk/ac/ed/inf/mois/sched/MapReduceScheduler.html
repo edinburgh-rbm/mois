@@ -242,39 +242,45 @@
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.sched.MapReduceScheduler#after" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="after(t:Double,dt:Double,acc:MapReduceScheduler.this.Acc,group:uk.ac.ed.inf.mois.ProcessGroup):Double"></a>
-      <a id="after(Double,Double,Acc,ProcessGroup):Double"></a>
+      <a id="after(t:Double,dt:Double,acc:MapReduceScheduler.this.Acc,group:uk.ac.ed.inf.mois.ProcessGroup):(Double,Double)"></a>
+      <a id="after(Double,Double,Acc,ProcessGroup):(Double,Double)"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">after</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Double">Double</span></span>, <span name="dt">dt: <span class="extype" name="scala.Double">Double</span></span>, <span name="acc">acc: <a href="#Acc" class="extmbr" name="uk.ac.ed.inf.mois.sched.MapReduceScheduler.Acc">Acc</a></span>, <span name="group">group: <a href="../ProcessGroup.html" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a></span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+        <span class="name">after</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Double">Double</span></span>, <span name="dt">dt: <span class="extype" name="scala.Double">Double</span></span>, <span name="acc">acc: <a href="#Acc" class="extmbr" name="uk.ac.ed.inf.mois.sched.MapReduceScheduler.Acc">Acc</a></span>, <span name="group">group: <a href="../ProcessGroup.html" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a></span>)</span><span class="result">: (<span class="extype" name="scala.Double">Double</span>, <span class="extype" name="scala.Double">Double</span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../../index.html#uk.ac.ed.inf.mois.sched.MapReduceScheduler@after(t:Double,dt:Double,acc:MapReduceScheduler.this.Acc,group:uk.ac.ed.inf.mois.ProcessGroup):Double" title="Permalink" target="_top">
+      <a href="../../../../../../index.html#uk.ac.ed.inf.mois.sched.MapReduceScheduler@after(t:Double,dt:Double,acc:MapReduceScheduler.this.Acc,group:uk.ac.ed.inf.mois.ProcessGroup):(Double,Double)" title="Permalink" target="_top">
         <img src="../../../../../../lib/permalink.png" />
       </a>
     </span>
       
     </li><li name="uk.ac.ed.inf.mois.sched.MapReduceScheduler#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="apply(t:Double,tau:Double,group:uk.ac.ed.inf.mois.ProcessGroup):Double"></a>
-      <a id="apply(Double,Double,ProcessGroup):Double"></a>
+      <a id="apply(t:Double,tau:Double,group:uk.ac.ed.inf.mois.ProcessGroup):(Double,Double)"></a>
+      <a id="apply(Double,Double,ProcessGroup):(Double,Double)"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">apply</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Double">Double</span></span>, <span name="tau">tau: <span class="extype" name="scala.Double">Double</span></span>, <span name="group">group: <a href="../ProcessGroup.html" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a></span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+        <span class="name">apply</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Double">Double</span></span>, <span name="tau">tau: <span class="extype" name="scala.Double">Double</span></span>, <span name="group">group: <a href="../ProcessGroup.html" class="extype" name="uk.ac.ed.inf.mois.ProcessGroup">ProcessGroup</a></span>)</span><span class="result">: (<span class="extype" name="scala.Double">Double</span>, <span class="extype" name="scala.Double">Double</span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../../index.html#uk.ac.ed.inf.mois.sched.MapReduceScheduler@apply(t:Double,tau:Double,group:uk.ac.ed.inf.mois.ProcessGroup):Double" title="Permalink" target="_top">
+      <a href="../../../../../../index.html#uk.ac.ed.inf.mois.sched.MapReduceScheduler@apply(t:Double,tau:Double,group:uk.ac.ed.inf.mois.ProcessGroup):(Double,Double)" title="Permalink" target="_top">
         <img src="../../../../../../lib/permalink.png" />
       </a>
     </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.sched.MapReduceScheduler">MapReduceScheduler</a> → <a href="../Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a></dd></dl></div>
+      <p class="shortcomment cmt">A single iteration of the scheduler must return the time
+after the iteration, and a suggested time step for the next
+iteration
+</p><div class="fullcomment"><div class="comment cmt"><p>A single iteration of the scheduler must return the time
+after the iteration, and a suggested time step for the next
+iteration
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.sched.MapReduceScheduler">MapReduceScheduler</a> → <a href="../Scheduler.html" class="extype" name="uk.ac.ed.inf.mois.Scheduler">Scheduler</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>

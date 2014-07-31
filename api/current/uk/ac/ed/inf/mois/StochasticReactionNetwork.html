@@ -1,0 +1,1981 @@
+<!DOCTYPE html >
+<html>
+        <head>
+          <title>StochasticReactionNetwork - uk.ac.ed.inf.mois.StochasticReactionNetwork</title>
+          <meta name="description" content="StochasticReactionNetwork - uk.ac.ed.inf.mois.StochasticReactionNetwork" />
+          <meta name="keywords" content="StochasticReactionNetwork uk.ac.ed.inf.mois.StochasticReactionNetwork" />
+          <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+          
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'uk.ac.ed.inf.mois.StochasticReactionNetwork';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
+    
+        </head>
+        <body class="type">
+      <div id="definition">
+        <img src="../../../../../lib/class_big.png" />
+        <p id="owner"><a href="../../../../package.html" class="extype" name="uk">uk</a>.<a href="../../../package.html" class="extype" name="uk.ac">ac</a>.<a href="../../package.html" class="extype" name="uk.ac.ed">ed</a>.<a href="../package.html" class="extype" name="uk.ac.ed.inf">inf</a>.<a href="package.html" class="extype" name="uk.ac.ed.inf.mois">mois</a></p>
+        <h1>StochasticReactionNetwork</h1> <span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      </div>
+
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">StochasticReactionNetwork</span><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> with <a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a> with <a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a></span>
+      </span>
+      </h4>
+      
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Base trait for all reaction networks that use concentrations of
+molecules as a measure for species (as opposed to
+population-based reaction networks).
+</p></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a>, <a href="CatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork">CatalyticReactionNetwork</a>, <a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a>, <a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a>, <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a>, <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a>, <a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a>, <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
+
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="uk.ac.ed.inf.mois.StochasticReactionNetwork"><span>StochasticReactionNetwork</span></li><li class="in" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork"><span>KineticCatalyticReactionNetwork</span></li><li class="in" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork"><span>CatalyticReactionNetwork</span></li><li class="in" name="uk.ac.ed.inf.mois.KineticReactionNetwork"><span>KineticReactionNetwork</span></li><li class="in" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork"><span>PopulationBasedReactionNetwork</span></li><li class="in" name="uk.ac.ed.inf.mois.ReactionNetwork"><span>ReactionNetwork</span></li><li class="in" name="uk.ac.ed.inf.mois.BaseProcess"><span>BaseProcess</span></li><li class="in" name="uk.ac.ed.inf.mois.Annotation"><span>Annotation</span></li><li class="in" name="uk.ac.ed.inf.mois.VarContainer"><span>VarContainer</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
+
+      <div id="template">
+        <div id="allMembers">
+        <div id="constructors" class="members">
+              <h3>Instance Constructors</h3>
+              <ol><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="&lt;init&gt;(name:String):uk.ac.ed.inf.mois.StochasticReactionNetwork"></a>
+      <a id="&lt;init&gt;:StochasticReactionNetwork"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">new</span>
+      </span>
+      <span class="symbol">
+        <span class="name">StochasticReactionNetwork</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@&lt;init&gt;(name:String):uk.ac.ed.inf.mois.StochasticReactionNetwork" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li></ol>
+            </div>
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork.Base" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Base=Int"></a>
+      <a id="Base:Base"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Base</span><span class="result"> = <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@Base=Int" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a> → <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="BaseReactionextendsReactionNetwork.this.SimpleReaction"></a>
+      <a id="BaseReaction:BaseReaction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$BaseReaction.html"><span class="name">BaseReaction</span></a><span class="result"> extends <a href="ReactionNetwork$SimpleReaction.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">SimpleReaction</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@BaseReactionextendsReactionNetwork.this.SimpleReaction" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.BaseSpecies" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="BaseSpeciesextendsVar[ReactionNetwork.this.Base]withNumericVar[ReactionNetwork.this.Base]"></a>
+      <a id="BaseSpecies:BaseSpecies"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$BaseSpecies.html"><span class="name">BaseSpecies</span></a><span class="result"> extends <a href="Var.html" class="extype" name="uk.ac.ed.inf.mois.Var">Var</a>[<a href="ReactionNetwork.html#Base" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Base">Base</a>] with <a href="NumericVar.html" class="extype" name="uk.ac.ed.inf.mois.NumericVar">NumericVar</a>[<a href="ReactionNetwork.html#Base" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Base">Base</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@BaseSpeciesextendsVar[ReactionNetwork.this.Base]withNumericVar[ReactionNetwork.this.Base]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysableReaction" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="CatalysableReactionextendsCatalyticReactionNetwork.this.BaseReaction"></a>
+      <a id="CatalysableReaction:CatalysableReaction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="CatalyticReactionNetwork$CatalysableReaction.html"><span class="name">CatalysableReaction</span></a><span class="result"> extends <a href="CatalyticReactionNetwork.html#BaseReactionextendsReactionNetwork.this.SimpleReaction" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">BaseReaction</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@CatalysableReactionextendsCatalyticReactionNetwork.this.BaseReaction" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="CatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork">CatalyticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysedReaction" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="CatalysedReaction[Mechanism&lt;:CatalyticReactionNetwork.this.EnzymeMechanism]extendsCatalyticReactionNetwork.this.SimpleReactionwithProductwithSerializable"></a>
+      <a id="CatalysedReaction[Mechanism&lt;:EnzymeMechanism]:CatalysedReaction[Mechanism]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="CatalyticReactionNetwork$CatalysedReaction.html"><span class="name">CatalysedReaction</span></a><span class="tparams">[<span name="Mechanism">Mechanism &lt;: <a href="CatalyticReactionNetwork$EnzymeMechanism.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.EnzymeMechanism">EnzymeMechanism</a></span>]</span><span class="params">(<span name="lhs">lhs: <a href="CatalyticReactionNetwork.html#MultisetextendsMap[ReactionNetwork.this.Species,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">CatalyticReactionNetwork.Multiset</a></span>, <span name="rhs">rhs: <a href="CatalyticReactionNetwork.html#MultisetextendsMap[ReactionNetwork.this.Species,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">CatalyticReactionNetwork.Multiset</a></span>, <span name="catalyser">catalyser: <a href="CatalyticReactionNetwork.html#Species&lt;:ReactionNetwork.this.BaseSpecies" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.Species">CatalyticReactionNetwork.Species</a></span>, <span name="mechanism">mechanism: <span class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysedReaction.Mechanism">Mechanism</span></span>)</span><span class="result"> extends <a href="CatalyticReactionNetwork.html#SimpleReactionextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">SimpleReaction</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@CatalysedReaction[Mechanism&lt;:CatalyticReactionNetwork.this.EnzymeMechanism]extendsCatalyticReactionNetwork.this.SimpleReactionwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="CatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork">CatalyticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess.Dimension" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="DimensionextendsAnyRef"></a>
+      <a id="Dimension:Dimension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BaseProcess$Dimension.html"><span class="name">Dimension</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseProcess@DimensionextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Needed for NetCDF et al.</p><div class="fullcomment"><div class="comment cmt"><p>Needed for NetCDF et al. TODO: explain better</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.EnzymeMechanism" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="EnzymeMechanismextendsAnyRef"></a>
+      <a id="EnzymeMechanism:EnzymeMechanism"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CatalyticReactionNetwork$EnzymeMechanism.html"><span class="name">EnzymeMechanism</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@EnzymeMechanismextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="CatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork">CatalyticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork.KineticMechanism" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="KineticMechanismextendsKineticCatalyticReactionNetwork.this.EnzymeMechanism"></a>
+      <a id="KineticMechanism:KineticMechanism"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="KineticCatalyticReactionNetwork$KineticMechanism.html"><span class="name">KineticMechanism</span></a><span class="result"> extends <a href="KineticCatalyticReactionNetwork.html#EnzymeMechanismextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.EnzymeMechanism">EnzymeMechanism</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork@KineticMechanismextendsKineticCatalyticReactionNetwork.this.EnzymeMechanism" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A trait for <code>EnzymeMechanism</code>s that are used to expand a
+catalytic reaction into a set of <code>KineticReaction</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>A trait for <code>EnzymeMechanism</code>s that are used to expand a
+catalytic reaction into a set of <code>KineticReaction</code>s.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReaction" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="KineticReactionextendsKineticReactionNetwork.this.BaseReaction"></a>
+      <a id="KineticReaction:KineticReaction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="KineticReactionNetwork$KineticReaction.html"><span class="name">KineticReaction</span></a><span class="result"> extends <a href="KineticReactionNetwork.html#BaseReactionextendsReactionNetwork.this.SimpleReaction" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">BaseReaction</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.KineticReactionNetwork@KineticReactionextendsKineticReactionNetwork.this.BaseReaction" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReactionFactory" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="KineticReactionFactoryextendsAnyRef"></a>
+      <a id="KineticReactionFactory:KineticReactionFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="KineticReactionNetwork$KineticReactionFactory.html"><span class="name">KineticReactionFactory</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.KineticReactionNetwork@KineticReactionFactoryextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork.MM" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="MMextendsKineticCatalyticReactionNetwork.this.EnzymeMechanismwithKineticCatalyticReactionNetwork.this.KineticMechanismwithProductwithSerializable"></a>
+      <a id="MM:MM"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="KineticCatalyticReactionNetwork$MM.html"><span class="name">MM</span></a><span class="params">(<span name="k1">k1: <span class="extype" name="scala.Double">Double</span></span>, <span name="k2">k2: <span class="extype" name="scala.Double">Double</span></span>, <span name="k3">k3: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result"> extends <a href="KineticCatalyticReactionNetwork.html#EnzymeMechanismextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.EnzymeMechanism">EnzymeMechanism</a> with <a href="KineticCatalyticReactionNetwork$KineticMechanism.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork.KineticMechanism">KineticMechanism</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork@MMextendsKineticCatalyticReactionNetwork.this.EnzymeMechanismwithKineticCatalyticReactionNetwork.this.KineticMechanismwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Michaelis-Menten mechanism: E + S &lt;-&gt;[k1,k2] ES -&gt;[k3] E + P</p><div class="fullcomment"><div class="comment cmt"><p>Michaelis-Menten mechanism: E + S &lt;-&gt;[k1,k2] ES -&gt;[k3] E + P</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticReactionNetwork.MassActionReaction" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="MassActionReactionextendsKineticReactionNetwork.this.BaseReactionwithKineticReactionNetwork.this.KineticReaction"></a>
+      <a id="MassActionReaction:MassActionReaction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="KineticReactionNetwork$MassActionReaction.html"><span class="name">MassActionReaction</span></a><span class="result"> extends <a href="KineticReactionNetwork.html#BaseReactionextendsReactionNetwork.this.SimpleReaction" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">BaseReaction</a> with <a href="KineticReactionNetwork$KineticReaction.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReaction">KineticReaction</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.KineticReactionNetwork@MassActionReactionextendsKineticReactionNetwork.this.BaseReactionwithKineticReactionNetwork.this.KineticReaction" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="MultisetextendsMap[ReactionNetwork.this.Species,Int]"></a>
+      <a id="Multiset:Multiset"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$Multiset.html"><span class="name">Multiset</span></a><span class="result"> extends <span class="extype" name="scala.Predef.Map">Map</span>[<a href="ReactionNetwork.html#Species&lt;:ReactionNetwork.this.BaseSpecies" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Species">Species</a>, <span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@MultisetextendsMap[ReactionNetwork.this.Species,Int]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.MultisetMaker" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="MultisetMakerextendsAnyRef"></a>
+      <a id="MultisetMaker:MultisetMaker"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$MultisetMaker.html"><span class="name">MultisetMaker</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@MultisetMakerextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork.PopulationBasedSpecies" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="PopulationBasedSpeciesextendsVar[PopulationBasedReactionNetwork.this.Base]withPopulationBasedReactionNetwork.this.BaseSpecies"></a>
+      <a id="PopulationBasedSpecies:PopulationBasedSpecies"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="PopulationBasedReactionNetwork$PopulationBasedSpecies.html"><span class="name">PopulationBasedSpecies</span></a><span class="result"> extends <a href="Var.html" class="extype" name="uk.ac.ed.inf.mois.Var">Var</a>[<a href="PopulationBasedReactionNetwork.html#Base=Int" class="extmbr" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork.Base">Base</a>] with <a href="PopulationBasedReactionNetwork.html#BaseSpeciesextendsVar[ReactionNetwork.this.Base]withNumericVar[ReactionNetwork.this.Base]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseSpecies">BaseSpecies</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.PopulationBasedReactionNetwork@PopulationBasedSpeciesextendsVar[PopulationBasedReactionNetwork.this.Base]withPopulationBasedReactionNetwork.this.BaseSpecies" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork.QSS" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="QSSextendsKineticCatalyticReactionNetwork.this.EnzymeMechanismwithKineticCatalyticReactionNetwork.this.KineticMechanismwithProductwithSerializable"></a>
+      <a id="QSS:QSS"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="KineticCatalyticReactionNetwork$QSS.html"><span class="name">QSS</span></a><span class="params">(<span name="vmax">vmax: <span class="extype" name="scala.Double">Double</span></span>, <span name="km">km: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result"> extends <a href="KineticCatalyticReactionNetwork.html#EnzymeMechanismextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.EnzymeMechanism">EnzymeMechanism</a> with <a href="KineticCatalyticReactionNetwork$KineticMechanism.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork.KineticMechanism">KineticMechanism</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork@QSSextendsKineticCatalyticReactionNetwork.this.EnzymeMechanismwithKineticCatalyticReactionNetwork.this.KineticMechanismwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Quasi-steady-state approximation.</p><div class="fullcomment"><div class="comment cmt"><p>Quasi-steady-state approximation.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticReactionNetwork.RateLawReaction" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RateLawReactionextendsKineticReactionNetwork.this.BaseReactionwithKineticReactionNetwork.this.KineticReaction"></a>
+      <a id="RateLawReaction:RateLawReaction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="KineticReactionNetwork$RateLawReaction.html"><span class="name">RateLawReaction</span></a><span class="result"> extends <a href="KineticReactionNetwork.html#BaseReactionextendsReactionNetwork.this.SimpleReaction" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">BaseReaction</a> with <a href="KineticReactionNetwork$KineticReaction.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReaction">KineticReaction</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.KineticReactionNetwork@RateLawReactionextendsKineticReactionNetwork.this.BaseReactionwithKineticReactionNetwork.this.KineticReaction" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork.Reaction" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ReactionextendsStochasticReactionNetwork.this.BaseReactionwithStochasticReactionNetwork.this.UnratedReactionwithStochasticReactionNetwork.this.CatalysableReaction"></a>
+      <a id="Reaction:Reaction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StochasticReactionNetwork$Reaction.html"><span class="name">Reaction</span></a><span class="result"> extends <a href="#BaseReactionextendsReactionNetwork.this.SimpleReaction" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">BaseReaction</a> with <a href="#UnratedReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction">UnratedReaction</a> with <a href="#CatalysableReactionextendsCatalyticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysableReaction">CatalysableReaction</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@ReactionextendsStochasticReactionNetwork.this.BaseReactionwithStochasticReactionNetwork.this.UnratedReactionwithStochasticReactionNetwork.this.CatalysableReaction" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionFactory" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="ReactionFactoryextendsAnyRef"></a>
+      <a id="ReactionFactory:ReactionFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$ReactionFactory.html"><span class="name">ReactionFactory</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@ReactionFactoryextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionMaker" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ReactionMakerextendsAnyRef"></a>
+      <a id="ReactionMaker:ReactionMaker"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$ReactionMaker.html"><span class="name">ReactionMaker</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@ReactionMakerextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.ReactionWithCatalyser" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ReactionWithCatalyserextendsAnyRef"></a>
+      <a id="ReactionWithCatalyser:ReactionWithCatalyser"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CatalyticReactionNetwork$ReactionWithCatalyser.html"><span class="name">ReactionWithCatalyser</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@ReactionWithCatalyserextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="CatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork">CatalyticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SimpleReactionextendsAnyRef"></a>
+      <a id="SimpleReaction:SimpleReaction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$SimpleReaction.html"><span class="name">SimpleReaction</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@SimpleReactionextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork.Species" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Species=PopulationBasedReactionNetwork.this.PopulationBasedSpecies"></a>
+      <a id="Species:Species"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Species</span><span class="result"> = <a href="#PopulationBasedSpeciesextendsVar[PopulationBasedReactionNetwork.this.Base]withPopulationBasedReactionNetwork.this.BaseSpecies" class="extmbr" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork.PopulationBasedSpecies">PopulationBasedSpecies</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@Species=PopulationBasedReactionNetwork.this.PopulationBasedSpecies" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a> → <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.SpeciesFactory" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SpeciesFactoryextendsAnyRef"></a>
+      <a id="SpeciesFactory:SpeciesFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$SpeciesFactory.html"><span class="name">SpeciesFactory</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@SpeciesFactoryextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticReactionNetwork.UnratedReaction" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="UnratedReactionextendsKineticReactionNetwork.this.BaseReaction"></a>
+      <a id="UnratedReaction:UnratedReaction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="KineticReactionNetwork$UnratedReaction.html"><span class="name">UnratedReaction</span></a><span class="result"> extends <a href="KineticReactionNetwork.html#BaseReactionextendsReactionNetwork.this.SimpleReaction" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseReaction">BaseReaction</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.KineticReactionNetwork@UnratedReactionextendsKineticReactionNetwork.this.BaseReaction" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a></dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
+      <a id="!=(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
+      <a id="##():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@##():Int" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#&lt;&lt;&lt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;&lt;&lt;(right:uk.ac.ed.inf.mois.VarContainer):Unit"></a>
+      <a id="&lt;&lt;&lt;(VarContainer):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $less$less$less" class="name">&lt;&lt;&lt;</span><span class="params">(<span name="right">right: <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@&lt;&lt;&lt;(right:uk.ac.ed.inf.mois.VarContainer):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
+      <a id="==(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#&gt;&gt;&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&gt;&gt;&gt;(right:uk.ac.ed.inf.mois.VarContainer):Unit"></a>
+      <a id="&gt;&gt;&gt;(VarContainer):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span title="gt4s: $greater$greater$greater" class="name">&gt;&gt;&gt;</span><span class="params">(<span name="right">right: <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@&gt;&gt;&gt;(right:uk.ac.ed.inf.mois.VarContainer):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#Boolean" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Boolean(meta:uk.ac.ed.inf.mois.VarMeta):uk.ac.ed.inf.mois.BooleanVar"></a>
+      <a id="Boolean(VarMeta):BooleanVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Boolean</span><span class="params">(<span name="meta">meta: <a href="VarMeta.html" class="extype" name="uk.ac.ed.inf.mois.VarMeta">VarMeta</a></span>)</span><span class="result">: <a href="BooleanVar.html" class="extype" name="uk.ac.ed.inf.mois.BooleanVar">BooleanVar</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@Boolean(meta:uk.ac.ed.inf.mois.VarMeta):uk.ac.ed.inf.mois.BooleanVar" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess.Dimension" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Dimension"></a>
+      <a id="Dimension:Dimension"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BaseProcess$Dimension$.html"><span class="name">Dimension</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseProcess@Dimension" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#Double" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Double(meta:uk.ac.ed.inf.mois.VarMeta):uk.ac.ed.inf.mois.DoubleVar"></a>
+      <a id="Double(VarMeta):DoubleVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Double</span><span class="params">(<span name="meta">meta: <a href="VarMeta.html" class="extype" name="uk.ac.ed.inf.mois.VarMeta">VarMeta</a></span>)</span><span class="result">: <a href="DoubleVar.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVar">DoubleVar</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@Double(meta:uk.ac.ed.inf.mois.VarMeta):uk.ac.ed.inf.mois.DoubleVar" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#Float" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Float(meta:uk.ac.ed.inf.mois.VarMeta):uk.ac.ed.inf.mois.FloatVar"></a>
+      <a id="Float(VarMeta):FloatVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Float</span><span class="params">(<span name="meta">meta: <a href="VarMeta.html" class="extype" name="uk.ac.ed.inf.mois.VarMeta">VarMeta</a></span>)</span><span class="result">: <a href="FloatVar.html" class="extype" name="uk.ac.ed.inf.mois.FloatVar">FloatVar</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@Float(meta:uk.ac.ed.inf.mois.VarMeta):uk.ac.ed.inf.mois.FloatVar" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#Int" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Int(meta:uk.ac.ed.inf.mois.VarMeta):uk.ac.ed.inf.mois.IntVar"></a>
+      <a id="Int(VarMeta):IntVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Int</span><span class="params">(<span name="meta">meta: <a href="VarMeta.html" class="extype" name="uk.ac.ed.inf.mois.VarMeta">VarMeta</a></span>)</span><span class="result">: <a href="IntVar.html" class="extype" name="uk.ac.ed.inf.mois.IntVar">IntVar</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@Int(meta:uk.ac.ed.inf.mois.VarMeta):uk.ac.ed.inf.mois.IntVar" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#Long" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Long(meta:uk.ac.ed.inf.mois.VarMeta):uk.ac.ed.inf.mois.LongVar"></a>
+      <a id="Long(VarMeta):LongVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Long</span><span class="params">(<span name="meta">meta: <a href="VarMeta.html" class="extype" name="uk.ac.ed.inf.mois.VarMeta">VarMeta</a></span>)</span><span class="result">: <a href="LongVar.html" class="extype" name="uk.ac.ed.inf.mois.LongVar">LongVar</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@Long(meta:uk.ac.ed.inf.mois.VarMeta):uk.ac.ed.inf.mois.LongVar" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticReactionNetwork#MassActionReaction" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="MassActionReaction:KineticReactionNetwork.this.KineticReactionFactory"></a>
+      <a id="MassActionReaction:KineticReactionFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">MassActionReaction</span><span class="result">: <a href="#KineticReactionFactoryextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReactionFactory">KineticReactionFactory</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@MassActionReaction:KineticReactionNetwork.this.KineticReactionFactory" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Multiset"></a>
+      <a id="Multiset:Multiset"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$Multiset$.html"><span class="name">Multiset</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@Multiset" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.MultisetConversion" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="MultisetConversion"></a>
+      <a id="MultisetConversion:MultisetConversion"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$MultisetConversion$.html"><span class="name">MultisetConversion</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@MultisetConversion" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticReactionNetwork#RateLawReaction" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="RateLawReaction:KineticReactionNetwork.this.KineticReactionFactory"></a>
+      <a id="RateLawReaction:KineticReactionFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">RateLawReaction</span><span class="result">: <a href="#KineticReactionFactoryextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReactionFactory">KineticReactionFactory</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@RateLawReaction:KineticReactionNetwork.this.KineticReactionFactory" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork.Reaction" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Reaction"></a>
+      <a id="Reaction:Reaction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="StochasticReactionNetwork$Reaction$.html"><span class="name">Reaction</span></a><span class="result"> extends <a href="#ReactionFactoryextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.ReactionFactory">ReactionFactory</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@Reaction" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.StochasticReactionNetwork">StochasticReactionNetwork</a> → <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork.Species" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="Species"></a>
+      <a id="Species:Species"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PopulationBasedReactionNetwork$Species$.html"><span class="name">Species</span></a><span class="result"> extends <a href="PopulationBasedReactionNetwork.html#SpeciesFactoryextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.SpeciesFactory">SpeciesFactory</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.PopulationBasedReactionNetwork@Species" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a> → <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#String2Meta" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="String2Meta(s:String):uk.ac.ed.inf.mois.VarMeta"></a>
+      <a id="String2Meta(String):VarMeta"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">String2Meta</span><span class="params">(<span name="s">s: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <a href="VarMeta.html" class="extype" name="uk.ac.ed.inf.mois.VarMeta">VarMeta</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@String2Meta(s:String):uk.ac.ed.inf.mois.VarMeta" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd><dt>Annotations</dt><dd>
+                <span class="name">@inline</span><span class="args">()</span>
+              
+        </dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#addBasicAnnotations" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addBasicAnnotations:Unit"></a>
+      <a id="addBasicAnnotations:Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addBasicAnnotations</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@addBasicAnnotations:Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Automatically annotate the process with its software name and version</p><div class="fullcomment"><div class="comment cmt"><p>Automatically annotate the process with its software name and version</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#addStepHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addStepHandler(sh:uk.ac.ed.inf.mois.StepHandler):Unit"></a>
+      <a id="addStepHandler(StepHandler):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addStepHandler</span><span class="params">(<span name="sh">sh: <a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@addStepHandler(sh:uk.ac.ed.inf.mois.StepHandler):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#addVar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addVar(nv:uk.ac.ed.inf.mois.BooleanVar):uk.ac.ed.inf.mois.BooleanVar"></a>
+      <a id="addVar(BooleanVar):BooleanVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addVar</span><span class="params">(<span name="nv">nv: <a href="BooleanVar.html" class="extype" name="uk.ac.ed.inf.mois.BooleanVar">BooleanVar</a></span>)</span><span class="result">: <a href="BooleanVar.html" class="extype" name="uk.ac.ed.inf.mois.BooleanVar">BooleanVar</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@addVar(nv:uk.ac.ed.inf.mois.BooleanVar):uk.ac.ed.inf.mois.BooleanVar" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#addVar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addVar(nv:uk.ac.ed.inf.mois.DoubleVar):uk.ac.ed.inf.mois.DoubleVar"></a>
+      <a id="addVar(DoubleVar):DoubleVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addVar</span><span class="params">(<span name="nv">nv: <a href="DoubleVar.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVar">DoubleVar</a></span>)</span><span class="result">: <a href="DoubleVar.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVar">DoubleVar</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@addVar(nv:uk.ac.ed.inf.mois.DoubleVar):uk.ac.ed.inf.mois.DoubleVar" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#addVar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addVar(nv:uk.ac.ed.inf.mois.FloatVar):uk.ac.ed.inf.mois.FloatVar"></a>
+      <a id="addVar(FloatVar):FloatVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addVar</span><span class="params">(<span name="nv">nv: <a href="FloatVar.html" class="extype" name="uk.ac.ed.inf.mois.FloatVar">FloatVar</a></span>)</span><span class="result">: <a href="FloatVar.html" class="extype" name="uk.ac.ed.inf.mois.FloatVar">FloatVar</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@addVar(nv:uk.ac.ed.inf.mois.FloatVar):uk.ac.ed.inf.mois.FloatVar" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#addVar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addVar(nv:uk.ac.ed.inf.mois.LongVar):uk.ac.ed.inf.mois.LongVar"></a>
+      <a id="addVar(LongVar):LongVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addVar</span><span class="params">(<span name="nv">nv: <a href="LongVar.html" class="extype" name="uk.ac.ed.inf.mois.LongVar">LongVar</a></span>)</span><span class="result">: <a href="LongVar.html" class="extype" name="uk.ac.ed.inf.mois.LongVar">LongVar</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@addVar(nv:uk.ac.ed.inf.mois.LongVar):uk.ac.ed.inf.mois.LongVar" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#addVar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="addVar(nv:uk.ac.ed.inf.mois.IntVar):uk.ac.ed.inf.mois.IntVar"></a>
+      <a id="addVar(IntVar):IntVar"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">addVar</span><span class="params">(<span name="nv">nv: <a href="IntVar.html" class="extype" name="uk.ac.ed.inf.mois.IntVar">IntVar</a></span>)</span><span class="result">: <a href="IntVar.html" class="extype" name="uk.ac.ed.inf.mois.IntVar">IntVar</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@addVar(nv:uk.ac.ed.inf.mois.IntVar):uk.ac.ed.inf.mois.IntVar" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork#allVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="allVars:scala.collection.mutable.Map[uk.ac.ed.inf.mois.VarMeta,uk.ac.ed.inf.mois.Var[_]]"></a>
+      <a id="allVars:Map[VarMeta,Var[_]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">allVars</span><span class="result">: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<a href="VarMeta.html" class="extype" name="uk.ac.ed.inf.mois.VarMeta">VarMeta</a>, <a href="Var.html" class="extype" name="uk.ac.ed.inf.mois.Var">Var</a>[_]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@allVars:scala.collection.mutable.Map[uk.ac.ed.inf.mois.VarMeta,uk.ac.ed.inf.mois.Var[_]]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a> → <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.Annotation#annotate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="annotate(k:String,v:Any):Unit"></a>
+      <a id="annotate(String,Any):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">annotate</span><span class="params">(<span name="k">k: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="v">v: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@annotate(k:String,v:Any):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Add an annotation</p><div class="fullcomment"><div class="comment cmt"><p>Add an annotation</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.Annotation#annotations" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="annotations:scala.collection.mutable.Map[String,Any]"></a>
+      <a id="annotations:Map[String,Any]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">annotations</span><span class="result">: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Any">Any</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@annotations:scala.collection.mutable.Map[String,Any]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#apply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="apply(t:Double,tau:Double):Unit"></a>
+      <a id="apply(Double,Double):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">apply</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Double">Double</span></span>, <span name="tau">tau: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@apply(t:Double,tau:Double):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A wrapper around the user defined step function to calculate
+changes.</p><div class="fullcomment"><div class="comment cmt"><p>A wrapper around the user defined step function to calculate
+changes.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#applyReaction" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="applyReaction(rxn:StochasticReactionNetwork.this.KineticReaction):Unit"></a>
+      <a id="applyReaction(KineticReaction):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">applyReaction</span><span class="params">(<span name="rxn">rxn: <a href="#KineticReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReaction">KineticReaction</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@applyReaction(rxn:StochasticReactionNetwork.this.KineticReaction):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
+      <a id="asInstanceOf[T0]:T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#boolVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="boolVars:uk.ac.ed.inf.mois.VarMap[Boolean,uk.ac.ed.inf.mois.BooleanVar]"></a>
+      <a id="boolVars:VarMap[Boolean,BooleanVar]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">boolVars</span><span class="result">: <a href="VarMap.html" class="extype" name="uk.ac.ed.inf.mois.VarMap">VarMap</a>[<span class="extype" name="scala.Boolean">Boolean</span>, <a href="BooleanVar.html" class="extype" name="uk.ac.ed.inf.mois.BooleanVar">BooleanVar</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@boolVars:uk.ac.ed.inf.mois.VarMap[Boolean,uk.ac.ed.inf.mois.BooleanVar]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork#catalyticToKinetic" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="catalyticToKinetic[M&lt;:KineticCatalyticReactionNetwork.this.KineticMechanism](r:KineticCatalyticReactionNetwork.this.CatalysedReaction[M]):Seq[KineticCatalyticReactionNetwork.this.KineticReaction]"></a>
+      <a id="catalyticToKinetic[M&lt;:KineticMechanism](CatalysedReaction[M]):Seq[KineticReaction]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">catalyticToKinetic</span><span class="tparams">[<span name="M">M &lt;: <a href="#KineticMechanismextendsKineticCatalyticReactionNetwork.this.EnzymeMechanism" class="extmbr" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork.KineticMechanism">KineticMechanism</a></span>]</span><span class="params">(<span name="r">r: <a href="#CatalysedReaction[Mechanism&lt;:CatalyticReactionNetwork.this.EnzymeMechanism]extendsCatalyticReactionNetwork.this.SimpleReactionwithProductwithSerializable" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysedReaction">CatalysedReaction</a>[<span class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork.catalyticToKinetic.M">M</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="#KineticReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReaction">KineticReaction</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@catalyticToKinetic[M&lt;:KineticCatalyticReactionNetwork.this.KineticMechanism](r:KineticCatalyticReactionNetwork.this.CatalysedReaction[M]):Seq[KineticCatalyticReactionNetwork.this.KineticReaction]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a></dd></dl></div>
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
+      <a id="clone():AnyRef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.CloneNotSupportedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#count" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="count(m:StochasticReactionNetwork.this.Multiset):Double"></a>
+      <a id="count(Multiset):Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">count</span><span class="params">(<span name="m">m: <a href="#MultisetextendsMap[ReactionNetwork.this.Species,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">Multiset</a></span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@count(m:StochasticReactionNetwork.this.Multiset):Double" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.StochasticReactionNetwork">StochasticReactionNetwork</a> → <a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#dimensions" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="dimensions:scala.collection.mutable.Map[uk.ac.ed.inf.mois.Var[_],Int]"></a>
+      <a id="dimensions:Map[Var[_],Int]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dimensions</span><span class="result">: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<a href="Var.html" class="extype" name="uk.ac.ed.inf.mois.Var">Var</a>[_], <span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@dimensions:scala.collection.mutable.Map[uk.ac.ed.inf.mois.Var[_],Int]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#doubleVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="doubleVars:uk.ac.ed.inf.mois.VarMap[Double,uk.ac.ed.inf.mois.DoubleVar]"></a>
+      <a id="doubleVars:VarMap[Double,DoubleVar]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">doubleVars</span><span class="result">: <a href="VarMap.html" class="extype" name="uk.ac.ed.inf.mois.VarMap">VarMap</a>[<span class="extype" name="scala.Double">Double</span>, <a href="DoubleVar.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVar">DoubleVar</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@doubleVars:uk.ac.ed.inf.mois.VarMap[Double,uk.ac.ed.inf.mois.DoubleVar]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork#enzymeComplex" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="enzymeComplex(enzyme:KineticCatalyticReactionNetwork.this.Species,substrates:KineticCatalyticReactionNetwork.this.Species*):KineticCatalyticReactionNetwork.this.Species"></a>
+      <a id="enzymeComplex(Species,Species*):Species"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">enzymeComplex</span><span class="params">(<span name="enzyme">enzyme: <a href="#Species=PopulationBasedReactionNetwork.this.PopulationBasedSpecies" class="extmbr" name="uk.ac.ed.inf.mois.StochasticReactionNetwork.Species">Species</a></span>, <span name="substrates">substrates: <a href="#Species=PopulationBasedReactionNetwork.this.PopulationBasedSpecies" class="extmbr" name="uk.ac.ed.inf.mois.StochasticReactionNetwork.Species">Species</a>*</span>)</span><span class="result">: <a href="#Species=PopulationBasedReactionNetwork.this.PopulationBasedSpecies" class="extmbr" name="uk.ac.ed.inf.mois.StochasticReactionNetwork.Species">Species</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@enzymeComplex(enzyme:KineticCatalyticReactionNetwork.this.Species,substrates:KineticCatalyticReactionNetwork.this.Species*):KineticCatalyticReactionNetwork.this.Species" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a></dd></dl></div>
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
+      <a id="eq(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="equals(x$1:Any):Boolean"></a>
+      <a id="equals(Any):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
+      <a id="finalize():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="symbol">classOf[java.lang.Throwable]</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#finish" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finish:Unit"></a>
+      <a id="finish:Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">finish</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@finish:Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Finish hook.</p><div class="fullcomment"><div class="comment cmt"><p>Finish hook. Expected to be called once at the end of theprocess.
+Finishes the step handlers
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#floatVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="floatVars:uk.ac.ed.inf.mois.VarMap[Float,uk.ac.ed.inf.mois.FloatVar]"></a>
+      <a id="floatVars:VarMap[Float,FloatVar]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">floatVars</span><span class="result">: <a href="VarMap.html" class="extype" name="uk.ac.ed.inf.mois.VarMap">VarMap</a>[<span class="extype" name="scala.Float">Float</span>, <a href="FloatVar.html" class="extype" name="uk.ac.ed.inf.mois.FloatVar">FloatVar</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@floatVars:uk.ac.ed.inf.mois.VarMap[Float,uk.ac.ed.inf.mois.FloatVar]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#fromJSON" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fromJSON(s:String):Seq[uk.ac.ed.inf.mois.Var[_]]"></a>
+      <a id="fromJSON(String):Seq[Var[_]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fromJSON</span><span class="params">(<span name="s">s: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="Var.html" class="extype" name="uk.ac.ed.inf.mois.Var">Var</a>[_]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@fromJSON(s:String):Seq[uk.ac.ed.inf.mois.Var[_]]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Parses a JSON string and adds all variable definitions that it
+finds to this VarContainer.</p><div class="fullcomment"><div class="comment cmt"><p>Parses a JSON string and adds all variable definitions that it
+finds to this VarContainer.
+</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the <code>Seq</code> of added variables.
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="hashCode():Int"></a>
+      <a id="hashCode():Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#init" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="init(t:Double):Unit"></a>
+      <a id="init(Double):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">init</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@init(t:Double):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Initialisation hook.</p><div class="fullcomment"><div class="comment cmt"><p>Initialisation hook. Expected to be called once before the process
+runs for the first time. Initialises step handlers.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#intVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="intVars:uk.ac.ed.inf.mois.VarMap[Int,uk.ac.ed.inf.mois.IntVar]"></a>
+      <a id="intVars:VarMap[Int,IntVar]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">intVars</span><span class="result">: <a href="VarMap.html" class="extype" name="uk.ac.ed.inf.mois.VarMap">VarMap</a>[<span class="extype" name="scala.Int">Int</span>, <a href="IntVar.html" class="extype" name="uk.ac.ed.inf.mois.IntVar">IntVar</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@intVars:uk.ac.ed.inf.mois.VarMap[Int,uk.ac.ed.inf.mois.IntVar]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <a id="isInstanceOf[T0]:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#leftMerge" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="leftMerge(right:uk.ac.ed.inf.mois.VarContainer):Unit"></a>
+      <a id="leftMerge(VarContainer):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">leftMerge</span><span class="params">(<span name="right">right: <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@leftMerge(right:uk.ac.ed.inf.mois.VarContainer):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#leftUpdate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="leftUpdate(right:uk.ac.ed.inf.mois.VarContainer):Unit"></a>
+      <a id="leftUpdate(VarContainer):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">leftUpdate</span><span class="params">(<span name="right">right: <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@leftUpdate(right:uk.ac.ed.inf.mois.VarContainer):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#longVars" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="longVars:uk.ac.ed.inf.mois.VarMap[Long,uk.ac.ed.inf.mois.LongVar]"></a>
+      <a id="longVars:VarMap[Long,LongVar]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">longVars</span><span class="result">: <a href="VarMap.html" class="extype" name="uk.ac.ed.inf.mois.VarMap">VarMap</a>[<span class="extype" name="scala.Long">Long</span>, <a href="LongVar.html" class="extype" name="uk.ac.ed.inf.mois.LongVar">LongVar</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@longVars:uk.ac.ed.inf.mois.VarMap[Long,uk.ac.ed.inf.mois.LongVar]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#markovStep" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="markovStep:Unit"></a>
+      <a id="markovStep:Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">markovStep</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@markovStep:Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#name" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="name:String"></a>
+      <a id="name:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">name</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@name:String" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.StochasticReactionNetwork">StochasticReactionNetwork</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
+      <a id="ne(AnyRef):Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#nextReaction" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="nextReaction(totalPropensity:Double):StochasticReactionNetwork.this.KineticReaction"></a>
+      <a id="nextReaction(Double):KineticReaction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">nextReaction</span><span class="params">(<span name="totalPropensity">totalPropensity: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <a href="#KineticReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReaction">KineticReaction</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@nextReaction(totalPropensity:Double):StochasticReactionNetwork.this.KineticReaction" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
+      <a id="notify():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
+      <a id="notifyAll():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork#numericBase" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="numericBase:Numeric[Int]"></a>
+      <a id="numericBase:Numeric[Int]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">numericBase</span><span class="result">: <span class="extype" name="scala.Numeric">Numeric</span>[<span class="extype" name="scala.Int">Int</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@numericBase:Numeric[Int]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a> → <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#pid" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="pid:Int"></a>
+      <a id="pid:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">pid</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@pid:Int" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Automatically assigned (locally) unique process identifier</p><div class="fullcomment"><div class="comment cmt"><p>Automatically assigned (locally) unique process identifier</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#propensities" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="propensities:Array[Double]"></a>
+      <a id="propensities:Array[Double]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">propensities</span><span class="result">: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Double">Double</span>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@propensities:Array[Double]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#reactions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="reactions(rss:Seq[StochasticReactionNetwork.this.KineticReaction]*):Unit"></a>
+      <a id="reactions(Seq[KineticReaction]*):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">reactions</span><span class="params">(<span name="rss">rss: <span class="extype" name="scala.Seq">Seq</span>[<a href="#KineticReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReaction">KineticReaction</a>]*</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@reactions(rss:Seq[StochasticReactionNetwork.this.KineticReaction]*):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#reset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="reset(t:Double):Unit"></a>
+      <a id="reset(Double):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">reset</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@reset(t:Double):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Reset hook.</p><div class="fullcomment"><div class="comment cmt"><p>Reset hook. May be called as necessary. Resets the step handlers.
+May be overridden in sub-classes to reset internal state. Rember
+to call <code>super.reset(t)</code> if you do this!
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#rng" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="rng:scala.util.Random.type"></a>
+      <a id="rng:Random.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rng</span><span class="result">: <span class="extype" name="scala.util.Random">Random</span>.type</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@rng:scala.util.Random.type" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#rxnToSeq" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="rxnToSeq(r:StochasticReactionNetwork.this.KineticReaction):Seq[StochasticReactionNetwork.this.KineticReaction]"></a>
+      <a id="rxnToSeq(KineticReaction):Seq[KineticReaction]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rxnToSeq</span><span class="params">(<span name="r">r: <a href="#KineticReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReaction">KineticReaction</a></span>)</span><span class="result">: <span class="extype" name="scala.collection.Seq">Seq</span>[<a href="#KineticReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReaction">KineticReaction</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@rxnToSeq(r:StochasticReactionNetwork.this.KineticReaction):Seq[StochasticReactionNetwork.this.KineticReaction]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#rxns" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="rxns:scala.collection.mutable.ArrayBuffer[StochasticReactionNetwork.this.KineticReaction]"></a>
+      <a id="rxns:ArrayBuffer[KineticReaction]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">rxns</span><span class="result">: <span class="extype" name="scala.collection.mutable.ArrayBuffer">ArrayBuffer</span>[<a href="#KineticReactionextendsKineticReactionNetwork.this.BaseReaction" class="extmbr" name="uk.ac.ed.inf.mois.KineticReactionNetwork.KineticReaction">KineticReaction</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@rxns:scala.collection.mutable.ArrayBuffer[StochasticReactionNetwork.this.KineticReaction]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork#species" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="species:uk.ac.ed.inf.mois.VarMap[ReactionNetwork.this.Base,ReactionNetwork.this.Species]"></a>
+      <a id="species:VarMap[Base,Species]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">species</span><span class="result">: <a href="VarMap.html" class="extype" name="uk.ac.ed.inf.mois.VarMap">VarMap</a>[<a href="#Base=Int" class="extmbr" name="uk.ac.ed.inf.mois.StochasticReactionNetwork.Base">Base</a>, <a href="#Species=PopulationBasedReactionNetwork.this.PopulationBasedSpecies" class="extmbr" name="uk.ac.ed.inf.mois.StochasticReactionNetwork.Species">Species</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@species:uk.ac.ed.inf.mois.VarMap[ReactionNetwork.this.Base,ReactionNetwork.this.Species]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#state" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="state:Seq[uk.ac.ed.inf.mois.Var[_]]"></a>
+      <a id="state:Seq[Var[_]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">state</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<a href="Var.html" class="extype" name="uk.ac.ed.inf.mois.Var">Var</a>[_]]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@state:Seq[uk.ac.ed.inf.mois.Var[_]]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">All variables defined in this <code>BaseProcess</code>.</p><div class="fullcomment"><div class="comment cmt"><p>All variables defined in this <code>BaseProcess</code>.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#step" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="step(t:Double,dt:Double):Unit"></a>
+      <a id="step(Double,Double):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">step</span><span class="params">(<span name="t">t: <span class="extype" name="scala.Double">Double</span></span>, <span name="dt">dt: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@step(t:Double,dt:Double):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This function takes the state from where it is at
+time t to where it is at t + tau.</p><div class="fullcomment"><div class="comment cmt"><p>This function takes the state from where it is at
+time t to where it is at t + tau. This must be supplied
+by concrete sub-classes.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.StochasticReactionNetwork">StochasticReactionNetwork</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#stepHandlers" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="stepHandlers:scala.collection.mutable.ArrayBuffer[uk.ac.ed.inf.mois.StepHandler]"></a>
+      <a id="stepHandlers:ArrayBuffer[StepHandler]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stepHandlers</span><span class="result">: <span class="extype" name="scala.collection.mutable.ArrayBuffer">ArrayBuffer</span>[<a href="StepHandler.html" class="extype" name="uk.ac.ed.inf.mois.StepHandler">StepHandler</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@stepHandlers:scala.collection.mutable.ArrayBuffer[uk.ac.ed.inf.mois.StepHandler]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#stringPrefix" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="stringPrefix:String"></a>
+      <a id="stringPrefix:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">stringPrefix</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@stringPrefix:String" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.StochasticReactionNetwork">StochasticReactionNetwork</a> → <a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a> → <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a> → <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork#time" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="time:Double"></a>
+      <a id="time:Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">var</span>
+      </span>
+      <span class="symbol">
+        <span class="name">time</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@time:Double" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="uk.ac.ed.inf.mois.VarContainer#toJSON" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toJSON:String"></a>
+      <a id="toJSON:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toJSON</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@toJSON:String" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Creates a JSON string with all variables in this VarContainer.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a JSON string with all variables in this VarContainer.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseProcess#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="toString():String"></a>
+      <a id="toString():String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@toString():String" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> → AnyRef → Any</dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
+      <a id="wait():Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
+      <a id="wait(Long,Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
+      <a id="wait(Long):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.StochasticReactionNetwork@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+                <span class="name">@throws</span><span class="args">(<span>
+      
+      <span class="defval" name="classOf[java.lang.InterruptedException]">...</span>
+    </span>)</span>
+              
+        </dd></dl></div>
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">
+              <h3>Inherited from <a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork">
+              <h3>Inherited from <a href="CatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork">CatalyticReactionNetwork</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.KineticReactionNetwork">
+              <h3>Inherited from <a href="KineticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticReactionNetwork">KineticReactionNetwork</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">
+              <h3>Inherited from <a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.ReactionNetwork">
+              <h3>Inherited from <a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.BaseProcess">
+              <h3>Inherited from <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.Annotation">
+              <h3>Inherited from <a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a></h3>
+            </div><div class="parent" name="uk.ac.ed.inf.mois.VarContainer">
+              <h3>Inherited from <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
+        </div>
+
+      </div>
+
+      <div id="tooltip"></div>
+
+      <div id="footer">  </div>
+
+
+    </body>
+      </html>

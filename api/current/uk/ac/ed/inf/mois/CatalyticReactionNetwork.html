@@ -52,7 +52,7 @@
           <div class="superTypes hiddenContent"><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a>, <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a>, <a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a>, <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
             <span class="toggle">Known Subclasses</span>
-            <div class="subClasses hiddenContent"><a href="DeterministicReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork">DeterministicReactionNetwork</a>, <a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a></div>
+            <div class="subClasses hiddenContent"><a href="DeterministicReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.DeterministicReactionNetwork">DeterministicReactionNetwork</a>, <a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a>, <a href="StochasticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.StochasticReactionNetwork">StochasticReactionNetwork</a></div>
           </div></div>
         
 
@@ -126,19 +126,19 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.BaseSpecie" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="BaseSpecieextendsVar[ReactionNetwork.this.Base]withNumericVar[ReactionNetwork.this.Base]"></a>
-      <a id="BaseSpecie:BaseSpecie"></a>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.BaseSpecies" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="BaseSpeciesextendsVar[ReactionNetwork.this.Base]withNumericVar[ReactionNetwork.this.Base]"></a>
+      <a id="BaseSpecies:BaseSpecies"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="ReactionNetwork$BaseSpecie.html"><span class="name">BaseSpecie</span></a><span class="result"> extends <a href="Var.html" class="extype" name="uk.ac.ed.inf.mois.Var">Var</a>[<a href="ReactionNetwork.html#Base" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Base">Base</a>] with <a href="NumericVar.html" class="extype" name="uk.ac.ed.inf.mois.NumericVar">NumericVar</a>[<a href="ReactionNetwork.html#Base" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Base">Base</a>]</span>
+        <a href="ReactionNetwork$BaseSpecies.html"><span class="name">BaseSpecies</span></a><span class="result"> extends <a href="Var.html" class="extype" name="uk.ac.ed.inf.mois.Var">Var</a>[<a href="ReactionNetwork.html#Base" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Base">Base</a>] with <a href="NumericVar.html" class="extype" name="uk.ac.ed.inf.mois.NumericVar">NumericVar</a>[<a href="ReactionNetwork.html#Base" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Base">Base</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@BaseSpecieextendsVar[ReactionNetwork.this.Base]withNumericVar[ReactionNetwork.this.Base]" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@BaseSpeciesextendsVar[ReactionNetwork.this.Base]withNumericVar[ReactionNetwork.this.Base]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -169,7 +169,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="CatalyticReactionNetwork$CatalysedReaction.html"><span class="name">CatalysedReaction</span></a><span class="tparams">[<span name="Mechanism">Mechanism &lt;: <a href="CatalyticReactionNetwork$EnzymeMechanism.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.EnzymeMechanism">EnzymeMechanism</a></span>]</span><span class="params">(<span name="lhs">lhs: <a href="#MultisetextendsMap[ReactionNetwork.this.Specie,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">CatalyticReactionNetwork.Multiset</a></span>, <span name="rhs">rhs: <a href="#MultisetextendsMap[ReactionNetwork.this.Specie,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">CatalyticReactionNetwork.Multiset</a></span>, <span name="catalyser">catalyser: <a href="#Specie&lt;:ReactionNetwork.this.BaseSpecie" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.Specie">CatalyticReactionNetwork.Specie</a></span>, <span name="mechanism">mechanism: <span class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysedReaction.Mechanism">Mechanism</span></span>)</span><span class="result"> extends <a href="#SimpleReactionextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">SimpleReaction</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="CatalyticReactionNetwork$CatalysedReaction.html"><span class="name">CatalysedReaction</span></a><span class="tparams">[<span name="Mechanism">Mechanism &lt;: <a href="CatalyticReactionNetwork$EnzymeMechanism.html" class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.EnzymeMechanism">EnzymeMechanism</a></span>]</span><span class="params">(<span name="lhs">lhs: <a href="#MultisetextendsMap[ReactionNetwork.this.Species,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">CatalyticReactionNetwork.Multiset</a></span>, <span name="rhs">rhs: <a href="#MultisetextendsMap[ReactionNetwork.this.Species,Int]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset">CatalyticReactionNetwork.Multiset</a></span>, <span name="catalyser">catalyser: <a href="#Species&lt;:ReactionNetwork.this.BaseSpecies" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.Species">CatalyticReactionNetwork.Species</a></span>, <span name="mechanism">mechanism: <span class="extype" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.CatalysedReaction.Mechanism">Mechanism</span></span>)</span><span class="result"> extends <a href="#SimpleReactionextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.SimpleReaction">SimpleReaction</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@CatalysedReaction[Mechanism&lt;:CatalyticReactionNetwork.this.EnzymeMechanism]extendsCatalyticReactionNetwork.this.SimpleReactionwithProductwithSerializable" title="Permalink" target="_top">
@@ -212,7 +212,7 @@
     </span>
       
     </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.Multiset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="MultisetextendsMap[ReactionNetwork.this.Specie,Int]"></a>
+      <a id="MultisetextendsMap[ReactionNetwork.this.Species,Int]"></a>
       <a id="Multiset:Multiset"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -220,10 +220,10 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ReactionNetwork$Multiset.html"><span class="name">Multiset</span></a><span class="result"> extends <span class="extype" name="scala.Predef.Map">Map</span>[<a href="ReactionNetwork.html#Specie&lt;:ReactionNetwork.this.BaseSpecie" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Specie">Specie</a>, <span class="extype" name="scala.Int">Int</span>]</span>
+        <a href="ReactionNetwork$Multiset.html"><span class="name">Multiset</span></a><span class="result"> extends <span class="extype" name="scala.Predef.Map">Map</span>[<a href="ReactionNetwork.html#Species&lt;:ReactionNetwork.this.BaseSpecies" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.Species">Species</a>, <span class="extype" name="scala.Int">Int</span>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@MultisetextendsMap[ReactionNetwork.this.Specie,Int]" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@MultisetextendsMap[ReactionNetwork.this.Species,Int]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -330,36 +330,36 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.Specie" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="Specie&lt;:ReactionNetwork.this.BaseSpecie"></a>
-      <a id="Specie:Specie"></a>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.Species" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="Species&lt;:ReactionNetwork.this.BaseSpecies"></a>
+      <a id="Species:Species"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">type</span>
       </span>
       <span class="symbol">
-        <span class="name">Specie</span><span class="result"> &lt;: <a href="#BaseSpecieextendsVar[ReactionNetwork.this.Base]withNumericVar[ReactionNetwork.this.Base]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseSpecie">BaseSpecie</a></span>
+        <span class="name">Species</span><span class="result"> &lt;: <a href="#BaseSpeciesextendsVar[ReactionNetwork.this.Base]withNumericVar[ReactionNetwork.this.Base]" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.BaseSpecies">BaseSpecies</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@Specie&lt;:ReactionNetwork.this.BaseSpecie" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@Species&lt;:ReactionNetwork.this.BaseSpecies" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.SpecieFactory" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="SpecieFactoryextendsAnyRef"></a>
-      <a id="SpecieFactory:SpecieFactory"></a>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.SpeciesFactory" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="SpeciesFactoryextendsAnyRef"></a>
+      <a id="SpeciesFactory:SpeciesFactory"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="ReactionNetwork$SpecieFactory.html"><span class="name">SpecieFactory</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="ReactionNetwork$SpeciesFactory.html"><span class="name">SpeciesFactory</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@SpecieFactoryextendsAnyRef" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@SpeciesFactoryextendsAnyRef" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -386,19 +386,19 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork#Specie" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="Specie:ReactionNetwork.this.SpecieFactory"></a>
-      <a id="Specie:SpecieFactory"></a>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork#Species" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="Species:ReactionNetwork.this.SpeciesFactory"></a>
+      <a id="Species:SpeciesFactory"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">Specie</span><span class="result">: <a href="#SpecieFactoryextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.SpecieFactory">SpecieFactory</a></span>
+        <span class="name">Species</span><span class="result">: <a href="#SpeciesFactoryextendsAnyRef" class="extmbr" name="uk.ac.ed.inf.mois.ReactionNetwork.SpeciesFactory">SpeciesFactory</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@Specie:ReactionNetwork.this.SpecieFactory" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@Species:ReactionNetwork.this.SpeciesFactory" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -420,6 +420,23 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork#numericBase" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="numericBase:Numeric[ReactionNetwork.this.Base]"></a>
+      <a id="numericBase:Numeric[Base]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">numericBase</span><span class="result">: <span class="extype" name="scala.Numeric">Numeric</span>[<a href="#Base" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.Base">Base</a>]</span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@numericBase:Numeric[ReactionNetwork.this.Base]" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#step" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="step(t:Double,tau:Double):Unit"></a>
       <a id="step(Double,Double):Unit"></a>
@@ -652,6 +669,23 @@ by concrete sub-classes.
       </span>
       </h4><span class="permalink">
       <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@Multiset" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.ReactionNetwork">ReactionNetwork</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.ReactionNetwork.MultisetConversion" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="MultisetConversion"></a>
+      <a id="MultisetConversion:MultisetConversion"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ReactionNetwork$MultisetConversion$.html"><span class="name">MultisetConversion</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.ReactionNetwork@MultisetConversion" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -1298,18 +1332,18 @@ May be overridden in sub-classes to reset internal state. Rember
 to call <code>super.reset(t)</code> if you do this!
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.ReactionNetwork#species" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="species:uk.ac.ed.inf.mois.VarMap[ReactionNetwork.this.Base,ReactionNetwork.this.Specie]"></a>
-      <a id="species:VarMap[Base,Specie]"></a>
+      <a id="species:uk.ac.ed.inf.mois.VarMap[ReactionNetwork.this.Base,ReactionNetwork.this.Species]"></a>
+      <a id="species:VarMap[Base,Species]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">species</span><span class="result">: <a href="VarMap.html" class="extype" name="uk.ac.ed.inf.mois.VarMap">VarMap</a>[<a href="#Base" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.Base">Base</a>, <a href="#Specie&lt;:ReactionNetwork.this.BaseSpecie" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.Specie">Specie</a>]</span>
+        <span class="name">species</span><span class="result">: <a href="VarMap.html" class="extype" name="uk.ac.ed.inf.mois.VarMap">VarMap</a>[<a href="#Base" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.Base">Base</a>, <a href="#Species&lt;:ReactionNetwork.this.BaseSpecies" class="extmbr" name="uk.ac.ed.inf.mois.CatalyticReactionNetwork.Species">Species</a>]</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@species:uk.ac.ed.inf.mois.VarMap[ReactionNetwork.this.Base,ReactionNetwork.this.Specie]" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.CatalyticReactionNetwork@species:uk.ac.ed.inf.mois.VarMap[ReactionNetwork.this.Base,ReactionNetwork.this.Species]" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>

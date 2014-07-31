@@ -112,8 +112,25 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="uk.ac.ed.inf.mois.BaseODE.Derivative" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Derivative=Array[Double]=&gt;Double"></a>
+              <ol><li name="uk.ac.ed.inf.mois.BaseODE.AddODE" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="AddODEextendsAnyRef"></a>
+      <a id="AddODE:AddODE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="BaseODE$AddODE.html"><span class="name">AddODE</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@AddODEextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A class to define derivatives of <code>Var</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>A class to define derivatives of <code>Var</code>s.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseODE.Derivative" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Derivative=()=&gt;Double"></a>
       <a id="Derivative:Derivative"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -121,10 +138,10 @@
         <span class="kind">type</span>
       </span>
       <span class="symbol">
-        <span class="name">Derivative</span><span class="result"> = (<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Double">Double</span>]) ⇒ <span class="extype" name="scala.Double">Double</span></span>
+        <span class="name">Derivative</span><span class="result"> = () ⇒ <span class="extype" name="scala.Double">Double</span></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@Derivative=Array[Double]=&gt;Double" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@Derivative=()=&gt;Double" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -146,23 +163,6 @@
       </a>
     </span>
       <p class="shortcomment cmt">Needed for NetCDF et al.</p><div class="fullcomment"><div class="comment cmt"><p>Needed for NetCDF et al. TODO: explain better</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.BaseODE.FunMaker" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="FunMakerextendsAnyRef"></a>
-      <a id="FunMaker:FunMaker"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">class</span>
-      </span>
-      <span class="symbol">
-        <a href="BaseODE$FunMaker.html"><span class="name">FunMaker</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@FunMakerextendsAnyRef" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">A class to define derivatives of <code>Var</code>s.</p><div class="fullcomment"><div class="comment cmt"><p>A class to define derivatives of <code>Var</code>s.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li></ol>
             </div>
 
@@ -420,23 +420,6 @@
       </a>
     </span>
       <p class="shortcomment cmt">Automatically annotate the process with its software name and version</p><div class="fullcomment"><div class="comment cmt"><p>Automatically annotate the process with its software name and version</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.BaseODE#addODE" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="addODE(v:uk.ac.ed.inf.mois.DoubleVarIntf,f:BaseODE.this.Derivative):scala.collection.mutable.ArrayBuffer[BaseODE.this.Derivative]"></a>
-      <a id="addODE(DoubleVarIntf,Derivative):ArrayBuffer[Derivative]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">addODE</span><span class="params">(<span name="v">v: <a href="DoubleVarIntf.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVarIntf">DoubleVarIntf</a></span>, <span name="f">f: <a href="#Derivative=Array[Double]=&gt;Double" class="extmbr" name="uk.ac.ed.inf.mois.BaseODE.Derivative">Derivative</a></span>)</span><span class="result">: <span class="extype" name="scala.collection.mutable.ArrayBuffer">ArrayBuffer</span>[<a href="#Derivative=Array[Double]=&gt;Double" class="extmbr" name="uk.ac.ed.inf.mois.BaseODE.Derivative">Derivative</a>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@addODE(v:uk.ac.ed.inf.mois.DoubleVarIntf,f:BaseODE.this.Derivative):scala.collection.mutable.ArrayBuffer[BaseODE.this.Derivative]" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">Adds an ODE definition to the process.</p><div class="fullcomment"><div class="comment cmt"><p>Adds an ODE definition to the process.</p></div><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="package.html" class="extype" name="uk.ac.ed.inf.mois">uk.ac.ed.inf.mois</a>] </dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#addStepHandler" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addStepHandler(sh:uk.ac.ed.inf.mois.StepHandler):Unit"></a>
       <a id="addStepHandler(StepHandler):Unit"></a>
@@ -647,6 +630,23 @@ changes.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a></dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#bynameToFun" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bynameToFun(f:=&gt;Double):()=&gt;Double"></a>
+      <a id="bynameToFun(⇒Double):()⇒Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">bynameToFun</span><span class="params">(<span name="f">f: ⇒ <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: () ⇒ <span class="extype" name="scala.Double">Double</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@bynameToFun(f:=&gt;Double):()=&gt;Double" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -692,18 +692,18 @@ derivatives (third argument, <code>ydots</code>) in terms of the (given) first t
 Indexes into the arrays are as defined by <code>vars</code>.
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="uk.ac.ed.inf.mois.BaseODE">BaseODE</a> → FirstOrderDifferentialEquations</dd></dl></div>
     </li><li name="uk.ac.ed.inf.mois.BaseODE#d" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="d(v:uk.ac.ed.inf.mois.DoubleVarIntf):BaseODE.this.FunMaker{def/(d:BaseODE.this.dt.type):BaseODE.this.FunMaker}"></a>
-      <a id="d(DoubleVarIntf):FunMaker{def/(d:BaseODE.this.dt.type):BaseODE.this.FunMaker}"></a>
+      <a id="d(vs:uk.ac.ed.inf.mois.DoubleVarIntf*):BaseODE.this.AddODE{def/(d:BaseODE.this.dt.type):BaseODE.this.AddODE}"></a>
+      <a id="d(DoubleVarIntf*):AddODE{def/(d:BaseODE.this.dt.type):BaseODE.this.AddODE}"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">d</span><span class="params">(<span name="v">v: <a href="DoubleVarIntf.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVarIntf">DoubleVarIntf</a></span>)</span><span class="result">: <a href="BaseODE$FunMaker.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE.FunMaker">FunMaker</a> { def /(d: BaseODE.this.dt.type): BaseODE.this.FunMaker }</span>
+        <span class="name">d</span><span class="params">(<span name="vs">vs: <a href="DoubleVarIntf.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVarIntf">DoubleVarIntf</a>*</span>)</span><span class="result">: <a href="BaseODE$AddODE.html" class="extype" name="uk.ac.ed.inf.mois.BaseODE.AddODE">AddODE</a> { def /(d: BaseODE.this.dt.type): BaseODE.this.AddODE }</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@d(v:uk.ac.ed.inf.mois.DoubleVarIntf):BaseODE.this.FunMaker{def/(d:BaseODE.this.dt.type):BaseODE.this.FunMaker}" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@d(vs:uk.ac.ed.inf.mois.DoubleVarIntf*):BaseODE.this.AddODE{def/(d:BaseODE.this.dt.type):BaseODE.this.AddODE}" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -793,26 +793,6 @@ Indexes into the arrays are as defined by <code>vars</code>.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.BaseODE#eval" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="eval(v:uk.ac.ed.inf.mois.DoubleVarIntf,ys:Array[Double]):Double"></a>
-      <a id="eval(DoubleVarIntf,Array[Double]):Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">eval</span><span class="params">(<span name="v">v: <a href="DoubleVarIntf.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVarIntf">DoubleVarIntf</a></span>, <span name="ys">ys: <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Double">Double</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@eval(v:uk.ac.ed.inf.mois.DoubleVarIntf,ys:Array[Double]):Double" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
-                <span class="name">@inline</span><span class="args">()</span>
-              
-        </dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -902,7 +882,7 @@ finds to this VarContainer.
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">funs</span><span class="result">: <span class="extype" name="scala.collection.mutable.ArrayBuffer">ArrayBuffer</span>[<a href="#Derivative=Array[Double]=&gt;Double" class="extmbr" name="uk.ac.ed.inf.mois.BaseODE.Derivative">Derivative</a>]</span>
+        <span class="name">funs</span><span class="result">: <span class="extype" name="scala.collection.mutable.ArrayBuffer">ArrayBuffer</span>[<a href="#Derivative=()=&gt;Double" class="extmbr" name="uk.ac.ed.inf.mois.BaseODE.Derivative">Derivative</a>]</span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@funs:scala.collection.mutable.ArrayBuffer[BaseODE.this.Derivative]" title="Permalink" target="_top">
@@ -966,23 +946,6 @@ the vector-valued integral.
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="uk.ac.ed.inf.mois.BaseODE#indices" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="indices:scala.collection.mutable.Map[uk.ac.ed.inf.mois.DoubleVarIntf,Int]"></a>
-      <a id="indices:Map[DoubleVarIntf,Int]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">indices</span><span class="result">: <span class="extype" name="scala.collection.mutable.Map">Map</span>[<a href="DoubleVarIntf.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVarIntf">DoubleVarIntf</a>, <span class="extype" name="scala.Int">Int</span>]</span>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@indices:scala.collection.mutable.Map[uk.ac.ed.inf.mois.DoubleVarIntf,Int]" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      <p class="shortcomment cmt">A map that returns the index of a <code>Var</code> in <code>vars</code>.</p>
     </li><li name="uk.ac.ed.inf.mois.BaseProcess#init" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="init(t:Double):Unit"></a>
       <a id="init(Double):Unit"></a>
@@ -1333,6 +1296,23 @@ to call <code>super.reset(t)</code> if you do this!
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> → AnyRef → Any</dd></dl></div>
+    </li><li name="uk.ac.ed.inf.mois.BaseODE#varToFun" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="varToFun(f:uk.ac.ed.inf.mois.DoubleVarIntf):()=&gt;Double"></a>
+      <a id="varToFun(DoubleVarIntf):()⇒Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">varToFun</span><span class="params">(<span name="f">f: <a href="DoubleVarIntf.html" class="extype" name="uk.ac.ed.inf.mois.DoubleVarIntf">DoubleVarIntf</a></span>)</span><span class="result">: () ⇒ <span class="extype" name="scala.Double">Double</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.BaseODE@varToFun(f:uk.ac.ed.inf.mois.DoubleVarIntf):()=&gt;Double" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
     </li><li name="uk.ac.ed.inf.mois.BaseODE#vars" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="vars:scala.collection.mutable.ArrayBuffer[uk.ac.ed.inf.mois.DoubleVarIntf]"></a>
       <a id="vars:ArrayBuffer[DoubleVarIntf]"></a>

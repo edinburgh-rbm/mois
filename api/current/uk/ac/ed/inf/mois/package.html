@@ -447,7 +447,7 @@ mathematical functions available. It is intended for use in Process
 definitions.
 </p></div></div>
     </li><li name="uk.ac.ed.inf.mois.Model" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="ModelextendsVarContainerwithAnnotationwithVarConversions"></a>
+      <a id="ModelextendsVarContainerwithVarConversions"></a>
       <a id="Model:Model"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -455,10 +455,10 @@ definitions.
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="Model.html"><span class="name">Model</span></a><span class="result"> extends <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a> with <a href="Annotation.html" class="extype" name="uk.ac.ed.inf.mois.Annotation">Annotation</a> with <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></span>
+        <a href="Model.html"><span class="name">Model</span></a><span class="result"> extends <a href="VarContainer.html" class="extype" name="uk.ac.ed.inf.mois.VarContainer">VarContainer</a> with <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@ModelextendsVarContainerwithAnnotationwithVarConversions" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@ModelextendsVarContainerwithVarConversions" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -700,6 +700,25 @@ StochasticReactionNetwork and FBA.
       <p class="shortcomment cmt">A StepHandler may be added to a <code>Process</code>.</p><div class="fullcomment"><div class="comment cmt"><p>A StepHandler may be added to a <code>Process</code>. It then gets called at
 the conclusion of each step with the end time and the state.
 </p></div></div>
+    </li><li name="uk.ac.ed.inf.mois.StochasticReactionNetwork" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="StochasticReactionNetworkextendsBaseProcesswithPopulationBasedReactionNetworkwithKineticCatalyticReactionNetwork"></a>
+      <a id="StochasticReactionNetwork:StochasticReactionNetwork"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StochasticReactionNetwork.html"><span class="name">StochasticReactionNetwork</span></a><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> with <a href="PopulationBasedReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.PopulationBasedReactionNetwork">PopulationBasedReactionNetwork</a> with <a href="KineticCatalyticReactionNetwork.html" class="extype" name="uk.ac.ed.inf.mois.KineticCatalyticReactionNetwork">KineticCatalyticReactionNetwork</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@StochasticReactionNetworkextendsBaseProcesswithPopulationBasedReactionNetworkwithKineticCatalyticReactionNetwork" title="Permalink" target="_top">
+        <img src="../../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Base trait for all reaction networks that use concentrations of
+molecules as a measure for species (as opposed to
+population-based reaction networks).</p>
     </li><li name="uk.ac.ed.inf.mois.TsvWriter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="TsvWriterextendsStepHandler"></a>
       <a id="TsvWriter:TsvWriter"></a>
@@ -753,7 +772,7 @@ the individual states of several processes, their individual state
 variables or variables are merged only if the identifiers and the
 scopes match.</p></div></div>
     </li><li name="uk.ac.ed.inf.mois.VarCalc" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="VarCalcextendsBaseProcess"></a>
+      <a id="VarCalcextendsBaseProcesswithVarConversions"></a>
       <a id="VarCalc:VarCalc"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -761,10 +780,10 @@ scopes match.</p></div></div>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="VarCalc.html"><span class="name">VarCalc</span></a><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a></span>
+        <a href="VarCalc.html"><span class="name">VarCalc</span></a><span class="result"> extends <a href="BaseProcess.html" class="extype" name="uk.ac.ed.inf.mois.BaseProcess">BaseProcess</a> with <a href="VarConversions.html" class="extype" name="uk.ac.ed.inf.mois.VarConversions">VarConversions</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@VarCalcextendsBaseProcess" title="Permalink" target="_top">
+      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@VarCalcextendsBaseProcesswithVarConversions" title="Permalink" target="_top">
         <img src="../../../../../lib/permalink.png" />
       </a>
     </span>
@@ -882,23 +901,6 @@ state variable.</p>
 run models.</p><div class="fullcomment"><div class="comment cmt"><p><code>MoisMain</code> is the entry point for command line programs that
 run models. For how to use this, see the mois-examples repository
 </p></div></div>
-    </li><li name="uk.ac.ed.inf.mois.ODEMacros" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ODEMacros"></a>
-      <a id="ODEMacros:ODEMacros"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">object</span>
-      </span>
-      <span class="symbol">
-        <a href="ODEMacros$.html"><span class="name">ODEMacros</span></a>
-      </span>
-      </h4><span class="permalink">
-      <a href="../../../../../index.html#uk.ac.ed.inf.mois.package@ODEMacros" title="Permalink" target="_top">
-        <img src="../../../../../lib/permalink.png" />
-      </a>
-    </span>
-      
     </li><li name="uk.ac.ed.inf.mois.VarMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="VarMap"></a>
       <a id="VarMap:VarMap"></a>
