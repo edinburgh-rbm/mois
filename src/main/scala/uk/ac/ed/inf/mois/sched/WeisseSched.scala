@@ -17,7 +17,8 @@
  */
 package uk.ac.ed.inf.mois.sched
 
-import uk.ac.ed.inf.mois.{ProcessGroup, Scheduler, DoubleVar, Math, VarConversions, VarMap}
+import uk.ac.ed.inf.mois.{ProcessGroup, Scheduler, Math}
+import uk.ac.ed.inf.mois.{DoubleVar, VarConversions, VarMeta}
 
 class WeisseScheduler(
   val tolerance: Double = 1e-1,
@@ -26,6 +27,12 @@ class WeisseScheduler(
   val dt_max: Double = 1e0,
   val threshold: Double = 1e-4)
     extends Scheduler with Math with VarConversions {
+
+  // debugging
+  var debug_err: DoubleVar = null
+  override def init(group: ProcessGroup) {
+    debug_err = group.Double(VarMeta("err"))
+  }
 
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
     val x0 = group.doubleVars.copy // all variables of the group
@@ -50,6 +57,7 @@ class WeisseScheduler(
         dx_i
     }
     val err = x0.values.map(estimateError(_)).max
+    debug_err := err
 
     val new_dt = max(dt_min, min(dt_max, rho * dt * tolerance / err))
 

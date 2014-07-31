@@ -67,7 +67,7 @@ class CoupledOscillatorGroupModel extends Model {
   val w = Double("w") := -1.0
   val k = Double("k") := 0.5
   val process = new ProcessGroup("Coupled OscillatorGroup") {
-    scheduler = new WeisseScheduler
+    scheduler = new WeisseScheduler(tolerance=0.1)
   }
   process += new CoupledOscillatorA(w, k)
   process += new CoupledOscillatorB(w, k)
@@ -93,8 +93,13 @@ class WeisseSchedulerTest extends FlatSpec with Matchers with VarConversions {
     val direct = new CoupledOscillatorModel
     val group = new CoupledOscillatorGroupModel
 
-    direct.process.step(0, 1)
-    group.process.step(0, 1)
+    direct.init(0)
+    direct.run(0, 1)
+    direct.finish
+
+    group.init(0)
+    group.run(0, 1)
+    group.finish
 
     println(direct.process.doubleVars.values.toSeq.sortBy(_.meta))
     println(group.process.doubleVars.values.toSeq.sortBy(_.meta))
