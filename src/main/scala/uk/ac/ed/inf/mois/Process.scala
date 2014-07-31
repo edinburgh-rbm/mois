@@ -19,13 +19,28 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 
-/** A `Process` is basically a `State` and a function that operates
-  * upon it parametrised by time.
+/** A `BaseProcess` is basically a container of mutable variables
+  * ([[VarContainer]]) and a function that operates them parametrised
+  * by time.
+  *
+  * A `BaseProcess` may also be parametrised by other values in addition
+  * to time. These are called [[BaseProcess.Dimension]]s and are of
+  * fixed size -- unlike time which is unlimited.
+  *
+  * A `BaseProcess` also has a list of [[StepHandler]]s that run each
+  * time step after the computation, their purpose is post-processing
+  * and output of the data.
+  *
+  * A `BaseProcess` may be [[BaseProcess.annotate]]d so that it may
+  * be self-documenting and introspectable.
   */
 abstract class BaseProcess extends VarContainer with Annotation {
 
+  /** a process is required to have a name (XXX: really? why?) */
   def name: String
+  /** the list of handlers that run after each step */
   val stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
+  /** a list of dimensions and their size/index */
   val dimensions = mutable.Map.empty[Var[_], Int]
 
   /** Automatically annotate the process with its software name and version */
@@ -54,12 +69,22 @@ abstract class BaseProcess extends VarContainer with Annotation {
 
   /** This function takes the state from where it is at
     * time t to where it is at t + tau. This must be supplied
-    * by concrete sub-classes.
+    * by concrete sub-classes. Except for testing, it is always
+    * called via the [[BaseProcess.apply]] method so that any
+    * [[StepHandler]]s also get executed.
+    *
+    * @param t the time at the beginning of the step
+    * @param tau the size of the step (delta-t)
     */
   def step(t: Double, tau: Double)
 
   /** A wrapper around the user defined step function to calculate
-    * changes.
+    * changes. This wrapper is the main way that the step function
+    * should be called and it has the additional responsibility of
+    * calling any [[StepHandler]]s.
+    *
+    * @param t the time at the beginning of the step
+    * @param tau the size of the step (delta-t)
     */
   def apply(t: Double, tau: Double) {
     step(t, tau)
@@ -68,9 +93,13 @@ abstract class BaseProcess extends VarContainer with Annotation {
   }
 
   /**
-   * Initialisation hook. Expected to be called once before the process
-   * runs for the first time. Initialises step handlers.
-   */
+    * Initialisation hook. Expected to be called once before the process
+    * runs for the first time. Initialises step handlers and adds
+    * basic annotations. Remember to call `super.init(t)` if you override
+    * this!
+    *
+    * @param t the time at the beginning of the simulation
+    */
   def init(t: Double) {
     addBasicAnnotations
     for (sh <- stepHandlers)
@@ -78,24 +107,30 @@ abstract class BaseProcess extends VarContainer with Annotation {
   }
 
   /**
-   * Reset hook. May be called as necessary. Resets the step handlers.
-   * May be overridden in sub-classes to reset internal state. Rember
-   * to call `super.reset(t)` if you do this!
-   */
+    * Reset hook. May be called as necessary. Resets the step handlers.
+    * May be overridden in sub-classes to reset internal state. Rember
+    * to call `super.reset(t)` if you do this!
+    *
+    * @param t the new time
+    */
   def reset(t: Double) {
     for (sh <- stepHandlers)
       sh.reset(t, this)
   }
 
-  /**
-   * Finish hook. Expected to be called once at the end of theprocess.
-   * Finishes the step handlers
-   */
+  /** Finish hook. Expected to be called once at the end of theprocess.
+    * Finishes the step handlers. Remember to call `super.finish` if you
+    * override this!
+    */
   def finish {
     for (sh <- stepHandlers)
       sh.finish
   }
 
+  /** Add a [[StepHandler]] to the list
+    *
+    * @param sh the step handler, evidently
+    */
   def addStepHandler(sh: StepHandler) {
     stepHandlers += sh
   }
