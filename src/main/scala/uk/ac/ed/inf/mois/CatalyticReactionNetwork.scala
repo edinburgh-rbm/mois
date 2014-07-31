@@ -148,7 +148,8 @@ trait KineticCatalyticReactionNetwork
     }
   }
 
-  /** Ternary-complex mechanism in random order.  See
+  /** Ternary-complex mechanism where `firstSubstrate` is bound first
+    * and `firstProduct` is released first.  See
     * en.wikipedia.org/wiki/Enzyme_kinetics#Ternary-complex_mechanisms
     *
     * @param bind1 kinetic rate for binding of first substrate.
@@ -163,11 +164,11 @@ trait KineticCatalyticReactionNetwork
     * @param unbind4 kinetic rate for unbinding of second product.
     */
   case class TCOrdered(
-    bind1: Double, unbind1: Double,
-    bind2: Double, unbind2: Double,
+    a: (Species, (Double, Double)),
+    b: (Species, (Double, Double)),
     fwdCat: Double, bwdCat: Double,
-    bind3: Double, unbind3: Double,
-    bind4: Double, unbind4: Double)
+    p: (Species, (Double, Double)),
+    q: (Species, (Double, Double)))
       extends KineticMechanism {
     def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
       require(lhs.multisize == 2, "left-hand side of reaction " +
@@ -176,8 +177,16 @@ trait KineticCatalyticReactionNetwork
       require(rhs.multisize == 2, "right-hand side of reaction " +
         lhs + " -> " + rhs + " must have exactly two products " +
         "to use the ternary-complex mechanism (TCOrdered).")
-      val Seq(s1, s2) = lhs.multiseq
-      val Seq(p1, p2) = rhs.multiseq
+      val (s1, (bind1, unbind1)) = a
+      val (s2, (bind2, unbind2)) = b
+      val (p1, (bind3, unbind3)) = p
+      val (p2, (bind4, unbind4)) = q
+      require(lhs contains s1 && lhs contains s2,
+        "left-hand side of reaction " + lhs + " -> " + rhs +
+        " doesn't contains species " + s1 + " or " + s2)
+      require(rhs contains p1 && rhs contains p2,
+        "right-hand side of reaction " + lhs + " -> " + rhs +
+        " doesn't contains species " + p1 + " or " + p2)
       val e = catalyser
       val es1 = enzymeComplex(e, s1)
       val es12 = enzymeComplex(es1, s2)
