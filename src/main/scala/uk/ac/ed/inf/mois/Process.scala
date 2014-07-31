@@ -21,18 +21,18 @@ import scala.collection.mutable
 
 /** A `BaseProcess` is basically a container of mutable variables
   * ([[VarContainer]]) and a function that operates them parametrised
-  * by time.
-  *
-  * A `BaseProcess` may also be parametrised by other values in addition
-  * to time. These are called [[BaseProcess.Dimension]]s and are of
-  * fixed size -- unlike time which is unlimited.
+  * by time. It may be [[BaseProcess.annotate]]d so that it may
+  * be self-documenting and introspectable.
   *
   * A `BaseProcess` also has a list of [[StepHandler]]s that run each
   * time step after the computation, their purpose is post-processing
   * and output of the data.
   *
-  * A `BaseProcess` may be [[BaseProcess.annotate]]d so that it may
-  * be self-documenting and introspectable.
+  * It is possible to parametrise by other values in addition
+  * to time. For example to run the same simulation several times with
+  * different initial conditions. Such variables are called
+  * [[BaseProcess.Dimension]]s and are of fixed size -- unlike time which
+  * has unlimited range.
   */
 abstract class BaseProcess extends VarContainer with Annotation {
 
