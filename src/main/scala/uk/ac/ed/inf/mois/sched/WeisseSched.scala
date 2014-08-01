@@ -42,7 +42,7 @@ class WeisseScheduler(
 
     for (child <- group.processes) {
       group >>> child
-      child.step(t, tau)
+      child.step(t, dt)
       // XXX should propagate all non-double vars here
       dx +:= child.doubleVars - x0
     }
