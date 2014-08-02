@@ -154,6 +154,65 @@ abstract class BaseProcess extends VarContainer with Annotation {
 
   def stringPrefix = "BaseProcess"
   override def toString = stringPrefix + "(" + name + ")"
+
+  /** Calculate the partial derivatives of a process. This means, for
+    * each (double) variable, change it by some small amount (typically
+    * 1% either way) and find out how this affects the other variables.
+    *
+    * For example,
+    * {{{
+    * p = new SomeProcess(...) // vars x1 and x2
+    * partials = p.partialDerivatives(0, 1)
+    * // \partial p \over \partial x1
+    * dpdx1 = partials(x1)
+    * // the x2 component -- how x2 depends on x1
+    * dx2 = partials(x1)(x2)
+    * }}}
+    *
+    * @param t time to begin the simulation
+    * @param tau end-time
+    * @return a may with keys for each variable, and values the changes
+    *         for every other.
+    */
+  def partialDerivatives(t: Double, tau: Double) = {
+    object state extends VarContainer
+
+    object conv extends VarConversions
+    import conv._ // XXX to get at VarConversions. Why on earth isn't this on
+                  // BaseProcess???
+    state leftMerge this
+
+    val partials = mutable.Map.empty[VarMeta, VarMap[Double, DoubleVar]]
+      .withDefaultValue(new VarMap[Double, DoubleVar] {
+        override def default(meta: VarMeta) = new DoubleVar(meta)
+      })
+    val epsilon = 0.01
+    for (v <- doubleVars.values) {
+      state >>> this
+
+      val dv = if (v.value == 0.0) {
+        epsilon
+      } else {
+        epsilon * v
+      }
+
+      v -= dv
+      step(t, tau)
+      val minus = doubleVars.copy
+
+      state >>> this
+
+      v += dv
+      step(t, tau)
+      val plus = doubleVars.copy
+
+      partials += v.meta -> (plus - minus)/(2*dv)
+      partials(v)(v) := 0
+    }
+
+    state >>> this
+    partials
+  }
 }
 
 abstract class Process(val name: String)
