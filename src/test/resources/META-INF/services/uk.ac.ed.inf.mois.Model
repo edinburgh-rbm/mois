@@ -2,5 +2,6 @@ uk.ac.ed.inf.mois.test.BrusselatorModel
 uk.ac.ed.inf.mois.test.CoupledOscillatorModel
 uk.ac.ed.inf.mois.test.CoupledOscillatorGroupModel
 uk.ac.ed.inf.mois.test.GbKlModel
+uk.ac.ed.inf.mois.test.KickedModel
 uk.ac.ed.inf.mois.test.TestModel1
 uk.ac.ed.inf.mois.test.TestModel2
