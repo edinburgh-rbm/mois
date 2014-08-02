@@ -20,7 +20,7 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{Math, ODE}
+import uk.ac.ed.inf.mois.{Math, ODE, VarConversions}
 
 /** Directly calculated ODE system from Dominik's stuff. */
 object sampleODE extends ODE("sample") with Math {
@@ -136,5 +136,36 @@ class ODETest extends FlatSpec with Matchers {
       }
       val wrong = new Wrong
     }
+  }
+}
+
+class PartialDerivativeTest extends FlatSpec with Matchers with VarConversions {
+
+  // Use approximate equality in `should equal`
+  val precision = 1e-4
+  implicit val doubleEquality =
+    TolerantNumerics.tolerantDoubleEquality(precision)
+
+  class P extends ODE("P") {
+    val x1 = Double("x1")
+    val x2 = Double("x2")
+
+    d(x1, x2) := (
+      x1,
+      x1
+    )
+  }
+
+  "partial derivative" should "give expected results" in {
+    val p = new P
+    val partials = p partialDerivatives(0, 1)
+
+    val dp_dx1 = partials(p.x1)
+    dp_dx1(p.x1).value should equal (0.0)
+    dp_dx1(p.x2).value should equal (1.7182)
+
+    val dp_dx2 = partials(p.x2)
+    dp_dx2(p.x1).value should equal (0.0)
+    dp_dx2(p.x2).value should equal (0.0)
   }
 }
