@@ -45,7 +45,7 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
 
 libraryDependencies += "org.jfree" % "jfreechart" % "1.0.14"
 
-libraryDependencies += "org.python" % "jython" % "2.7-b1"
+libraryDependencies += "org.python" % "jython" % "2.7-b2"
 
 libraryDependencies += "edu.ucar" % "netcdf" % "4.3.22"
 
