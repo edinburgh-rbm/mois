@@ -66,7 +66,7 @@ class CoupledOscillatorB(w: Double, k: Double)
 class CoupledOscillatorGroupModel extends Model {
   val w = Double("w") := -1.0
   val k = Double("k") := 0.5
-  val process = new ProcessGroup("Coupled OscillatorGroup") {
+  val process = new ProcessGroup("Coupled Oscillator Group") {
     scheduler = new WeisseScheduler(tolerance=0.1)
   }
   process += new CoupledOscillatorA(w, k)
