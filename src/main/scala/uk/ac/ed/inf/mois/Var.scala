@@ -266,9 +266,23 @@ trait VarConversions {
       val nvm = vm.copy
       nvm *:= other
     }
+    def *(x: Double) = {
+      val nvm = vm.copy
+      for (v <- vm.values) {
+        nvm(v) *= x
+      }
+      nvm
+    }
     def /(other: VarMap[Double, DoubleVar]) = {
       val nvm = vm.copy
       nvm /:= other
+    }
+    def /(x: Double) = {
+      val nvm = vm.copy
+      for (v <- vm.values) {
+        nvm(v) /= x
+      }
+      nvm
     }
     def +:=(other: VarMap[Double, DoubleVar]) = {
       for (v <- vm.values if other contains v.meta)
