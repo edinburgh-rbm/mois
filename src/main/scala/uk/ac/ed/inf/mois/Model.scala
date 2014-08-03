@@ -39,6 +39,28 @@ abstract class Model extends VarContainer with VarConversions {
   def reset(t: Double) {
     process.reset(t)
   }
+
+  /** Convenience method to add a step handler onto the process.
+    * see [[BaseProcess.addStepHandler]] */
+  def addStepHandler(sh: StepHandler) {
+    process.addStepHandler(sh)
+  }
+
+  /** convenience method to set/override the scheduler iff the process is a group */
+  def setScheduler(sched: Scheduler) {
+    require(process.isInstanceOf[ProcessGroup], "process must be a group to have a scheduler")
+    process.asInstanceOf[ProcessGroup].scheduler = sched
+  }
+
+  /** set a model parameter */
+  def setParam(name: String, value: Double) {
+    doubleVars(VarMeta(name)) := value
+  }
+
+  /** set a variable (for initial conditions */
+  def setVar(name: String, value: Double) {
+    process.doubleVars(VarMeta(name)) := value
+  }
 }
 
 object Model {
