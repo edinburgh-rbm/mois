@@ -164,6 +164,8 @@ abstract class BaseODE
     t = time
     for (i <- 0 until ydots.size) {
       assume(funs isDefinedAt i, "no derivative defined for " + vars(i))
+      assume(!ys(i).isNaN, "integration of " + vars(i).meta +
+        " gave NaN (not a number)")
       vars(i) := ys(i)
       ydots(i) = funs(i)()
     }
