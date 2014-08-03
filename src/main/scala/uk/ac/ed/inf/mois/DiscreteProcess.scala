@@ -48,7 +48,7 @@ abstract class DiscreteProcess(val name: String)
   @inline final def next(v: DoubleVar) = new Next(v)
   @inline final def n(v: DoubleVar) = new Next(v)
 
-  def step(t0: Double, tau: Double) {
+  override def step(t0: Double, tau: Double) {
     var t = t0
     while (t < t0+tau) {
       // We do the setting in two steps so as not to perturb the

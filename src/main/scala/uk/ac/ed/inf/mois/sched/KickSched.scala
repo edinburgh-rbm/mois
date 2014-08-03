@@ -21,10 +21,10 @@ import scala.collection.mutable
 
 import uk.ac.ed.inf.mois.{BaseProcess, ProcessGroup, Scheduler, Math}
 import uk.ac.ed.inf.mois.{AdaptiveTimestep}
-import uk.ac.ed.inf.mois.{DoubleVar, VarConversions, VarMap, VarMeta}
+import uk.ac.ed.inf.mois.{DoubleVar, VarMapConversions, VarMap, VarMeta}
 
 abstract class KickMethod
-    extends Scheduler with AdaptiveTimestep with Math with VarConversions {
+    extends Scheduler with AdaptiveTimestep with Math with VarMapConversions {
 
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
     val dt = calculateInitialTimestep(tau)
@@ -68,19 +68,17 @@ abstract class KickMethod
 //        println(s"\td/d${v.identifier} = $pp")
 //      }
       val kick = child.doubleVars.zeros
-      for (other <- group.processes if other != child) {
-        for (x <- x_tau(other).values) {
-          for (v <- child.doubleVars.values if v != x) {
-            kick(v) += partial_c(x)(v) * x / 4
-          }
-        }
-      }
+      for {
+        other <- group.processes if other != child
+        (mx, x) <- x_tau(other)
+        (mv, v) <- child.doubleVars if v != x
+      } kick(mv) += partial_c(mx)(mv).value * x.value / 4 //2
 //      println(child)
 //      for (v <- child.doubleVars.values.toList.sortBy(_.meta)) {
 //        val kv = kick(v)
 //        println(s"\t$v\t$kv")
 //      }
-      child.doubleVars +:= kick
+      child.doubleVars += kick
     }
 
 //    println("Drifting the rest of the time")
@@ -89,13 +87,14 @@ abstract class KickMethod
     val dx = group.doubleVars.zeros // accumulate the change
     for (child <- group.processes) {
       child.step(t+dt/2, dt/2)
-      dx +:= (child.doubleVars - x0)
+      dx += (child.doubleVars - x0)
     }
     calculateNewTimestep(x0, dx, t, dt, group)
   }
 }
 
-class KickScheduler(val dt: Double) extends KickMethod with AdaptiveTimestep with VarConversions {
+
+class KickScheduler(val dt: Double) extends KickMethod with AdaptiveTimestep with VarMapConversions {
   def calculateInitialTimestep(tau: Double) = dt
   def calculateNewTimestep(
     x0: VarMap[Double, DoubleVar], dx: VarMap[Double, DoubleVar],

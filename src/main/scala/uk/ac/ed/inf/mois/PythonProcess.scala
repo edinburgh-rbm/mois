@@ -24,6 +24,7 @@ import org.python.util.PythonInterpreter
 import org.python.core.{PyException, PyFloat, PyObject}
 
 abstract class PythonProcess(name: String) extends Process(name) {
+
   type F = (Double, Double, Seq[DoubleVar]) => Unit
   private val pyFuncs = mutable.ArrayBuffer.empty[(F, Seq[DoubleVar])]
 
@@ -80,7 +81,7 @@ abstract class PythonProcess(name: String) extends Process(name) {
     }
   }
 
-  def step(t: Double, tau: Double) {
+  override def step(t: Double, tau: Double) {
     for ((f, vs) <- pyFuncs) {
       f(t, tau, vs)
     }

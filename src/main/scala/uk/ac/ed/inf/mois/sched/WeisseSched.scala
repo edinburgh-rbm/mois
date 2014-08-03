@@ -18,7 +18,7 @@
 package uk.ac.ed.inf.mois.sched
 
 import uk.ac.ed.inf.mois.{ProcessGroup, Scheduler, AdaptiveTimestep, Math}
-import uk.ac.ed.inf.mois.{DoubleVar, VarConversions, VarMap, VarMeta}
+import uk.ac.ed.inf.mois.{DoubleVar, VarMapConversions, VarMap, VarMeta}
 
 class WeisseScheduler(
   val tolerance: Double = 1e-1,
@@ -26,7 +26,7 @@ class WeisseScheduler(
   val dt_min: Double = 1e-8,
   val dt_max: Double = 1e0,
   val threshold: Double = 1e-4)
-    extends Scheduler with WeisseAdaptiveTimestep with VarConversions {
+    extends Scheduler with WeisseAdaptiveTimestep with VarMapConversions {
 
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
     val x0 = group.doubleVars.copy // all variables of the group
@@ -38,13 +38,13 @@ class WeisseScheduler(
       group >>> child
       child.step(t, dt)
       // XXX should propagate all non-double vars here
-      dx +:= child.doubleVars - x0
+      dx += child.doubleVars - x0
     }
     calculateNewTimestep(x0, dx, t, dt, group)
   }
 }
 
-trait WeisseAdaptiveTimestep extends AdaptiveTimestep with VarConversions with Math {
+trait WeisseAdaptiveTimestep extends AdaptiveTimestep with VarMapConversions with Math {
   val tolerance: Double
   val rho: Double
   val dt_min: Double
@@ -59,9 +59,9 @@ trait WeisseAdaptiveTimestep extends AdaptiveTimestep with VarConversions with M
     t: Double, dt: Double, group: ProcessGroup
   ) = {
     // use absolute error for variables near 0 and relative for others
-    def estimateError(v: DoubleVar) = {
-      val x0_i = abs(x0(v.meta))
-      val dx_i = abs(dx(v.meta))
+    def estimateError(v: DoubleVar): Double = {
+      val x0_i = abs(x0(v.meta).value)
+      val dx_i = abs(dx(v.meta).value)
       if (x0_i > threshold) // relative error
         dx_i/x0_i
       else

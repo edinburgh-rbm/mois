@@ -76,7 +76,7 @@ abstract class BaseProcess extends VarContainer with Annotation {
     * @param t the time at the beginning of the step
     * @param tau the size of the step (delta-t)
     */
-  def step(t: Double, tau: Double)
+  def step(t: Double, tau: Double) { }
 
   /** A wrapper around the user defined step function to calculate
     * changes. This wrapper is the main way that the step function
@@ -175,11 +175,8 @@ abstract class BaseProcess extends VarContainer with Annotation {
     *         for every other.
     */
   def partialDerivatives(t: Double, tau: Double) = {
-    object state extends VarContainer
 
-    object conv extends VarConversions
-    import conv._ // XXX to get at VarConversions. Why on earth isn't this on
-                  // BaseProcess???
+    object state extends VarContainer
     state leftMerge this
 
     val partials = mutable.Map.empty[VarMeta, VarMap[Double, DoubleVar]]
@@ -187,13 +184,13 @@ abstract class BaseProcess extends VarContainer with Annotation {
         override def default(meta: VarMeta) = new DoubleVar(meta)
       })
     val epsilon = 0.01
-    for (v <- doubleVars.values) {
+    for ((m, v) <- doubleVars) {
       state >>> this
 
       val dv = if (v.value == 0.0) {
         epsilon
       } else {
-        epsilon * v
+        epsilon * v.value
       }
 
       v -= dv
@@ -206,8 +203,8 @@ abstract class BaseProcess extends VarContainer with Annotation {
       step(t, tau)
       val plus = doubleVars.copy
 
-      partials += v.meta -> (plus - minus)/(2*dv)
-      partials(v)(v) := 0
+      partials += m -> (plus - minus)/(2*dv)
+      partials(m)(m) := 0
     }
 
     state >>> this

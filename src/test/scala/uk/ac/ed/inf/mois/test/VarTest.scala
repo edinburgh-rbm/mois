@@ -152,15 +152,15 @@ class VarTest extends FlatSpec with Matchers
     v3(x).value should be (10)
     v3(y).value should be (20)
 
-    v1 +:= v3
+    v1 += v3
     v1(x).value should be (20)
     v1(y).value should be (20)
 
-    v2 /:= v1
+    v2 /= v1
     v2(x).value should be (0)
     v2(y).value should be (1)
 
-    v3 -:= v2
+    v3 -= v2
     v3(x).value should be (10)
     v3(y).value should be (19)
   }

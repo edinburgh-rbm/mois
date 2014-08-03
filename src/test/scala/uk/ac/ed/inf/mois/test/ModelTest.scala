@@ -29,17 +29,15 @@ class TestModel1 extends Model {
     val x = Double("x")
     x.annotate("long_name", "The x value")
     x.annotate("units", "u")
-    def step(t: Double, tau: Double) {}
   }
 }
 
 class TestModel2 extends Model {
-  object process extends Process("test model 2") {
-    def step(t: Double, tau: Double) {}
-  }
+  object process extends Process("test model 2")
 }
 
 class ModelTest extends FlatSpec with Matchers {
+
   "model constructor" should "find a fully qualified model" in {
     val testModel = Model("uk.ac.ed.inf.mois.test.TestModel1")
     assert(testModel != null)
