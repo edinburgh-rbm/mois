@@ -18,7 +18,7 @@
 package uk.ac.ed.inf.mois.sched
 
 import uk.ac.ed.inf.mois.{ProcessGroup, Scheduler, Math}
-import uk.ac.ed.inf.mois.{DoubleVar, VarConversions, VarMeta}
+import uk.ac.ed.inf.mois.{DoubleVar, VarMapConversions, VarMeta}
 
 class WeisseScheduler(
   val tolerance: Double = 1e-1,
@@ -26,7 +26,7 @@ class WeisseScheduler(
   val dt_min: Double = 1e-8,
   val dt_max: Double = 1e0,
   val threshold: Double = 1e-4)
-    extends Scheduler with Math with VarConversions {
+    extends Scheduler with Math with VarMapConversions {
 
   // debugging
   var debug_err: DoubleVar = null
@@ -44,13 +44,13 @@ class WeisseScheduler(
       group >>> child
       child.step(t, dt)
       // XXX should propagate all non-double vars here
-      dx +:= child.doubleVars - x0
+      dx += child.doubleVars - x0
     }
 
     // use absolute error for variables near 0 and relative for others
-    def estimateError(v: DoubleVar) = {
-      val x0_i = abs(x0(v.meta))
-      val dx_i = abs(dx(v.meta))
+    def estimateError(v: DoubleVar): Double = {
+      val x0_i = abs(x0(v.meta).value)
+      val dx_i = abs(dx(v.meta).value)
       if (x0_i > threshold) // relative error
         dx_i/x0_i
       else

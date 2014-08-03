@@ -65,7 +65,7 @@ abstract class StochasticReactionNetwork(val name: String)
     for ((s, n) <- rxn.rhs) s += n
   }
 
-  def step(t: Double, dt: Double) {
+  override def step(t: Double, dt: Double) {
     if (propensities.size != rxns.size)
       propensities = Array.fill(rxns.size)(0.0)
     time = t

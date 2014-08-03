@@ -69,7 +69,7 @@ class ProcessGroup(val name: String) extends BaseProcess {
     * the [[Scheduler]] on the list of processes together with the group
     * state table and time parameters.
     */
-  def step(t0: Double, tau: Double) {
+  override def step(t0: Double, tau: Double) {
     _step(t0, tau, t0+tau)
   }
 

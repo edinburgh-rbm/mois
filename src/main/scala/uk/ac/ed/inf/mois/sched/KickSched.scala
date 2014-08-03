@@ -20,7 +20,7 @@ package uk.ac.ed.inf.mois.sched
 import scala.collection.mutable
 
 import uk.ac.ed.inf.mois.{BaseProcess, ProcessGroup, Scheduler, Math}
-import uk.ac.ed.inf.mois.{DoubleVar, VarConversions, VarMap, VarMeta}
+import uk.ac.ed.inf.mois.{DoubleVar, VarMapConversions, VarMap, VarMeta}
 
 class KickScheduler(
   val tolerance: Double = 1e-1,
@@ -28,7 +28,7 @@ class KickScheduler(
   val dt_min: Double = 1e-8,
   val dt_max: Double = 1e0,
   val threshold: Double = 1e-4)
-    extends Scheduler with Math with VarConversions {
+    extends Scheduler with Math with VarMapConversions {
 
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
     val dt = if (tau > dt_max) dt_max else tau
@@ -69,19 +69,17 @@ class KickScheduler(
 //        println(s"\td/d${v.identifier} = $pp")
 //      }
       val kick = child.doubleVars.zeros
-      for (other <- group.processes if other != child) {
-        for (x <- x_tau(other).values) {
-          for (v <- child.doubleVars.values if v != x) {
-            kick(v) += partial_c(x)(v) * x / 4 //2
-          }
-        }
-      }
+      for {
+        other <- group.processes if other != child
+        (mx, x) <- x_tau(other)
+        (mv, v) <- child.doubleVars if v != x
+      } kick(mv) += partial_c(mx)(mv).value * x.value / 4 //2
 //      println(child)
 //      for (v <- child.doubleVars.values.toList.sortBy(_.meta)) {
 //        val kv = kick(v)
 //        println(s"\t$v\t$kv")
 //      }
-      child.doubleVars +:= kick
+      child.doubleVars += kick
     }
 
 //    println("Drifting the rest of the time")
@@ -90,14 +88,14 @@ class KickScheduler(
     val dx = group.doubleVars.zeros // accumulate the change
     for (child <- group.processes) {
       child.step(t+dt/2, dt/2)
-      dx +:= (child.doubleVars - x0)
+      dx += (child.doubleVars - x0)
     }
 
 //    println("Calculating error")
     // use absolute error for variables near 0 and relative for others
-    def estimateError(v: DoubleVar) = {
-      val x0_i = abs(x0(v.meta))
-      val dx_i = abs(dx(v.meta))
+    def estimateError(v: DoubleVar): Double = {
+      val x0_i = abs(x0(v.meta).value)
+      val dx_i = abs(dx(v.meta).value)
       if (x0_i > threshold) // relative error
         dx_i/x0_i
       else

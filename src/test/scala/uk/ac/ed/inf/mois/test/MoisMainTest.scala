@@ -30,7 +30,6 @@ class MoisMainTest extends FlatSpec with Matchers {
       val y = Double("y")
       val z = Double("z")
       val i = Int("i")
-      def step(t: Double, dt: Double) {}
     }
   }
 

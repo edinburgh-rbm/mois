@@ -27,7 +27,7 @@ class ProcessTest extends FlatSpec with Matchers {
     val x1 = Double("ex:x1")
     val x2 = Double("ex:x2")
     val x3 = Boolean("ex:x3")
-    def step(t: Double, tau: Double) {
+    override def step(t: Double, tau: Double) {
       x1 := t + x1 * x2 * tau
       if (t % 2 != 0) x3 := !x3
       else x2 := x2 * x2

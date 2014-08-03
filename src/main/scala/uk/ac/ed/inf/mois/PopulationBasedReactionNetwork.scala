@@ -28,17 +28,10 @@ trait PopulationBasedReactionNetwork extends ReactionNetwork {
   type Base = Int
   type Species = PopulationBasedSpecies
 
-  class PopulationBasedSpecies(val meta: VarMeta) extends BaseSpecies {
-
-    var value = 0
+  class PopulationBasedSpecies(val meta: VarMeta)
+      extends BaseSpecies with IntVarIntf {
     type R = Species
     override def copy = new PopulationBasedSpecies(meta) := value
-
-    def += (x: Int) = update (value + x)
-    def -= (x: Int) = update (value - x)
-    def *= (x: Int) = update (value * x)
-    def /= (x: Int) = update (value / x)
-    def %= (x: Int) = update (value % x)
   }
 
   object Species extends SpeciesFactory {
