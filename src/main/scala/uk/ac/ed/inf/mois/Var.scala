@@ -28,8 +28,9 @@ case class ConstraintViolation(msg: String) extends Exception(msg)
 /** This class is to abstract away the details of uniquely identifying a
   * state variable.
   */
-case class VarMeta(identifier: String) extends Ordered[VarMeta] with Annotation {
-  def compare(that: VarMeta): Int = this.identifier compare that.identifier
+case class VarMeta(identifier: String)
+    extends Ordered[VarMeta] with Annotation {
+  def compare(that: VarMeta) = this.identifier compare that.identifier
   override def toString = identifier
 }
 
@@ -69,24 +70,33 @@ abstract class Var[T] {
   protected[mois] def value: T
   protected[mois] def value_= (x: T)
 
+  // -- Constraints --
+
+  // RHZ: I wanted to move constraints to VarMeta but VarMeta doesn't
+  // know about T.
+  type Constraint = T => Boolean
+
+  val constraints: mutable.ArrayBuffer[Constraint] =
+    mutable.ArrayBuffer.empty[Constraint]
+
+  // def merge(that: VarMeta): VarMeta = {
+  //   require(this.identifier == that.identifier,
+  //     "impossible to merge VarMetas with different identifiers")
+  //   for (c <- that.constraints)
+  //     constraints += c
+  // }
+
   // -- Concrete members --
 
   val meta: VarMeta
 
   /** Syntax sugar for assignment. */
-  @inline final def :=(x: T): this.type = this.update(x)
+  @inline final def := (x: T): this.type = this.update(x)
 
   def stringPrefix = "Var"
 
   override def toString =
     stringPrefix + "(" + meta + ") := " + value
-
-  // -- Constraints --
-
-  val constraints: mutable.ArrayBuffer[Constraint] =
-    mutable.ArrayBuffer.empty[Constraint]
-
-  type Constraint = T => Boolean
 
   /** Assignment to a Variable is expected to set the underlying value. */
   def update(x: T): this.type = {
@@ -121,6 +131,7 @@ class BooleanVar(val meta: VarMeta) extends Var[Boolean] {
 }
 
 trait NumericVar[T] extends Var[T] {
+  type R >: this.type <: NumericVar[T]
   def += (x: T): this.type
   def -= (x: T): this.type
   def *= (x: T): this.type
@@ -128,11 +139,10 @@ trait NumericVar[T] extends Var[T] {
   def %= (x: T): this.type
 }
 
-class IntVar(val meta: VarMeta) extends NumericVar[Int] {
+trait IntVarIntf extends NumericVar[Int] {
+  type R >: this.type <: IntVarIntf
   override def stringPrefix = "Int"
   var value = 0
-  type R = IntVar
-  def copy = new IntVar(meta) := value
   def +=(that: Int) = update (value + that)
   def -=(that: Int) = update (value - that)
   def *=(that: Int) = update (value * that)
@@ -140,11 +150,15 @@ class IntVar(val meta: VarMeta) extends NumericVar[Int] {
   def %=(that: Int) = update (value % that)
 }
 
-class LongVar(val meta: VarMeta) extends NumericVar[Long] {
+class IntVar(val meta: VarMeta) extends IntVarIntf {
+  type R = IntVar
+  def copy = new IntVar(meta) := value
+}
+
+trait LongVarIntf extends NumericVar[Long] {
+  type R >: this.type <: LongVarIntf
   override def stringPrefix = "Long"
   var value = 0L
-  type R = LongVar
-  def copy = new LongVar(meta) := value
   def +=(that: Long) = update (value + that)
   def -=(that: Long) = update (value - that)
   def *=(that: Long) = update (value * that)
@@ -152,11 +166,15 @@ class LongVar(val meta: VarMeta) extends NumericVar[Long] {
   def %=(that: Long) = update (value % that)
 }
 
-class FloatVar(val meta: VarMeta) extends NumericVar[Float] {
+class LongVar(val meta: VarMeta) extends LongVarIntf {
+  type R = LongVar
+  def copy = new LongVar(meta) := value
+}
+
+trait FloatVarIntf extends NumericVar[Float] {
+  type R >: this.type <: FloatVarIntf
   override def stringPrefix = "Float"
   var value = (0.0).toFloat
-  type R = FloatVar
-  def copy = new FloatVar(meta) := value
   def +=(that: Float) = update (value + that)
   def -=(that: Float) = update (value - that)
   def *=(that: Float) = update (value * that)
@@ -164,7 +182,14 @@ class FloatVar(val meta: VarMeta) extends NumericVar[Float] {
   def %=(that: Float) = update (value % that)
 }
 
+class FloatVar(val meta: VarMeta) extends FloatVarIntf {
+  type R = FloatVar
+  def copy = new FloatVar(meta) := value
+}
+
 trait DoubleVarIntf extends NumericVar[Double] {
+  type R >: this.type <: DoubleVarIntf
+  override def stringPrefix = "Double"
   var value = 0.0
   def +=(that: Double) = update (value + that)
   def -=(that: Double) = update (value - that)
@@ -174,15 +199,19 @@ trait DoubleVarIntf extends NumericVar[Double] {
 }
 
 class DoubleVar(val meta: VarMeta) extends DoubleVarIntf {
-  override def stringPrefix = "Double"
   type R = DoubleVar
   def copy = new DoubleVar(meta) := value
 }
 
-class ArrayVar[T](val meta: VarMeta) extends Var[mutable.ArrayBuffer[T]] {
+class ArrayVar[T](val meta: VarMeta)
+   extends Var[mutable.ArrayBuffer[T]] {
   override def stringPrefix = "Array"
   val value: mutable.ArrayBuffer[T] = mutable.ArrayBuffer.empty[T]
-  def value_= (that: mutable.ArrayBuffer[T]) = {
+  def value_= (that: Iterable[T]) {
+    value.clear
+    for (x <- that) value += x
+  }
+  def value_= (that: mutable.ArrayBuffer[T]) {
     value.clear
     for (x <- that) value += x
   }
@@ -207,12 +236,8 @@ class VarMap[T, U <: Var[T] { type R <: U }] extends mutable.Map[VarMeta, U] {
   def add(v: U): U = get(v.meta) match {
     case Some(myv) => myv := v.value
     case None => {
-      // RHZ: Do we really want to make a copy of v here?
-      val copy = v.copy
-      this += v.meta -> copy
-      copy
-      // this += v.meta -> v
-      // v
+      this += v.meta -> v
+      v
     }
   }
 
@@ -243,71 +268,82 @@ object VarMap {
 trait VarConversions {
   @inline implicit def Var2Meta(v: Var[_]) = v.meta
   @inline implicit def getVarValue[T](v: Var[T]) = v.value
+}
 
-  /** implicit utility class for extra operations on a group of DoubleVars */
-  implicit class DoubleVarMap(vm: VarMap[Double, DoubleVar]) {
-    /** return an instance with the same variable identifiers,
-      * but all values set to zero */
+trait VarMapConversions {
+
+  /** Implicit utility class for extra operations on a group of DoubleVars */
+  implicit class NumericVarMap[T, U <: NumericVar[T] { type R <: U }](
+    vm: VarMap[T, U])(implicit num: Numeric[T]) {
+
+    /** Returns an instance with the same variable identifiers,
+      * but all values set to zero.
+      */
     def zeros = {
-      val nvm = VarMap.empty[Double, DoubleVar]
-      for (m <- vm.keys)
-        nvm += m -> new DoubleVar(m)
+      val nvm = vm.copy
+      for ((_, v) <- nvm) v := num.zero
       nvm
     }
-    def +(other: VarMap[Double, DoubleVar]) = {
+    def + (other: VarMap[T, U]) = {
       val nvm = vm.copy
-      nvm +:= other
+      nvm += other
     }
-    def -(other: VarMap[Double, DoubleVar]) = {
+    def + (x: T) = {
       val nvm = vm.copy
-      nvm -:= other
-    }
-    def *(other: VarMap[Double, DoubleVar]) = {
-      val nvm = vm.copy
-      nvm *:= other
-    }
-    def *(x: Double) = {
-      val nvm = vm.copy
-      for (v <- vm.values) {
-        nvm(v) *= x
-      }
+      for (v <- nvm.values) v += x
       nvm
     }
-    def /(other: VarMap[Double, DoubleVar]) = {
+    def - (other: VarMap[T, U]) = {
       val nvm = vm.copy
-      nvm /:= other
+      nvm -= other
     }
-    def /(x: Double) = {
+    def - (x: T) = {
       val nvm = vm.copy
-      for (v <- vm.values) {
-        nvm(v) /= x
-      }
+      for (v <- nvm.values) v -= x
       nvm
     }
-    def +:=(other: VarMap[Double, DoubleVar]) = {
-      for (v <- vm.values if other contains v.meta)
-        v += other(v.meta)
+    def * (other: VarMap[T, U]) = {
+      val nvm = vm.copy
+      nvm *= other
+    }
+    def * (x: T) = {
+      val nvm = vm.copy
+      for (v <- nvm.values) v *= x
+      nvm
+    }
+    def / (other: VarMap[T, U]) = {
+      val nvm = vm.copy
+      nvm /= other
+    }
+    def / (x: T) = {
+      val nvm = vm.copy
+      for (v <- nvm.values) v /= x
+      nvm
+    }
+    def += (other: VarMap[T, U]) = {
+      for ((m, v) <- vm if other contains m)
+        v += other(m).value
       vm
     }
-    def -:=(other: VarMap[Double, DoubleVar]) = {
-      for (v <- vm.values if other contains v.meta)
-          v -= other(v.meta)
+    def -= (other: VarMap[T, U]) = {
+      for ((m, v) <- vm if other contains m)
+        v -= other(m).value
       vm
     }
-    def *:=(other: VarMap[Double, DoubleVar]) = {
-      for (v <- vm.values if other contains v.meta)
-        v *= other(v.meta)
+    def *= (other: VarMap[T, U]) = {
+      for ((m, v) <- vm if other contains m)
+        v *= other(m).value
       vm
     }
-    def /:=(other: VarMap[Double, DoubleVar]) = {
-      for (v <- vm.values if other contains v.meta)
-        v /= other(v.meta)
+    def /= (other: VarMap[T, U]) = {
+      for ((m, v) <- vm if other contains m)
+        v /= other(m).value
       vm
     }
   }
 }
 
-trait VarContainer {
+trait VarContainer extends VarMapConversions {
 
   @inline implicit def String2Meta(s: String) = new VarMeta(s)
 
@@ -320,18 +356,12 @@ trait VarContainer {
   def allVars: mutable.Map[VarMeta, Var[_]] =
     intVars ++ longVars ++ floatVars ++ doubleVars ++ boolVars
 
-  def addVar(nv: IntVar) = intVars add nv
-  def addVar(nv: LongVar) = longVars add nv
-  def addVar(nv: FloatVar) = floatVars add nv
-  def addVar(nv: DoubleVar) = doubleVars add nv
-  def addVar(nv: BooleanVar) = boolVars add nv
-
   def leftMerge(right: VarContainer) {
-    for (i <- right.intVars.values) addVar(i)
-    for (l <- right.longVars.values) addVar(l)
-    for (f <- right.floatVars.values) addVar(f)
-    for (d <- right.doubleVars.values) addVar(d)
-    for (b <- right.boolVars.values) addVar(b)
+    for (i <- right.intVars.values) intVars add i.copy
+    for (l <- right.longVars.values) longVars add l.copy
+    for (f <- right.floatVars.values) floatVars add f.copy
+    for (d <- right.doubleVars.values) doubleVars add d.copy
+    for (b <- right.boolVars.values) boolVars add b.copy
   }
 
   def leftUpdate(right: VarContainer) {
@@ -344,11 +374,13 @@ trait VarContainer {
   @inline final def <<<(right: VarContainer) = leftUpdate(right)
   @inline final def >>>(right: VarContainer) = right.leftUpdate(this)
 
-  def Int(meta: VarMeta) = addVar(new IntVar(meta))
-  def Long(meta: VarMeta) = addVar(new LongVar(meta))
-  def Float(meta: VarMeta) = addVar(new FloatVar(meta))
-  def Double(meta: VarMeta) = addVar(new DoubleVar(meta))
-  def Boolean(meta: VarMeta) = addVar(new BooleanVar(meta))
+  def Int(meta: VarMeta) = intVars add (new IntVar(meta))
+  def Long(meta: VarMeta) = longVars add (new LongVar(meta))
+  def Float(meta: VarMeta) = floatVars add (new FloatVar(meta))
+  def Double(meta: VarMeta) = doubleVars add (new DoubleVar(meta))
+  def Boolean(meta: VarMeta) = boolVars add (new BooleanVar(meta))
+
+  // FIXME: There's no annotation for constraints in the JSON format
 
   /** Creates a JSON string with all variables in this VarContainer. */
   def toJSON: String = {
@@ -368,11 +400,9 @@ trait VarContainer {
         case b: Boolean => JBool(b)
       }
     }
-    // RHZ: Why not just Serialization.write(v.meta) instead?  That
-    // way we don't have to change this code when VarMeta changes.
     val json = for ((_, v) <- this.allVars) yield
       ("value" -> jval(v)) ~
-      ("meta" -> ("identifier" -> v.meta.identifier))
+      ("meta" -> Serialization.write(v.meta))
     pretty(render(json))
   }
 

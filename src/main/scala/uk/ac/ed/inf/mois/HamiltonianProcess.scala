@@ -26,7 +26,9 @@ import org.apache.commons.math3.analysis.differentiation.MultivariateDifferentia
 import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction
 import org.apache.commons.math3.analysis.MultivariateVectorFunction
 
-abstract class HamiltonianProcess(name: String) extends ODE(name) {
+abstract class HamiltonianProcess(val name: String)
+    extends BaseODE with VarConversions {
+
   override def stringPrefix = "Hamiltonian"
 
   type F = () => Double

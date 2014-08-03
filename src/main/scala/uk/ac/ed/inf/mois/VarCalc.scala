@@ -20,6 +20,7 @@ package uk.ac.ed.inf.mois
 import scala.collection.mutable
 
 trait VarCalc extends BaseProcess with VarConversions {
+
   type Func = () => Double
 
   private val vars = mutable.ArrayBuffer.empty[DoubleVar]
