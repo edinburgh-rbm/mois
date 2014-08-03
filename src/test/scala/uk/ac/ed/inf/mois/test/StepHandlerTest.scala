@@ -25,8 +25,8 @@ class StepHandlerTest extends FlatSpec with Matchers with VarConversions {
 
   object p extends Process("p") {
     val x1 = Int("ex:x1")
-    def step(t: Double, tau: Double) {
-      x1 := x1 + 1
+    override def step(t: Double, tau: Double) {
+      x1 += 1
     }
   }
 
@@ -52,8 +52,8 @@ class TsvWriterTest extends FlatSpec with Matchers {
     // purposely define them in the "wrong" order
     val x2 = Int("ex:x2")
     val x1 = Int("ex:x1")
-    def step(t: Double, tau: Double) {
-      x1 := x1 + 1
+    override def step(t: Double, tau: Double) {
+      x1 += 1
       x2 := 2*x1
     }
   }

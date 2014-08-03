@@ -18,10 +18,6 @@ class ReactionNetworkTest extends FlatSpec with Matchers {
         new Reaction(lhs, rhs)
     }
 
-    // -- Process methods --
-
-    def step(t: Double, dt: Double) { }
-
     // -- Brusselator --
 
     val A = Species("A")

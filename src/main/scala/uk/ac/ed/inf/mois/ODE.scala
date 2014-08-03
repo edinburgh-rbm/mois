@@ -93,7 +93,7 @@ abstract class BaseODE
   private val relativeTolerance = 1e-10
 
   /** Main function implementing the `Process` interface. */
-  def step(time: Double, tau: Double) {
+  override def step(time: Double, tau: Double) {
     // construct array of doubles corresponding to the the values of
     // vars which is what the ODE solver will actually use
     val doubleY = vars.map(_.value).toArray

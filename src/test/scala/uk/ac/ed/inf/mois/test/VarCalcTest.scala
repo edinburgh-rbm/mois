@@ -27,7 +27,7 @@ class VarCalcTest extends FlatSpec with Matchers {
     val x = Double("x")
     val y = Double("y")
     calc(y) := x
-    def step(t: Double, tau: Double) {
+    override def step(t: Double, tau: Double) {
       x := t + tau
     }
   }

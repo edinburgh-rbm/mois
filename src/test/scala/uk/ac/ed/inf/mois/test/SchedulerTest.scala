@@ -28,7 +28,7 @@ object sampleEuler1 extends Process("sampleEuler1") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
 
-  def step(t: Double, tau: Double) {
+  override def step(t: Double, tau: Double) {
     x1 += (-0.3*x1 - 0.4*x2) * tau
   }
 }
@@ -37,7 +37,7 @@ object sampleEuler2 extends Process("sampleEuler2") {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
 
-  def step(t: Double, tau: Double) {
+  override def step(t: Double, tau: Double) {
     x2 += (-0.5*x1 - 0.8*x2) * tau
   }
 }
