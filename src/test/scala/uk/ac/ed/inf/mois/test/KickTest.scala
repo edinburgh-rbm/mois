@@ -27,7 +27,7 @@ class KickedModel extends Model {
   val w = Double("w") := -1.0
   val k = Double("k") := 0.5
   val process = new ProcessGroup("Coupled Oscillator Group") {
-    scheduler = new KickScheduler(tolerance=0.1)
+    scheduler = new KickScheduler(0.1)
   }
   process += new CoupledOscillatorA(w, k)
   process += new CoupledOscillatorB(w, k)
@@ -54,13 +54,18 @@ class KickSchedulerTest extends FlatSpec with Matchers with VarConversions {
     val group = new KickedModel
 
     direct.init(0)
-    direct.run(0, 1)
+    direct.run(0, 0.5)
     direct.finish
 
     group.init(0)
-    group.run(0, 1)
+    group.run(0, 0.5)
     group.finish
 
+/*
+    println(direct.process.doubleVars.values.toList.sortBy(_.meta))
+    println(group.process.doubleVars.values.toList.sortBy(_.meta))
+    println(maxerr(direct.process, group.process))
+ */
     (maxerr(direct.process, group.process) < 0.035) should  be (true)
   }
 }
