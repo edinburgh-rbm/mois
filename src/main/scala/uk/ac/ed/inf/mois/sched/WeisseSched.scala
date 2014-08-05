@@ -17,8 +17,8 @@
  */
 package uk.ac.ed.inf.mois.sched
 
-import uk.ac.ed.inf.mois.{ProcessGroup, Scheduler, Math}
-import uk.ac.ed.inf.mois.{DoubleVar, VarMapConversions, VarMeta}
+import uk.ac.ed.inf.mois.{ProcessGroup, Scheduler, AdaptiveTimestep, Math}
+import uk.ac.ed.inf.mois.{DoubleVar, VarMapConversions, VarMap, VarMeta}
 
 class WeisseScheduler(
   val tolerance: Double = 1e-1,
@@ -26,19 +26,13 @@ class WeisseScheduler(
   val dt_min: Double = 1e-8,
   val dt_max: Double = 1e0,
   val threshold: Double = 1e-4)
-    extends Scheduler with Math with VarMapConversions {
-
-  // debugging
-  var debug_err: DoubleVar = null
-  override def init(group: ProcessGroup) {
-    debug_err = group.Double(VarMeta("err"))
-  }
+    extends Scheduler with WeisseAdaptiveTimestep with VarMapConversions {
 
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
     val x0 = group.doubleVars.copy // all variables of the group
     val dx = group.doubleVars.zeros
 
-    val dt = if (tau > dt_max) dt_max else tau
+    val dt = calculateInitialTimestep(tau)
 
     for (child <- group.processes) {
       group >>> child
@@ -46,7 +40,24 @@ class WeisseScheduler(
       // XXX should propagate all non-double vars here
       dx += child.doubleVars - x0
     }
+    calculateNewTimestep(x0, dx, t, dt, group)
+  }
+}
 
+trait WeisseAdaptiveTimestep extends AdaptiveTimestep with VarMapConversions with Math {
+  val tolerance: Double
+  val rho: Double
+  val dt_min: Double
+  val dt_max: Double
+  val threshold: Double
+
+  def calculateInitialTimestep(tau: Double) =
+    if (tau > dt_max) dt_max else tau
+
+  def calculateNewTimestep(
+    x0: VarMap[Double, DoubleVar], dx: VarMap[Double, DoubleVar],
+    t: Double, dt: Double, group: ProcessGroup
+  ) = {
     // use absolute error for variables near 0 and relative for others
     def estimateError(v: DoubleVar): Double = {
       val x0_i = abs(x0(v.meta).value)
@@ -57,7 +68,6 @@ class WeisseScheduler(
         dx_i
     }
     val err = x0.values.map(estimateError(_)).max
-    debug_err := err
 
     val new_dt = max(dt_min, min(dt_max, rho * dt * tolerance / err))
 

@@ -42,3 +42,14 @@ abstract class Scheduler {
     */
   def apply(t: Double, tau: Double, group: ProcessGroup): (Double, Double)
 }
+
+trait AdaptiveTimestep {
+  def apply(t: Double, tau: Double, group: ProcessGroup): (Double, Double)
+
+  def calculateInitialTimestep(tau: Double): Double
+
+  def calculateNewTimestep(
+    x0: VarMap[Double, DoubleVar], dx: VarMap[Double, DoubleVar],
+    t: Double, dt: Double, group: ProcessGroup
+  ): (Double, Double)
+}
