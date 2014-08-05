@@ -27,14 +27,10 @@ trait CatalyticReactionNetwork extends ReactionNetwork {
   abstract class EnzymeMechanism
 
   trait CatalysableReaction extends BaseReaction {
-    def catalysedBy(catalyser: Species) =
-      new ReactionWithCatalyser(lhs, rhs, catalyser)
-  }
-
-  class ReactionWithCatalyser(
-    lhs: Multiset, rhs: Multiset, catalyser: Species) {
-    def using[M <: EnzymeMechanism](mechanism: M) =
-      CatalysedReaction[M](lhs, rhs, catalyser, mechanism)
+    def catalysedBy(catalyser: Species) = new {
+      def using[M <: EnzymeMechanism](mechanism: M) =
+        CatalysedReaction[M](lhs, rhs, catalyser, mechanism)
+    }
   }
 
   case class CatalysedReaction[Mechanism <: EnzymeMechanism](
@@ -50,45 +46,16 @@ trait KineticCatalyticReactionNetwork
 
   type Reaction <: UnratedReaction with CatalysableReaction
 
-  /** A trait for `EnzymeMechanism`s that are used to expand a
-    * catalytic reaction into a set of `KineticReaction`s.
-    */
-  trait KineticMechanism extends EnzymeMechanism {
-    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species)
-        : Seq[KineticReaction]
-  }
-
-  def enzymeComplex(enzyme: Species, substrates: Species*) = {
-    val name = (s: Species) => s.meta.identifier
-    Species(name(enzyme) + "-" + substrates.map(name).mkString("-"))
-  }
+  def enzymeComplex(enzyme: Species, substrates: Species*) =
+    Species(enzyme.meta + "-" + substrates.map(_.meta).mkString("-"))
 
   /** Michaelis-Menten mechanism: E + S <->[k1,k2] ES ->[k3] E + P */
   case class MM(k1: Double, k2: Double, k3: Double)
-      extends KineticMechanism {
-    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
-      require(lhs.multisize == 1, "left-hand side of reaction " +
-        lhs + " -> " + rhs + " must have only one substrate to use " +
-        "Michaelis-Menten mechanism (MM).")
-      require(rhs.multisize == 1, "right-hand side of reaction " +
-        lhs + " -> " + rhs + " must have only one product to use " +
-        "Michaelis-Menten mechanism (MM).")
-      val (s, _) = lhs.head
-      val (p, _) = rhs.head
-      val e  = catalyser
-      val es = enzymeComplex(e, s)
-      List(e + s -> es at k1,
-           es -> e + s at k2,
-           es -> e + p at k3)
-    }
-  }
+      extends EnzymeMechanism
 
   /** Quasi-steady-state approximation. */
   case class QSS(vmax: Double, km: Double)
-      extends KineticMechanism {
-    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) =
-      List(lhs -> rhs `at!` vmax * count(lhs) / (km + count(lhs)))
-  }
+      extends EnzymeMechanism
 
   /** Ternary-complex mechanism in random order.  See
     * en.wikipedia.org/wiki/Enzyme_kinetics#Ternary-complex_mechanisms
@@ -110,43 +77,7 @@ trait KineticCatalyticReactionNetwork
     fwdCat: Double, bwdCat: Double,
     bind3: Double, unbind3: Double,
     bind4: Double, unbind4: Double)
-      extends KineticMechanism {
-    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
-      require(lhs.multisize == 2, "left-hand side of reaction " +
-        lhs + " -> " + rhs + " must have exactly two substrates " +
-        "to use the ternary-complex mechanism (TCRandom).")
-      require(rhs.multisize == 2, "right-hand side of reaction " +
-        lhs + " -> " + rhs + " must have exactly two products " +
-        "to use the ternary-complex mechanism (TCRandom).")
-      val Seq(s1, s2) = lhs.multiseq
-      val Seq(p1, p2) = rhs.multiseq
-      val e = catalyser
-      val es1 = enzymeComplex(e, s1)
-      val es2 = enzymeComplex(e, s2)
-      val es12 = enzymeComplex(es1, s2)
-      val ep1 = enzymeComplex(e, p1)
-      val ep2 = enzymeComplex(e, p2)
-      val ep12 = enzymeComplex(ep1, p2)
-      List(e + s1 -> es1 at bind1,
-           e + s2 -> es2 at bind2,
-           es1 -> e + s1 at unbind1,
-           es2 -> e + s2 at unbind2,
-           es2 + s1 -> es12 at bind1,
-           es1 + s2 -> es12 at bind2,
-           es12 -> es2 + s1 at unbind1,
-           es12 -> es1 + s2 at unbind2,
-           es12 -> ep12 at fwdCat,
-           ep12 -> es12 at bwdCat,
-           ep12 -> ep2 + p1 at unbind3,
-           ep12 -> ep1 + p2 at unbind4,
-           ep2 + p1 -> ep12 at bind3,
-           ep1 + p2 -> ep12 at bind4,
-           ep1 -> e + p1 at unbind3,
-           ep2 -> e + p2 at unbind4,
-           e + p1 -> ep1 at bind3,
-           e + p2 -> ep2 at bind4)
-    }
-  }
+      extends EnzymeMechanism
 
   // TODO: By giving all the species involved in the reaction as
   // parameters to TCOrdered we are basically specifying the reaction
@@ -169,41 +100,7 @@ trait KineticCatalyticReactionNetwork
     fwdCat: Double, bwdCat: Double,
     p: (Species, (Double, Double)),
     q: (Species, (Double, Double)))
-      extends KineticMechanism {
-    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
-      require(lhs.multisize == 2, "left-hand side of reaction " +
-        lhs + " -> " + rhs + " must have exactly two substrates " +
-        "to use the ternary-complex mechanism (TCOrdered).")
-      require(rhs.multisize == 2, "right-hand side of reaction " +
-        lhs + " -> " + rhs + " must have exactly two products " +
-        "to use the ternary-complex mechanism (TCOrdered).")
-      val (s1, (bind1, unbind1)) = a
-      val (s2, (bind2, unbind2)) = b
-      val (p1, (bind3, unbind3)) = p
-      val (p2, (bind4, unbind4)) = q
-      require((lhs contains s1) && (lhs contains s2),
-        "left-hand side of reaction " + lhs + " -> " + rhs +
-        " doesn't contains species " + s1 + " or " + s2)
-      require((rhs contains p1) && (rhs contains p2),
-        "right-hand side of reaction " + lhs + " -> " + rhs +
-        " doesn't contains species " + p1 + " or " + p2)
-      val e = catalyser
-      val es1 = enzymeComplex(e, s1)
-      val es12 = enzymeComplex(es1, s2)
-      val ep2 = enzymeComplex(e, p2)
-      val ep12 = enzymeComplex(ep2, p1)
-      List(e + s1 -> es1 at bind1,
-           es1 -> e + s1 at unbind1,
-           es1 + s2 -> es12 at bind2,
-           es12 -> es1 + s2 at unbind2,
-           es12 -> ep12 at fwdCat,
-           ep12 -> es12 at bwdCat,
-           ep12 -> ep2 + p1 at unbind3,
-           ep2 + p1 -> ep12 at bind3,
-           ep2 -> e + p2 at unbind4,
-           e + p2 -> ep2 at bind4)
-    }
-  }
+      extends EnzymeMechanism
 
   /** Ping-pong mechanism.  See
     * en.wikipedia.org/wiki/Enzyme_kinetics#Ping-pong_mechanisms
@@ -226,38 +123,123 @@ trait KineticCatalyticReactionNetwork
     bind2: Double, unbind2: Double,
     fwd2: Double, bwd2: Double,
     bind4: Double, unbind4: Double)
-      extends KineticMechanism {
-    def expand(lhs: Multiset, rhs: Multiset, catalyser: Species) = {
-      require(lhs.multisize == 2, "left-hand side of reaction " +
-        lhs + " -> " + rhs + " must have exactly two substrates " +
-        "to use the ping-pong mechanism (PP).")
-      require(rhs.multisize == 2, "right-hand side of reaction " +
-        lhs + " -> " + rhs + " must have exactly two products " +
-        "to use the ping-pong mechanism (PP).")
-      val Seq(s1, s2) = lhs.multiseq
-      val Seq(p1, p2) = rhs.multiseq
-      val e1 = catalyser
-      val e2 = Species(e1.meta.identifier + "'")
-      val e1s1 = enzymeComplex(e1, s1)
-      val e2p1 = enzymeComplex(e2, p1)
-      val e2s2 = enzymeComplex(e2, s2)
-      val e1p2 = enzymeComplex(e1, p2)
-      List(e1 + s1 -> e1s1 at bind1,
-           e1s1 -> e1 + s1 at unbind1,
-           e1s1 -> e2p1 at fwd1,
-           e2p1 -> e1s1 at bwd1,
-           e2p1 -> e2 + p1 at unbind3,
-           e2 + p1 -> e2p1 at bind3,
-           e2 + s2 -> e2s2 at bind2,
-           e2s2 -> e2 + s2 at unbind2,
-           e2s2 -> e1p2 at fwd2,
-           e1p2 -> e2s2 at bwd2,
-           e1p2 -> e1 + p2 at unbind4,
-           e1 + p2 -> e1p2 at bind4)
-    }
+      extends EnzymeMechanism
+
+  def check(r: CatalysedReaction[_], size: Int, mech: String) = {
+    require(r.lhs.multisize == size, "left-hand side of reaction " +
+      r.lhs + " -> " + r.rhs + " must have exactly " + size +
+      " substrate" + (if (size > 1) "s" else "") + " to use a " +
+      mech + " mechanism.")
+    require(r.rhs.multisize == size, "right-hand side of reaction " +
+      r.lhs + " -> " + r.rhs + " must have exactly " + size +
+      " product" + (if (size > 1) "s" else "") + " to use a " +
+      mech + " mechanism.")
   }
 
-  implicit def catalyticToKinetic[
-    M <: KineticMechanism](r: CatalysedReaction[M]) =
-    r.mechanism.expand(r.lhs, r.rhs, r.catalyser)
+  // -- Expand catalytic reactions into sets of kinetic reactions --
+
+  implicit def mm(r: CatalysedReaction[MM]) = {
+    check(r, 1, "Michaelis-Menten (MM)")
+    val (s, _) = r.lhs.head
+    val (p, _) = r.rhs.head
+    val e  = r.catalyser
+    val es = enzymeComplex(e, s)
+    import r.mechanism._
+    List(e + s -> es at k1,
+         es -> e + s at k2,
+         es -> e + p at k3)
+  }
+
+  implicit def qss(r: CatalysedReaction[QSS]) = {
+    import r.mechanism.{vmax, km}
+    List(r.lhs -> r.rhs `at!`
+      vmax * count(r.lhs) / (km + count(r.lhs)))
+  }
+
+  implicit def tcrandom(r: CatalysedReaction[TCRandom]) = {
+    check(r, 2, "ternary-complex (TCRandom)")
+    val Seq(s1, s2) = r.lhs.multiseq
+    val Seq(p1, p2) = r.rhs.multiseq
+    val e = r.catalyser
+    val es1 = enzymeComplex(e, s1)
+    val es2 = enzymeComplex(e, s2)
+    val es12 = enzymeComplex(es1, s2)
+    val ep1 = enzymeComplex(e, p1)
+    val ep2 = enzymeComplex(e, p2)
+    val ep12 = enzymeComplex(ep1, p2)
+    import r.mechanism._
+    List(e + s1 -> es1 at bind1,
+         e + s2 -> es2 at bind2,
+         es1 -> e + s1 at unbind1,
+         es2 -> e + s2 at unbind2,
+         es2 + s1 -> es12 at bind1,
+         es1 + s2 -> es12 at bind2,
+         es12 -> es2 + s1 at unbind1,
+         es12 -> es1 + s2 at unbind2,
+         es12 -> ep12 at fwdCat,
+         ep12 -> es12 at bwdCat,
+         ep12 -> ep2 + p1 at unbind3,
+         ep12 -> ep1 + p2 at unbind4,
+         ep2 + p1 -> ep12 at bind3,
+         ep1 + p2 -> ep12 at bind4,
+         ep1 -> e + p1 at unbind3,
+         ep2 -> e + p2 at unbind4,
+         e + p1 -> ep1 at bind3,
+         e + p2 -> ep2 at bind4)
+  }
+
+  implicit def tcordered(r: CatalysedReaction[TCOrdered]) = {
+    check(r, 2, "ternary-complex (TCOrdered)")
+    import r.mechanism._
+    val (s1, (bind1, unbind1)) = a
+    val (s2, (bind2, unbind2)) = b
+    val (p1, (bind3, unbind3)) = p
+    val (p2, (bind4, unbind4)) = q
+    require((r.lhs contains s1) && (r.lhs contains s2),
+      "left-hand side of reaction " + r.lhs + " -> " + r.rhs +
+      " doesn't contains species " + s1 + " or " + s2)
+    require((r.rhs contains p1) && (r.rhs contains p2),
+      "right-hand side of reaction " + r.lhs + " -> " + r.rhs +
+      " doesn't contains species " + p1 + " or " + p2)
+    val e = r.catalyser
+    val es1  = enzymeComplex(e, s1)
+    val es12 = enzymeComplex(es1, s2)
+    val ep2  = enzymeComplex(e, p2)
+    val ep12 = enzymeComplex(ep2, p1)
+    List(e + s1 -> es1 at bind1,
+         es1 -> e + s1 at unbind1,
+         es1 + s2 -> es12 at bind2,
+         es12 -> es1 + s2 at unbind2,
+         es12 -> ep12 at fwdCat,
+         ep12 -> es12 at bwdCat,
+         ep12 -> ep2 + p1 at unbind3,
+         ep2 + p1 -> ep12 at bind3,
+         ep2 -> e + p2 at unbind4,
+         e + p2 -> ep2 at bind4)
+  }
+
+  implicit def pp(r: CatalysedReaction[PP]) = {
+    check(r, 2, "ping-pong (PP)")
+    val Seq(s1, s2) = r.lhs.multiseq
+    val Seq(p1, p2) = r.rhs.multiseq
+    val e1 = r.catalyser
+    val e2 = Species(e1.meta + "'")
+    val e1s1 = enzymeComplex(e1, s1)
+    val e2p1 = enzymeComplex(e2, p1)
+    val e2s2 = enzymeComplex(e2, s2)
+    val e1p2 = enzymeComplex(e1, p2)
+    import r.mechanism._
+    List(e1 + s1 -> e1s1 at bind1,
+         e1s1 -> e1 + s1 at unbind1,
+         e1s1 -> e2p1 at fwd1,
+         e2p1 -> e1s1 at bwd1,
+         e2p1 -> e2 + p1 at unbind3,
+         e2 + p1 -> e2p1 at bind3,
+         e2 + s2 -> e2s2 at bind2,
+         e2s2 -> e2 + s2 at unbind2,
+         e2s2 -> e1p2 at fwd2,
+         e1p2 -> e2s2 at bwd2,
+         e1p2 -> e1 + p2 at unbind4,
+         e1 + p2 -> e1p2 at bind4)
+  }
 }
