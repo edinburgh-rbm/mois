@@ -43,6 +43,4 @@ trait ConcentrationBasedReactionNetwork extends ReactionNetwork {
         s
       }
   }
-
-  val numericBase = implicitly[Numeric[Double]]
 }

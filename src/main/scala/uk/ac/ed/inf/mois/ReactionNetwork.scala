@@ -179,11 +179,10 @@ trait ReactionNetwork extends BaseProcess {
 
   // -- Conversions --
 
-  val numericBase: Numeric[Base]
-
   object MultisetConversion {
-    implicit def multisetToDouble(m: Multiset): Base =
-      (for ((s, n) <- m) yield numericBase.plus(
-        numericBase.fromInt(n), s.value)).product(numericBase)
+    implicit def multisetToDouble(m: Multiset)(
+      implicit num: Numeric[Base]): Base =
+      (for ((s, n) <- m) yield
+        num.times(num.fromInt(n), s.value)).sum(num)
   }
 }
