@@ -19,9 +19,9 @@ name := "mois"
 
 organization := "uk.ac.ed.inf"
 
-version := "1.99.3-SNAPSHOT"
+version := "1.99.4-SNAPSHOT"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.2"
 
 scalacOptions ++= Seq( "-deprecation", "-unchecked", "-feature" )
 
