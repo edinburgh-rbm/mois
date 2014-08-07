@@ -45,6 +45,8 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
 
 libraryDependencies += "org.jfree" % "jfreechart" % "1.0.14"  exclude("xml-apis", "xml-apis")
 
+libraryDependencies += "org.spire-math" %% "spire" % "0.8.2"
+
 libraryDependencies += "org.python" % "jython" % "2.7-b2"
 
 libraryDependencies += "edu.ucar" % "netcdf" % "4.3.22"
