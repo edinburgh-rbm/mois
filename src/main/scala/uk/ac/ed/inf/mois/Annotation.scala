@@ -28,7 +28,8 @@ import scala.collection.mutable
 trait Annotation {
   val annotations = mutable.Map.empty[String, Any]
   /** Add an annotation */
-  def annotate(k: String, v: Any) {
+  def annotate(k: String, v: Any) = {
     annotations += k -> v
+    this
   }
 }

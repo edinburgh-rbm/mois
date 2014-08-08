@@ -216,3 +216,60 @@ abstract class Process(val name: String)
     extends BaseProcess with VarConversions {
   override def stringPrefix = "Process"
 }
+
+import spire.algebra.Ring
+
+class SpireProcess[T](implicit ring: Ring[T]) {
+  /** used to build the variable index on initialisation */
+  private val _variables = mutable.ArrayBuffer.empty[VarMeta]
+  /** list of variables this process uses */
+  lazy val variables = _variables.sorted.toArray
+
+  private val _initial = mutable.Map.empty[VarMeta, T] withDefault(_ => ring.zero)
+  /** set default intial value */
+  def initial(m: VarMeta, v: T) {
+    _initial += m -> v
+  }
+  /** construct a vector of default initial values */
+  def initialValues: Vector[T] = Vector(variables map(m => _initial(m)) :_*)
+
+  /** metadata contained in our variable index */
+  protected case class Index(val meta: VarMeta) extends Annotation {
+    lazy val index = variables indexOf meta
+    /** syntax sugar to set initial values */
+    def := (v: T) = {
+      initial(meta, v)
+      this
+    }
+  }
+  /** companion object to dereference the index automatically */
+  protected object Index {
+    implicit def dereference(i: Index): Int = i.index
+  }
+
+  /** constructor object for a variable used by this process */
+  object Var {
+    /** create a new variable with the given name */
+    def apply(name: String) = {
+      val meta = new VarMeta(name)
+      // inefficient but shouldn't be used outside of initialisations
+      // and tests
+      if (_variables contains meta) {
+        Index(_variables(_variables indexOf meta))
+      } else {
+        _variables += meta
+        Index(meta)
+      }
+    }
+  }
+
+  /**
+    * @param X the state vector
+    * @param t the time
+    * @param tau the time step
+    * @return the change in the state vector
+    */
+  def step(x: Vector[T], t: Double, tau: Double): Vector[T] = {
+    Vector.fill(x.size)(ring.zero)
+  }
+}

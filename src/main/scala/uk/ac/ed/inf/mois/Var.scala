@@ -34,6 +34,10 @@ case class VarMeta(identifier: String)
   override def toString = identifier
 }
 
+object VarMeta {
+  implicit def stringToMeta(s: String) = VarMeta(s)
+}
+
 /** A `Var` is basically a named value of a certain type. It is operated
   * on by a Process. The value given in the initialisation can be retrieved
   * and manipulated in the usual way.
