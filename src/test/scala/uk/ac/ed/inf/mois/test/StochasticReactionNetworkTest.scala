@@ -1,20 +1,21 @@
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{StochasticReactionNetwork, PlotFileWriter}
+import uk.ac.ed.inf.mois.reaction.StochasticReactionNetwork
 
+import scala.language.reflectiveCalls
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
+import spire.implicits._
 
 class StochasticReactionNetworkTest extends FlatSpec with Matchers {
 
-  object GbKl extends StochasticReactionNetwork("Goldbeter-Koshland") {
+  object GbKl extends StochasticReactionNetwork {
+    annotate("long_name", "Goldbeter-Koshland")
 
     val A = Species("A")
     val B = Species("B")
     val X = Species("X")
     val Y = Species("Y")
-
-    addStepHandler(new PlotFileWriter("goldbeter-koshland.png"))
 
     reactions(
       A -> B catalysedBy X using MM(1, 1, 1),

@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.mois
+package uk.ac.ed.inf.mois.reaction
 
 import scala.language.implicitConversions
 import scala.annotation.tailrec
@@ -6,25 +6,26 @@ import scala.annotation.tailrec
 import collection.mutable
 import util.Random
 import scala.math.log
+import uk.ac.ed.inf.mois.math.Multiset
 
 /** Base trait for all reaction networks that use concentrations of
   * molecules as a measure for species (as opposed to
   * population-based reaction networks).
   */
-abstract class StochasticReactionNetwork(val name: String)
-    extends PopulationBasedReactionNetwork
-       with KineticCatalyticReactionNetwork {
+abstract class StochasticReactionNetwork
+    extends PopulationBasedReactionNetwork[Double]
+       with KineticCatalyticReactionNetwork[Double] {
 
   override def stringPrefix = "StochasticReactionNetwork"
 
-  class Reaction(val lhs: Multiset, val rhs: Multiset)
+  class Reaction(val lhs: Multiset[Species], val rhs: Multiset[Species])
       extends UnratedReaction with CatalysableReaction
 
   object Reaction extends ReactionFactory {
-    def apply(lhs: Multiset, rhs: Multiset) = new Reaction(lhs, rhs)
+    def apply(lhs: Multiset[Species], rhs: Multiset[Species]) = new Reaction(lhs, rhs)
   }
 
-  def count(m: Multiset): Double = {
+  def count(m: Multiset[Species]): Double = {
     for ((s, n) <- m; i <- 0 until n)
     yield 0.0 max (s.value - i)
   }.product

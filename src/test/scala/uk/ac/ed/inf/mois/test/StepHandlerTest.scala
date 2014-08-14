@@ -17,17 +17,18 @@
  */
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{Accumulator, Process, StepHandler, TsvWriter, VarConversions}
-
+import uk.ac.ed.inf.mois.{Accumulator, Process, StepHandler, TsvWriter}
+import spire.implicits._
 import org.scalatest.{FlatSpec, Matchers}
 
-class StepHandlerTest extends FlatSpec with Matchers with VarConversions {
+class StepHandlerTest extends FlatSpec with Matchers {
 
-  object p extends Process("p") {
+  object p extends Process {
     val x1 = Int("ex:x1")
     override def step(t: Double, tau: Double) {
       x1 += 1
     }
+    init(0)
   }
 
   "accumulator" should "accumulate state" in {
@@ -39,16 +40,16 @@ class StepHandlerTest extends FlatSpec with Matchers with VarConversions {
     p(1, 1)
     p(2, 1)
 
-    acc(0.0).allVars(p.x1).value should be (0)
-    acc(1.0).allVars(p.x1).value should be (1)
-    acc(2.0).allVars(p.x1).value should be (2)
-    acc(3.0).allVars(p.x1).value should be (3)
+    acc(0.0)(p.x1).value should be (0)
+    acc(1.0)(p.x1).value should be (1)
+    acc(2.0)(p.x1).value should be (2)
+    acc(3.0)(p.x1).value should be (3)
   }
 }
 
 class TsvWriterTest extends FlatSpec with Matchers {
 
-  object p extends Process("p") {
+  object p extends Process {
     // purposely define them in the "wrong" order
     val x2 = Int("ex:x2")
     val x1 = Int("ex:x1")
@@ -56,6 +57,7 @@ class TsvWriterTest extends FlatSpec with Matchers {
       x1 += 1
       x2 := 2*x1
     }
+    init(0)
   }
 
   "file output" should "write tsv" in {

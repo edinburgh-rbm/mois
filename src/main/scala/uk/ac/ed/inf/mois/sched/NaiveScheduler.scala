@@ -24,9 +24,9 @@ import uk.ac.ed.inf.mois.{ProcessGroup, Scheduler}
 class NaiveScheduler(step: Double) extends Scheduler {
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
     for (child <- Random.shuffle(group.processes)) {
-      group >>> child
-      child.step(t, step)
-      group <<< child
+      group.state >>> child.state
+      child(t, step)
+      group.state <<< child.state
     }
     (t+step, step)
   }

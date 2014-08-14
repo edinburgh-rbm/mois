@@ -17,6 +17,9 @@
  */
 package uk.ac.ed.inf.mois
 
+import spire.algebra.Rig
+import spire.implicits._
+
 /**
  * `MoisMain` is the entry point for command line programs that
  * run models. For how to use this, see the mois-examples repository
@@ -194,13 +197,15 @@ object MoisMain {
     }
   }
 
-  def getDoubleVars(names: Seq[String], model: Model) =
-    for (name <- names) yield {
-      val v = model.process.allVars(VarMeta(name))
-      require(v.isInstanceOf[DoubleVarIntf],
-        "variable '" + name + "' is not of type Double")
-      v.asInstanceOf[DoubleVarIntf]
-    }
+  def getDoubleVars(names: Seq[String], model: Model)(implicit
+    rig: Rig[Double]
+  ): Seq[Index[Double]] = {
+    val state = model.buildState
+    for (name <- names
+      if (state.meta.get(rig).isDefined) &&
+      (state.meta(rig) contains name)
+    ) yield state.getIndex(name)
+  }
 
   def getStepHandler(spec: String, model: Model): Option[StepHandler] = {
     val fmtargs = spec split ":"
@@ -227,7 +232,7 @@ object MoisMain {
       }
       case "netcdf" => {
         fmtargs.size match {
-          case 2 => Some(new NetCDFWriter(fmtargs(1)))
+          case 2 => Some(new NetCdfWriter(fmtargs(1)))
           case _ => {
             System.err.println("Invalid spec for NetCDF output")
             None
@@ -271,23 +276,26 @@ object MoisMain {
   def info(cfg: Config) {
     val model = cfg.model.get
     model.init(0)
+    val state = model.buildState
     println("model parameters:")
-    for (v <- model.allVars.values) {
+    for (v <- state.meta.values.foldLeft(Array.empty[VarMeta])((z, a) => z ++ a)) {
       println(String.format("    %s", v))
-      for ((k, a) <- v.meta.annotations)
+      for ((k, a) <- v.annotations)
         println(String.format("%24s: %s", k, a.toString))
     }
 
     println("process tree:")
-    def prprocess(proc: BaseProcess, prefix: String) {
+    def prprocess(proc: Process, prefix: String) {
       for ((k,a) <- model.process.annotations)
         println(String.format("%s%16s: %s", prefix, k, a.toString))
+/*
       println(String.format("%s%16s:", prefix, "variables"))
       for (v <- model.process.state) {
         println(String.format("%s          %s", prefix, v))
         for ((k, a) <- v.meta.annotations)
           println(String.format("%s%32s: %s", prefix, k, a.toString))
       }
+ */
     }
     prprocess(model.process, "")
   }
@@ -314,10 +322,6 @@ object MoisMain {
     for (sh <- cfg.stepHandlers)
       model.process.addStepHandler(sh(model).get)
 
-    // set initial conditions
-    if(cfg.initial.isDefined)
-      model.process.fromJSON(cfg.initial.get)
-
     // run the simulation
     model.init(begin)
     model.run(begin, duration)
@@ -325,9 +329,6 @@ object MoisMain {
 
     // clean up output
     System.out.flush()
-
-    if (cfg.dumpState)
-      println(model.process.toJSON)
   }
 
   def main(args: Array[String]) {

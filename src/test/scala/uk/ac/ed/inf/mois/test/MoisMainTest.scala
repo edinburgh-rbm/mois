@@ -19,13 +19,13 @@ package uk.ac.ed.inf.mois.test
 
 import org.scalatest.{FlatSpec, Matchers}
 import uk.ac.ed.inf.mois.{MoisMain, Model, Process}
-import uk.ac.ed.inf.mois.{TsvWriter, NetCDFWriter,
+import uk.ac.ed.inf.mois.{TsvWriter, NetCdfWriter,
                           PlotFileWriter, PlotGUIWriter}
 
 class MoisMainTest extends FlatSpec with Matchers {
 
   val model = new Model {
-    val process = new Process("") {
+    val process = new Process {
       val x = Double("x")
       val y = Double("y")
       val z = Double("z")
@@ -59,18 +59,18 @@ class MoisMainTest extends FlatSpec with Matchers {
     sh.isDefined should be (false)
   }
 
-  it should "understand NetCDF step handlers" in {
+  it should "understand NetCdf step handlers" in {
     val sh = MoisMain.getStepHandler("netcdf:/dev/null", model)
     sh.isDefined should be (true)
-    sh.get.isInstanceOf[NetCDFWriter] should be (true)
+    sh.get.isInstanceOf[NetCdfWriter] should be (true)
   }
 
-  it should "not understand NetCDF step handlers with no filename" in {
+  it should "not understand NetCdf step handlers with no filename" in {
     val sh = MoisMain.getStepHandler("netcdf:", model)
     sh.isDefined should be (false)
   }
 
-  it should "not understand mal-formed NetCDF step handlers" in {
+  it should "not understand mal-formed NetCdf step handlers" in {
     val sh = MoisMain.getStepHandler("netcdf:/dev/null:xxx", model)
     sh.isDefined should be (false)
   }
@@ -119,7 +119,7 @@ class MoisMainTest extends FlatSpec with Matchers {
     sh1.isDefined should be (true)
     sh1.get.isInstanceOf[TsvWriter] should be (true)
     sh2.isDefined should be (true)
-    sh2.get.isInstanceOf[NetCDFWriter] should be (true)
+    sh2.get.isInstanceOf[NetCdfWriter] should be (true)
   }
 
   it should "print out information about a model" in {

@@ -49,7 +49,7 @@ trait AdaptiveTimestep {
   def calculateInitialTimestep(tau: Double): Double
 
   def calculateNewTimestep(
-    x0: VarMap[Double, DoubleVar], dx: VarMap[Double, DoubleVar],
+    x0: Array[Double], dx: Array[Double],
     t: Double, dt: Double, group: ProcessGroup
   ): (Double, Double)
 }

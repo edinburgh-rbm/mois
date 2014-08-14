@@ -22,7 +22,7 @@ import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.PythonProcess
 
-class S extends PythonProcess("S") {
+class S extends PythonProcess {
   val x = Double("ex:x")
   val y = Double("ex:y")
   val z = Double("ex:z")
@@ -38,6 +38,8 @@ class PythonProcessTest extends FlatSpec with Matchers {
 
   "a python process" should "receive and set variables" in {
     val s = new S
+    s.init(0)
+
     import s._
 
     s.x := 1.0

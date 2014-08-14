@@ -19,29 +19,27 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 
-trait VarCalc extends BaseProcess with VarConversions {
+trait VarCalc extends Process {
 
-  type Func = () => Double
+  type Func = () => Unit
 
-  private val vars = mutable.ArrayBuffer.empty[DoubleVar]
   private val funcs = mutable.ArrayBuffer.empty[Func]
 
-  protected class Calc(val v: DoubleVar) {
-    def := (e: => Double): Unit = {
-      vars += v
-      funcs += (() => e)
+  protected class Calc[T](val v: Index[T]) {
+    def := (e: => T): Unit = {
+      funcs += (() => v := e)
     }
   }
 
-  @inline final def calc(v: DoubleVar) = new Calc(v)
+  @inline final def calc[T](v: Index[T]) = new Calc(v)
 
   protected class CalcVars extends StepHandler {
-    def init(t: Double, proc: BaseProcess) {
+    def init(t: Double, proc: Process) {
       handleStep(t, proc)
     }
-    def handleStep(t: Double, proc: BaseProcess) {
-      for ((v, f) <- vars zip funcs) {
-        v := f()
+    def handleStep(t: Double, proc: Process) {
+      for (f <- funcs) {
+        f()
       }
     }
   }

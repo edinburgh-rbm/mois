@@ -26,9 +26,7 @@ import org.apache.commons.math3.analysis.differentiation.MultivariateDifferentia
 import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction
 import org.apache.commons.math3.analysis.MultivariateVectorFunction
 
-abstract class HamiltonianProcess(val name: String)
-    extends BaseODE with VarConversions {
-
+abstract class HamiltonianProcess extends ODE {
   override def stringPrefix = "Hamiltonian"
 
   type F = () => Double
@@ -45,7 +43,7 @@ abstract class HamiltonianProcess(val name: String)
    */
   var totalEnergy = 0.0
 
-  case class H(q: DoubleVar*)(p: DoubleVar*)
+  case class H(q: Index[Double]*)(p: Index[Double]*)
       extends MultivariateDifferentiableFunction {
     private val phase = q ++ p
     assert(q.size == p.size)

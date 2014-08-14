@@ -20,46 +20,78 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
+import scala.collection.mutable
+import spire.algebra.{Field, Ring, VectorSpace}
+
 import spire.implicits._
-import spire.algebra.{Ring, VectorSpace}
-import spire.math.{Real, Rational}
+import spire.math.{Numeric, Real, Rational, Number}
 
-import uk.ac.ed.inf.mois.SpireProcess
 
-class SillyProcess[T](implicit ring: Ring[T]) extends SpireProcess[T] {
-  val x = Var("hello")
-  x annotate("who", "world")
-  val y = Var("foo")
-  y annotate("what", "bar")
+// import uk.ac.ed.inf.mois.SpireProcess
 
-  def step(x: Vector[T], t: Double, tau: Double)(implicit
-    vs: VectorSpace[Vector[T], T] // needed for the - operation
-  ) = {
-    /* just do something silly like print out the state X */
-    val m0 = variables(0)
-    val v0 = x(0)
-    for (i <- 0 until x.size) {
-      val m = variables(i)
-      val v = x(Index(m))
-      println(s"x($i) = $m = $v")
-    }
+// class SillyProcess extends SpireProcess {
+//   val x = Double("hello")
+//   x annotate("who", "world")
+//   val y = Double("foo")
+//   y annotate("what", "bar")
+//   val z = BigInt("Big")
+//   val b = Boolean("Bool")
+// }
 
-    // we can reference the vector like this too
-    require(x(y) == x(Index("foo")), "...")
+// abstract class Integrator[T] {
 
-    // do something to the state vector
-    x :/ 0.5
-  }
-}
+//   def apply(x0: Vector[T], t0: Double, tau: Double): Vector[T]
 
-class SpireTest extends FlatSpec with Matchers {
-  "foo" should "bar" in {
+//   def x (d: Double): Integrator[T] = {
+//     val old = this
+//     new Integrator[T] {
+//       def apply(x0: Vector[T], t0: Double, tau: Double) = {
+//         old(x0, t0, tau/2)
+//       }
+//     }
+//   }
 
-    val p = new SillyProcess[Real]
-    p.x := 1.0
-    p.y := 2.0
-    println(p.step(p.initialValues, 0, 1))
+//   def compose(rhs: Integrator[T]) = {
+//     val lhs = this
+//     new Integrator[T] {
+//       def apply(x0: Vector[T], t0: Double, tau: Double) = {
+//         lhs(rhs(x0, t0, tau), t0, tau)
+//       }
+//     }
+//   }
+// }
 
-    (1) should be (1)
-  }
-}
+// case class ForwardEuler[T](f: Integrable[T])(implicit vs: VectorSpace[Vector[T], T])
+//     extends Integrator[T] {
+//   def apply(x0: Vector[T], t0: Double, tau: Double) = {
+//     val dx = f.derivative(x0, t0) :/ (1/tau)
+//     x0 + dx
+//   }
+// }
+
+// /**
+//   */
+// abstract class Integrable[T] {
+//   def derivative(x: Vector[T], t: Double): Vector[T]
+// }
+
+// class SpireTest extends FlatSpec with Matchers {
+//   "foo" should "bar" in {
+
+//     val p = new SillyProcess
+//     p.init(p.buildState, 0)
+//     p.x := 1.0
+//     p.y := 2.0
+//     println(s"${p.x}, ${p.y}")
+
+//     val f = new Integrable[Double] {
+//       def derivative(x: Vector[Double], t: Double) = Vector.fill(x.size)(1.0)
+//     }
+
+//     val i2 = (ForwardEuler(f) x 0.5) compose (ForwardEuler(f) x 0.5)
+
+//     println(i2(Vector(0.0), 0, 10))
+
+//     (1) should be (1)
+//   }
+// }

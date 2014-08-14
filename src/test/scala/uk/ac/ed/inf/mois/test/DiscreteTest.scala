@@ -19,10 +19,11 @@ package uk.ac.ed.inf.mois.test
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
+import spire.implicits._
 
 import uk.ac.ed.inf.mois.DiscreteProcess
 
-class Henon(a: Double, b: Double) extends DiscreteProcess("Henon") {
+class Henon(a: Double, b: Double) extends DiscreteProcess[Double] {
   val x = Double("ex:x")
   val y = Double("ex:y")
   next(x) := 1.0 - a * x*x + y
@@ -38,6 +39,8 @@ class DiscreteProcessTest extends FlatSpec with Matchers {
       TolerantNumerics.tolerantDoubleEquality(precision)
 
     val henon = new Henon(1.4, 0.3)
+    henon.init(0)
+
     import henon._
 
     henon.x := 0.0

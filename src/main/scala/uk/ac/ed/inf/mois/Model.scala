@@ -20,11 +20,12 @@ package uk.ac.ed.inf.mois
 import scala.collection.mutable
 import scala.util.matching.Regex
 
-abstract class Model extends VarContainer with VarConversions {
+abstract class Model extends StateBuilder {
 
-  val process: BaseProcess
+  val process: Process
 
   def init(t: Double) {
+    merge(process)
     process.init(t)
   }
 
@@ -53,14 +54,14 @@ abstract class Model extends VarContainer with VarConversions {
   }
 
   /** set a model parameter */
-  def setParam(name: String, value: Double) {
-    doubleVars(VarMeta(name)) := value
-  }
+  // def setParam(name: String, value: Double) {
+  //   doubleVars(VarMeta(name)) := value
+  // }
 
   /** set a variable (for initial conditions */
-  def setVar(name: String, value: Double) {
-    process.doubleVars(VarMeta(name)) := value
-  }
+  // def setVar(name: String, value: Double) {
+  //   process.doubleVars(VarMeta(name)) := value
+  // }
 }
 
 object Model {

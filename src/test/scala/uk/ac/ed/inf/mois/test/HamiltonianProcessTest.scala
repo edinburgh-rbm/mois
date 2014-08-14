@@ -23,8 +23,8 @@ import org.scalactic.TolerantNumerics
 import java.lang.Math.PI
 import uk.ac.ed.inf.mois.{HamiltonianProcess, Math}
 
-case class Pendulum(m: Double, l: Double)
-    extends HamiltonianProcess("Pendulum") with Math {
+case class Pendulum(m: Double, l: Double) extends HamiltonianProcess with Math {
+  annotate("description", "Pendulum")
   val q = Double("ex:q")
   val p = Double("ex:p")
   val g = 9.81
@@ -41,6 +41,8 @@ class HamiltonianProcessTest extends FlatSpec with Matchers {
       TolerantNumerics.tolerantDoubleEquality(precision)
 
     val pendulum = new Pendulum(1, 1)
+    pendulum.init(0)
+
     import pendulum._
 
     q := PI/4

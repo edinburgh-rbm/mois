@@ -19,29 +19,30 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 
-/** A `BaseProcess` is basically a container of mutable variables
+/** A `Process` is basically a container of mutable variables
   * ([[VarContainer]]) and a function that operates them parametrised
-  * by time. It may be [[BaseProcess.annotate]]d so that it may
+  * by time. It may be [[Process.annotate]]d so that it may
   * be self-documenting and introspectable.
   *
-  * A `BaseProcess` also has a list of [[StepHandler]]s that run each
+  * A `Process` also has a list of [[StepHandler]]s that run each
   * time step after the computation, their purpose is post-processing
   * and output of the data.
   *
   * It is possible to parametrise by other values in addition
   * to time. For example to run the same simulation several times with
   * different initial conditions. Such variables are called
-  * [[BaseProcess.Dimension]]s and are of fixed size -- unlike time which
+  * [[Process.Dimension]]s and are of fixed size -- unlike time which
   * has unlimited range.
   */
-abstract class BaseProcess extends VarContainer with Annotation {
+abstract class Process extends StateBuilder with Annotation {
+  lazy val state = buildState
 
-  /** a process is required to have a name (XXX: really? why?) */
-  def name: String
   /** the list of handlers that run after each step */
-  val stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
+  val _stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
+  lazy val stepHandlers = _stepHandlers.toArray
+
   /** a list of dimensions and their size/index */
-  val dimensions = mutable.Map.empty[Var[_], Int]
+  val dimensions = mutable.Map.empty[VarMeta, Int]
 
   /** Automatically annotate the process with its software name and version */
   protected def addBasicAnnotations = {
@@ -58,19 +59,13 @@ abstract class BaseProcess extends VarContainer with Annotation {
     if (m.name != null && m.version != null) {
       annotate(m.name, m.version)
     }
-
-    annotate("name", name)
-    annotate("type", stringPrefix)
     annotate("class", getClass.getName)
   }
-
-  /** All variables defined in this `BaseProcess`. */
-  def state: Seq[Var[_]] = allVars.values.toSeq
 
   /** This function takes the state from where it is at
     * time t to where it is at t + tau. This must be supplied
     * by concrete sub-classes. Except for testing, it is always
-    * called via the [[BaseProcess.apply]] method so that any
+    * called via the [[Process.apply]] method so that any
     * [[StepHandler]]s also get executed.
     *
     * @param t the time at the beginning of the step
@@ -86,7 +81,7 @@ abstract class BaseProcess extends VarContainer with Annotation {
     * @param t the time at the beginning of the step
     * @param tau the size of the step (delta-t)
     */
-  def apply(t: Double, tau: Double) {
+  def apply(t: Double, tau: Double) = {
     step(t, tau)
     for (sh <- stepHandlers)
       sh.handleStep(t+tau, this)
@@ -101,6 +96,7 @@ abstract class BaseProcess extends VarContainer with Annotation {
     * @param t the time at the beginning of the simulation
     */
   def init(t: Double) {
+    initStateIndices(state)
     addBasicAnnotations
     for (sh <- stepHandlers)
       sh.init(t, this)
@@ -132,144 +128,26 @@ abstract class BaseProcess extends VarContainer with Annotation {
     * @param sh the step handler, evidently
     */
   def addStepHandler(sh: StepHandler) {
-    stepHandlers += sh
+    _stepHandlers += sh
   }
 
   /** Needed for NetCDF et al. TODO: explain better */
-  class Dimension(v: Var[_]) {
-    def apply = dimensions(v)
-    def update(x: Int) { dimensions(v) = x }
-    def +=(x: Int) { dimensions(v) = dimensions(v) + x }
-    def -=(x: Int) { dimensions(v) = dimensions(v) - x }
-    def *=(x: Int) { dimensions(v) = dimensions(v) * x }
-    def /=(x: Int) { dimensions(v) = dimensions(v) / x }
+  class Dimension[T](i: Index[T]) {
+    def apply = dimensions(i.meta)
+    def update(x: Int) { dimensions(i.meta) = x }
+    def +=(x: Int) { dimensions(i.meta) = dimensions(i.meta) + x }
+    def -=(x: Int) { dimensions(i.meta) = dimensions(i.meta) - x }
+    def *=(x: Int) { dimensions(i.meta) = dimensions(i.meta) * x }
+    def /=(x: Int) { dimensions(i.meta) = dimensions(i.meta) / x }
   }
   object Dimension {
-    def apply(v: Var[_], size: Int): Dimension = {
-      dimensions += allVars(v.meta) -> size
-      Dimension(v)
+    def apply[T](i: Index[T], size: Int): Dimension[T] = {
+      dimensions += i.meta -> size
+      Dimension(i)
     }
-    def apply(v: Var[_]): Dimension = new Dimension(v)
+    def apply[T](i: Index[T]): Dimension[T] = new Dimension(i)
   }
 
-  def stringPrefix = "BaseProcess"
-  override def toString = stringPrefix + "(" + name + ")"
-
-  /** Calculate the partial derivatives of a process. This means, for
-    * each (double) variable, change it by some small amount (typically
-    * 1% either way) and find out how this affects the other variables.
-    *
-    * For example,
-    * {{{
-    * p = new SomeProcess(...) // vars x1 and x2
-    * partials = p.partialDerivatives(0, 1)
-    * // \partial p \over \partial x1
-    * dpdx1 = partials(x1)
-    * // the x2 component -- how x2 depends on x1
-    * dx2 = partials(x1)(x2)
-    * }}}
-    *
-    * @param t time to begin the simulation
-    * @param tau end-time
-    * @return a may with keys for each variable, and values the changes
-    *         for every other.
-    */
-  def partialDerivatives(t: Double, tau: Double) = {
-
-    object state extends VarContainer
-    state leftMerge this
-
-    val partials = mutable.Map.empty[VarMeta, VarMap[Double, DoubleVar]]
-      .withDefaultValue(new VarMap[Double, DoubleVar] {
-        override def default(meta: VarMeta) = new DoubleVar(meta)
-      })
-    val epsilon = 0.01
-    for ((m, v) <- doubleVars) {
-      state >>> this
-
-      val dv = if (v.value == 0.0) {
-        epsilon
-      } else {
-        epsilon * v.value
-      }
-
-      v -= dv
-      step(t, tau)
-      val minus = doubleVars.copy
-
-      state >>> this
-
-      v += dv
-      step(t, tau)
-      val plus = doubleVars.copy
-
-      partials += m -> (plus - minus)/(2*dv)
-      partials(m)(m) := 0
-    }
-
-    state >>> this
-    partials
-  }
-}
-
-abstract class Process(val name: String)
-    extends BaseProcess with VarConversions {
-  override def stringPrefix = "Process"
-}
-
-import spire.algebra.Ring
-
-class SpireProcess[T](implicit ring: Ring[T]) {
-  /** used to build the variable index on initialisation */
-  private val _variables = mutable.ArrayBuffer.empty[VarMeta]
-  /** list of variables this process uses */
-  lazy val variables = _variables.sorted.toArray
-
-  private val _initial = mutable.Map.empty[VarMeta, T] withDefault(_ => ring.zero)
-  /** set default intial value */
-  def initial(m: VarMeta, v: T) {
-    _initial += m -> v
-  }
-  /** construct a vector of default initial values */
-  def initialValues: Vector[T] = Vector(variables map(m => _initial(m)) :_*)
-
-  /** metadata contained in our variable index */
-  protected case class Index(val meta: VarMeta) extends Annotation {
-    lazy val index = variables indexOf meta
-    /** syntax sugar to set initial values */
-    def := (v: T) = {
-      initial(meta, v)
-      this
-    }
-  }
-  /** companion object to dereference the index automatically */
-  protected object Index {
-    implicit def dereference(i: Index): Int = i.index
-  }
-
-  /** constructor object for a variable used by this process */
-  object Var {
-    /** create a new variable with the given name */
-    def apply(name: String) = {
-      val meta = new VarMeta(name)
-      // inefficient but shouldn't be used outside of initialisations
-      // and tests
-      if (_variables contains meta) {
-        Index(_variables(_variables indexOf meta))
-      } else {
-        _variables += meta
-        Index(meta)
-      }
-    }
-  }
-
-  /**
-    * @param X the state vector
-    * @param t the time
-    * @param tau the time step
-    * @return the change in the state vector
-    */
-  def step(x: Vector[T], t: Double, tau: Double): Vector[T] = {
-    Vector.fill(x.size)(ring.zero)
-  }
+  def stringPrefix = "Process"
+  override def toString = stringPrefix
 }

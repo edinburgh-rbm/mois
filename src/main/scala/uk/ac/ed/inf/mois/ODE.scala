@@ -25,24 +25,18 @@ import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator
 
 import collection.mutable
 
-// TODO: Maybe we should allow users to define algebraic equations
-// as well as we do in the graph-rewriting library.
-
 /** A partial implementation of `Process` that uses the Apache Commons
   * Math ODE library to implement its `step` method.
   */
-abstract class ODE(val name: String)
-    extends BaseODE with VarConversions {
-  override def stringPrefix = "ODE"
-}
-
-abstract class BaseODE
-    extends BaseProcess
-       with ode.FirstOrderDifferentialEquations {
+abstract class ODE extends Process
+    with ode.FirstOrderDifferentialEquations {
   self =>
 
+  /** An array with all `Var`s for which to integrate. */
+  val vars = mutable.ArrayBuffer.empty[Index[Double]]
+
   /** A class to define derivatives of `Var`s. */
-  protected class AddODE(val vs: Seq[DoubleVarIntf]) {
+  protected class AddODE(val vs: Seq[Index[Double]]) {
 
     /** Adds an ODE definition to the process. */
     def := (fs: (() => Double)*): Unit = {
@@ -55,10 +49,10 @@ abstract class BaseODE
     }
   }
   implicit def bynameToFun(f: => Double) = () => f
-  implicit def varToFun(f: DoubleVarIntf) = () => f.value
+  implicit def varToFun(f: Index[Double]) = () => f.value
 
   /** Adds an ODE definition to the current `ODE`. */
-  protected def d(vs: DoubleVarIntf*) = new AddODE(vs) {
+  protected def d(vs: Index[Double]*) = new AddODE(vs) {
     def / (d: dt.type) = new AddODE(vs)
   }
 
@@ -67,9 +61,6 @@ abstract class BaseODE
 
   /** `Var` used to construct derivatives that depend on time. */
   var t = 0.0
-
-  /** An array with all `Var`s for which to integrate. */
-  val vars = mutable.ArrayBuffer.empty[DoubleVarIntf]
 
   type Derivative = () => Double
 
@@ -104,49 +95,6 @@ abstract class BaseODE
     // construct the integrator
     val i = integrator()
 
-    // only add step handlers if we have them
-    //
-    // WW: this block is ***required*** do not remove
-    //
-    // RHZ: No! This is not required! An explanation of why you think
-    // it's required would helpful, because after last time we
-    // discussed it I had the impression we agreed it was not even
-    // desired.
-    //
-    // The reason I think it's *wrong* to do this is that mois should
-    // treat all processes as black boxes.  Also, mois step handlers
-    // in my opinion should have the following guarantee: they will
-    // be called only once per call to step.  They should handle mois
-    // steps, not someone's else steps.  This clearly violates both.
-    //
-    // WW: Because it is required to be able to produce a trace of
-    // output for an ODE process. There might be another way to do this
-    // by manipulating the way the process is run but until that exists
-    // and we are satisfied with it, do not remove the ability to
-    // because I need it and I use it. It's impossible to, e.g.
-    // work on schedulers and compare to a known behaviour without it.
-    //
-    // We agreed that it was a bit ugly and should go away but not
-    // without an alternative
-    //
-    // RHZ: The alternative is our step method!  If you need a thousand
-    // points between time 0 and 10, just run it like:
-    // val s = 0.01; for (i <- 0.0 until 10.0 by s) step(i, i+s)
-    //
-    if (stepHandlers.size > 0) {
-      i.addStepHandler(new sampling.StepHandler {
-        def init(t0: Double, y0: Array[Double], t: Double) {}
-        def handleStep(interp: sampling.StepInterpolator, isLast: Boolean) {
-          val t = interp.getCurrentTime()
-          val y = interp.getInterpolatedState()
-          for (i <- 0 until vars.size)
-            vars(i) := y(i)
-          for (sh <- stepHandlers)
-            sh.handleStep(t, self)
-        }
-      })
-    }
-
     // conduct the integration
     i.integrate(this, time, doubleY, time+tau, doubleY)
 
@@ -175,6 +123,4 @@ abstract class BaseODE
     * the vector-valued integral.
     */
   def getDimension = vars.size
-
-  @inline override def apply(t: Double, tau: Double) = step(t, tau)
 }

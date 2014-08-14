@@ -1,6 +1,6 @@
 /*
  *  MOIS: Catalytic Reaction Network
- *  Copyright (C) 2014 University of Edinburgh School of Informatics
+ *  Copyringht (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,12 +15,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.ed.inf.mois
+package uk.ac.ed.inf.mois.reaction
 
 import scala.language.implicitConversions
+import uk.ac.ed.inf.mois.math.Multiset
+import spire.algebra.Ring
+import spire.implicits._
 
 /** A trait for reaction networks that have catalysis. */
-trait CatalyticReactionNetwork extends ReactionNetwork {
+trait CatalyticReactionNetwork[T] extends ReactionNetwork[T] {
 
   type Reaction <: CatalysableReaction
 
@@ -34,19 +37,21 @@ trait CatalyticReactionNetwork extends ReactionNetwork {
   }
 
   case class CatalysedReaction[Mechanism <: EnzymeMechanism](
-    lhs: Multiset, rhs: Multiset, catalyser: Species,
+    lhs: Multiset[Species], rhs: Multiset[Species], catalyser: Species,
     mechanism: Mechanism) extends SimpleReaction
 }
 
 
 /** A trait for reaction networks that have catalysis. */
-trait KineticCatalyticReactionNetwork
-    extends KineticReactionNetwork
-       with CatalyticReactionNetwork {
+trait KineticCatalyticReactionNetwork[T]
+    extends KineticReactionNetwork[T]
+       with CatalyticReactionNetwork[T] {
 
   type Reaction <: UnratedReaction with CatalysableReaction
 
-  def enzymeComplex(enzyme: Species, substrates: Species*) =
+  def enzymeComplex(enzyme: Species, substrates: Species*)(implicit
+    ring: Ring[T]
+  ) =
     Species(enzyme.meta + "-" + substrates.map(_.meta).mkString("-"))
 
   /** Michaelis-Menten mechanism: E + S <->[k1,k2] ES ->[k3] E + P */
@@ -130,7 +135,7 @@ trait KineticCatalyticReactionNetwork
       r.lhs + " -> " + r.rhs + " must have exactly " + size +
       " substrate" + (if (size > 1) "s" else "") + " to use a " +
       mech + " mechanism.")
-    require(r.rhs.multisize == size, "right-hand side of reaction " +
+    require(r.rhs.multisize == size, "ringht-hand side of reaction " +
       r.lhs + " -> " + r.rhs + " must have exactly " + size +
       " product" + (if (size > 1) "s" else "") + " to use a " +
       mech + " mechanism.")
@@ -138,7 +143,7 @@ trait KineticCatalyticReactionNetwork
 
   // -- Expand catalytic reactions into sets of kinetic reactions --
 
-  implicit def mm(r: CatalysedReaction[MM]) = {
+  implicit def mm(r: CatalysedReaction[MM])(implicit ring: Ring[T]) = {
     check(r, 1, "Michaelis-Menten (MM)")
     val (s, _) = r.lhs.head
     val (p, _) = r.rhs.head
@@ -156,7 +161,7 @@ trait KineticCatalyticReactionNetwork
       vmax * count(r.lhs) / (km + count(r.lhs)))
   }
 
-  implicit def tcrandom(r: CatalysedReaction[TCRandom]) = {
+  implicit def tcrandom(r: CatalysedReaction[TCRandom])(implicit ring: Ring[T]) = {
     check(r, 2, "ternary-complex (TCRandom)")
     val Seq(s1, s2) = r.lhs.multiseq
     val Seq(p1, p2) = r.rhs.multiseq
@@ -188,7 +193,7 @@ trait KineticCatalyticReactionNetwork
          e + p2 -> ep2 at bind4)
   }
 
-  implicit def tcordered(r: CatalysedReaction[TCOrdered]) = {
+  implicit def tcordered(r: CatalysedReaction[TCOrdered])(implicit ring: Ring[T]) = {
     check(r, 2, "ternary-complex (TCOrdered)")
     import r.mechanism._
     val (s1, (bind1, unbind1)) = a
@@ -199,7 +204,7 @@ trait KineticCatalyticReactionNetwork
       "left-hand side of reaction " + r.lhs + " -> " + r.rhs +
       " doesn't contains species " + s1 + " or " + s2)
     require((r.rhs contains p1) && (r.rhs contains p2),
-      "right-hand side of reaction " + r.lhs + " -> " + r.rhs +
+      "ringht-hand side of reaction " + r.lhs + " -> " + r.rhs +
       " doesn't contains species " + p1 + " or " + p2)
     val e = r.catalyser
     val es1  = enzymeComplex(e, s1)
@@ -218,7 +223,7 @@ trait KineticCatalyticReactionNetwork
          e + p2 -> ep2 at bind4)
   }
 
-  implicit def pp(r: CatalysedReaction[PP]) = {
+  implicit def pp(r: CatalysedReaction[PP])(implicit ring: Ring[T]) = {
     check(r, 2, "ping-pong (PP)")
     val Seq(s1, s2) = r.lhs.multiseq
     val Seq(p1, p2) = r.rhs.multiseq

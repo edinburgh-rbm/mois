@@ -20,52 +20,52 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{Model, ProcessGroup, VarContainer, VarConversions, VarMeta}
-import uk.ac.ed.inf.mois.sched.{KickScheduler}
+import spire.implicits._
 
-class KickedModel extends Model {
-  val w = Double("w") := -1.0
-  val k = Double("k") := 0.5
-  val process = new ProcessGroup("Coupled Oscillator Group") {
-    scheduler = new KickScheduler(0.1)
-  }
-  process += new CoupledOscillatorA(w, k)
-  process += new CoupledOscillatorB(w, k)
-}
+// import uk.ac.ed.inf.mois.{Model, ProcessGroup}
+// import uk.ac.ed.inf.mois.sched.{KickScheduler}
 
-/** Run the two versions of the system of ODEs with the NaiveScheduler. */
-class KickSchedulerTest extends FlatSpec with Matchers with VarConversions {
+// class KickedModel extends Model {
+//   val w = Double("w") := -1.0
+//   val k = Double("k") := 0.5
+//   val process = new ProcessGroup {
+//     scheduler = new KickScheduler(0.1)
+//   }
+//   process += new CoupledOscillatorA(w, k)
+//   process += new CoupledOscillatorB(w, k)
+// }
 
-  // Use approximate equality in `should equal`
-  val precision = 1e-4
-  implicit val doubleEquality =
-    TolerantNumerics.tolerantDoubleEquality(precision)
+// /** Run the two versions of the system of ODEs with the NaiveScheduler. */
+// class KickSchedulerTest extends FlatSpec with Matchers {
 
-  import scala.math.abs
-  implicit def stringToMeta(s: String) = VarMeta(s)
+//   // Use approximate equality in `should equal`
+//   val precision = 1e-4
+//   implicit val doubleEquality =
+//     TolerantNumerics.tolerantDoubleEquality(precision)
 
-  def maxerr(p1: VarContainer, p2: VarContainer) =
-    Seq("x1", "x2", "x3", "x4")
-      .map(v => abs(1-p1.doubleVars("c:" + v)/p2.doubleVars("d:" + v)))
-      .max
+//   import scala.math.abs
 
-  "coupled oscillator" should "give similar results directly as with weisse" in {
-    val direct = new CoupledOscillatorModel
-    val group = new KickedModel
+//   def maxerr(s1: Array[Double], s2: Array[Double]) =
+//     (0 until s1.size).map( i => abs(1 - s1(i)/s2(i)) )
+//       .max
 
-    direct.init(0)
-    direct.run(0, 0.5)
-    direct.finish
+//   "coupled oscillator" should "give similar results directly as with weisse" in {
+//     val direct = new CoupledOscillatorModel
+//     val group = new KickedModel
 
-    group.init(0)
-    group.run(0, 0.5)
-    group.finish
+//     direct.init(0)
+//     direct.run(0, 0.5)
+//     direct.finish
 
-/*
-    println(direct.process.doubleVars.values.toList.sortBy(_.meta))
-    println(group.process.doubleVars.values.toList.sortBy(_.meta))
-    println(maxerr(direct.process, group.process))
- */
-    (maxerr(direct.process, group.process) < 0.035) should  be (true)
-  }
-}
+//     group.init(0)
+//     group.run(0, 0.5)
+//     group.finish
+
+// /*
+//     println(direct.process.doubleVars.values.toList.sortBy(_.meta))
+//     println(group.process.doubleVars.values.toList.sortBy(_.meta))
+//     println(maxerr(direct.process, group.process))
+//  */
+//     (maxerr(direct.process.state, group.process.state) < 0.035) should  be (true)
+//   }
+// }

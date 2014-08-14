@@ -1,11 +1,15 @@
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{DeterministicReactionNetwork, Model, PlotFileWriter}
+import uk.ac.ed.inf.mois.reaction.DeterministicReactionNetwork
+import uk.ac.ed.inf.mois.Model
+import scala.language.reflectiveCalls
+import spire.implicits._
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-object GbKl extends DeterministicReactionNetwork("Goldbeter-Koshland") {
+object GbKl extends DeterministicReactionNetwork {
+  annotate("description", "Goldbeter-Koshland")
 
   val A = Species("A")
   val B = Species("B")

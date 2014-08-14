@@ -18,15 +18,16 @@
 package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
+import spire.algebra.Rig
 
 /**
  * A StepHandler may be added to a `Process`. It then gets called at
  * the conclusion of each step with the end time and the state.
  */
 abstract class StepHandler {
-  def init(t: Double, proc: BaseProcess)
-  def handleStep(t: Double, proc: BaseProcess)
-  def reset(t: Double, proc: BaseProcess) {}
+  def init(t: Double, proc: Process)
+  def handleStep(t: Double, proc: Process)
+  def reset(t: Double, proc: Process) {}
   def finish {}
 }
 
@@ -35,18 +36,16 @@ abstract class StepHandler {
  * all state in a time-indexed dictionary in memory
  */
 class Accumulator extends StepHandler {
-  class Container extends VarContainer
-  val history = mutable.ArrayBuffer.empty[(Double, VarContainer)]
-  def handleStep(t: Double, proc: BaseProcess) {
-    val snapshot = new Container
-    snapshot leftMerge  proc
-    history += ((t, snapshot))
+  val history = mutable.ArrayBuffer.empty[(Double, State)]
+  def handleStep(t: Double, proc: Process) {
+    history += ((t, proc.state.deepCopy))
   }
-  def init(t: Double, proc: BaseProcess) = handleStep(t, proc)
+  def init(t: Double, proc: Process) = handleStep(t, proc)
   // TODO: Should the Accumulator interpolate?
-  def apply(t: Double) = {
+  def apply[T](t: Double)(key: Index[T])(implicit rig: Rig[T]) = {
     // FIXME really stupid linear search
-    history.filter(_._1 <= t).last._2
+    val state = history.filter(_._1 <= t).last._2
+    state.getIndex(key.meta)
   }
 }
 
@@ -59,17 +58,21 @@ class Accumulator extends StepHandler {
  */
 class TsvWriter(fp: java.io.Writer, sep: String = "\t")
     extends StepHandler {
-  def init(t: Double, proc: BaseProcess) {
-    val vars = (for (v <- proc.state) yield v).toSeq.sortBy(_.meta)
-    fp.write("t" + sep + vars.map(x => x.meta.identifier).mkString(sep) + "\n")
-    fp.write(t.toString + sep + vars.map(x => x.value).mkString(sep) + "\n")
+  def init(t: Double, proc: Process) {
+    val rigs = proc.state.meta.keys.toSeq.sortBy(_.toString)
+    val metas = (for (rig <- rigs) yield proc.state.meta(rig))
+      .foldLeft(mutable.ArrayBuffer.empty[VarMeta])((z, a) => z ++ a)
+    fp.write("t" + sep + metas.map(x => x.identifier).mkString(sep) + "\n")
+    handleStep(t, proc)
   }
-  def handleStep(t: Double, proc: BaseProcess) {
+  def handleStep(t: Double, proc: Process) {
     // apply a predictable ordering
-    val vars = (for (v <- proc.state) yield v).toSeq.sortBy(_.meta)
-    fp.write(t.toString + sep + vars.map(x => x.value).mkString(sep) + "\n")
+    val rigs = proc.state.meta.keys.toSeq.sortBy(_.toString)
+    val vars = (for (rig <- rigs) yield proc.state.vars(rig))
+      .foldLeft(mutable.ArrayBuffer.empty[Any])((z, a) => z ++ a)
+    fp.write(t.toString + sep + vars.mkString(sep) + "\n")
   }
-  override def reset(t: Double, proc: BaseProcess) {
+  override def reset(t: Double, proc: Process) {
     fp.write("\n")
     handleStep(t, proc)
   }

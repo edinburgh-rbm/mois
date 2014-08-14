@@ -1,14 +1,13 @@
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{DeterministicReactionNetwork, Accumulator,
-                          Model, DoubleVarIntf => D}
+import uk.ac.ed.inf.mois.Model
+import uk.ac.ed.inf.mois.reaction.DeterministicReactionNetwork
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
+import spire.implicits._
 
-object Brusselator
-  extends DeterministicReactionNetwork("Brusselator") {
-
+object Brusselator extends DeterministicReactionNetwork {
   val A = Species("A")
   val B = Species("B")
   val X = Species("X")
@@ -20,6 +19,8 @@ object Brusselator
     B + X -> B + Y at 1.0,
     X -> () at 1.0
   )
+
+  init(0)
 }
 
 /**
@@ -48,8 +49,6 @@ class DeterministicReactionNetworkTest extends FlatSpec with Matchers {
     Brusselator.X := 1.0
     Brusselator.Y := 1.0
 
-    val acc = new Accumulator
-    Brusselator.addStepHandler(acc)
     Brusselator.step(0, 50)
 
     // Tests

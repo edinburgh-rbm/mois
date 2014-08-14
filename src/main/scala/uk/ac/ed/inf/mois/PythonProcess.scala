@@ -23,12 +23,12 @@ import scala.collection.mutable
 import org.python.util.PythonInterpreter
 import org.python.core.{PyException, PyFloat, PyObject}
 
-abstract class PythonProcess(name: String) extends Process(name) {
+abstract class PythonProcess extends Process {
 
-  type F = (Double, Double, Seq[DoubleVar]) => Unit
-  private val pyFuncs = mutable.ArrayBuffer.empty[(F, Seq[DoubleVar])]
+  type F = (Double, Double, Seq[Index[Double]]) => Unit
+  private val pyFuncs = mutable.ArrayBuffer.empty[(F, Seq[Index[Double]])]
 
-  protected case class py(val vs: DoubleVar*) {
+  protected case class py(val vs: Index[Double]*) {
     def := (f: F) = {
       pyFuncs += (f -> vs)
     }
@@ -36,7 +36,7 @@ abstract class PythonProcess(name: String) extends Process(name) {
 
   case class Python(module: String) extends Dynamic {
     private val interp = new PythonInterpreter
-    def applyDynamic(func: String)(args: DoubleVar*) = {
+    def applyDynamic(func: String)(args: Index[Double]*) = {
       try {
         interp.exec(s"from $module import $func")
       } catch {
@@ -48,7 +48,7 @@ abstract class PythonProcess(name: String) extends Process(name) {
       if (fh == null)
         throw new IllegalArgumentException(s"no such python function ${module}.${func}")
 
-      def wrapper(t: Double, tau: Double, vs: DoubleVar*) {
+      def wrapper(t: Double, tau: Double, vs: Index[Double]*) {
         val pyArgs =
         (Seq(t, tau).map(new PyFloat(_)) ++ args.map(new PyFloat(_)))
           .toArray

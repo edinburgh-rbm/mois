@@ -19,6 +19,9 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 
+import spire.algebra.Rig
+import spire.implicits._
+
 import org.jfree.chart.{ChartFactory, ChartPanel, ChartUtilities}
 import org.jfree.chart.{ChartMouseEvent, ChartMouseListener}
 import org.jfree.chart.title.TextTitle
@@ -32,15 +35,15 @@ import javax.swing.{JFrame, WindowConstants}
  * A StepHandler may be added to a `Process`. It then gets called at
  * the conclusion of each step with the end time and the state.
  */
-abstract class PlotWriter extends StepHandler with VarConversions {
-
-  val vars: Seq[DoubleVarIntf]
-  val series = mutable.Map.empty[DoubleVarIntf, XYSeries]
+abstract class PlotWriter extends StepHandler {
+  private val rig = Rig[Double]
+  val vars: Seq[Index[Double]]
+  val series = mutable.Map.empty[Index[Double], XYSeries]
   var title = "Untitled"
   var ylabel = ""
 
   // RHZ: This would actually make for a good Var.toString method
-  def label(v: Var[_]): String = {
+  def label(v: Index[_]): String = {
     if (v.meta.annotations contains "long_name") {
       v.meta.annotations("long_name").toString +
         (if (v.meta.annotations contains "units")
@@ -52,23 +55,22 @@ abstract class PlotWriter extends StepHandler with VarConversions {
     }
   }
 
-  def init(t: Double, proc: BaseProcess) {
+  def init(t: Double, proc: Process) {
     if (vars.size == 0) { // try to plot everything!
-      for (v <- proc.state collect { case v: DoubleVarIntf => v }
-           if !proc.dimensions.contains(v)) {
-        series += v -> new XYSeries(label(v))
+      val allvars = proc.state.meta.getOrElse(rig, Array.empty[VarMeta])
+      for (v <- proc.state.getMeta[Double].map(proc.state.getIndex[Double](_))) {
+        if (!proc.dimensions.contains(v.meta)) {
+          series += v -> new XYSeries(label(v))
+        }
       }
     } else {
       for (v <- vars) {
-        // val v = proc.allVars(VarMeta(vname))
         series += v -> new XYSeries(label(v))
       }
     }
 
-    title = if (proc.annotations contains "title")
-              proc.annotations("title").toString
-            else
-              proc.name
+    if (proc.annotations contains "title")
+      title = proc.annotations("title").toString
   }
 
   val dataset = new XYSeriesCollection
@@ -81,14 +83,14 @@ abstract class PlotWriter extends StepHandler with VarConversions {
   }
 }
 
-class PlotFileWriter(val filename: String, val vars: DoubleVarIntf*)
+class PlotFileWriter(val filename: String, val vars: Index[Double]*)
     extends PlotWriter {
 
-  def handleStep(t: Double, proc: BaseProcess) {
+  def handleStep(t: Double, proc: Process) {
     for ((v, ss) <- series) ss.add(t, v.value)
   }
 
-  override def reset(t: Double, proc: BaseProcess) {
+  override def reset(t: Double, proc: Process) {
     for(ss <- series.values) ss.clear
   }
 
@@ -100,7 +102,7 @@ class PlotFileWriter(val filename: String, val vars: DoubleVarIntf*)
   }
 }
 
-class PlotGUIWriter(val vars: DoubleVarIntf*) extends PlotWriter {
+class PlotGUIWriter(val vars: Index[Double]*) extends PlotWriter {
 
   val dimTitle = new TextTitle
 
@@ -160,7 +162,7 @@ class PlotGUIWriter(val vars: DoubleVarIntf*) extends PlotWriter {
     }
   }
 
-  override def init(t: Double, proc: BaseProcess) {
+  override def init(t: Double, proc: Process) {
     super.init(t, proc)
     for (ss <- series.values) {
       ss.setNotify(false)
@@ -169,13 +171,13 @@ class PlotGUIWriter(val vars: DoubleVarIntf*) extends PlotWriter {
     java.awt.EventQueue.invokeLater(new Gui)
   }
 
-  def handleStep(t: Double, proc: BaseProcess) {
+  def handleStep(t: Double, proc: Process) {
     val title = proc.dimensions.keys.mkString(", ")
     val ds = for ((v, s) <- series) yield (v.value, s)
     java.awt.EventQueue.invokeLater(new GuiHandle(t, ds, title))
   }
 
-  override def reset(t: Double, proc: BaseProcess) {
+  override def reset(t: Double, proc: Process) {
     java.awt.EventQueue.invokeLater(new GuiReset)
   }
 

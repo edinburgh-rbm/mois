@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
+import scala.language.existentials
 import scala.language.implicitConversions
 import scala.language.postfixOps
 import spire.algebra.Rig
@@ -13,8 +14,82 @@ import spire.implicits._
   */
 case class State(
   val meta: Map[Rig[_], Array[VarMeta]],
-  val vars: Map[Rig[_], Array[_]] // XX would be nice to enforce same type here
-)
+  val vars: Map[Rig[_], Array[_]]
+) {
+  def deepCopy = copy(vars = vars map { case (rig, a) => (rig, a.clone) } toMap)
+
+  def update[T](data: Array[T])(implicit rig: Rig[T]) =
+    copy(vars = vars map { case (r, a) =>
+      (r, if (r == rig) data else a)
+    } toMap)
+  @inline final def :=[T](data: Array[T])(implicit rig: Rig[T]) = update(data)
+
+  def getIndex[T](m: VarMeta)(implicit rig: Rig[T]) = {
+    if (!(meta contains m.rig) || !(meta(m.rig) contains m))
+      throw new NoSuchElementException(s"key not found $m")
+    val i = new Index[T](m)
+    i.setState(this)
+    i
+  }
+  def getMeta[T](implicit rig: Rig[T]): Array[VarMeta] =
+    meta.getOrElse(rig, Array.empty[VarMeta])
+
+  // xxx inefficient!
+  def copyTo[T](other: State)(implicit rig: Rig[T]) {
+    if (other.meta contains rig) {
+      val mine: Array[T] = this
+      val theirs: Array[T] = other
+      val mymeta = meta(rig)
+      val theirmeta = other.meta(rig)
+      for (i <- 0 until theirmeta.size)
+        theirs(i) = mine(mymeta indexOf theirmeta(i))
+    }
+  }
+
+  // xxx inefficient!
+  def copyFrom[T](other: State)(implicit rig: Rig[T]) {
+    if (other.meta contains rig) {
+      val mine: Array[T] = this
+      val theirs: Array[T] = other
+      val mymeta = meta(rig)
+      val theirmeta = other.meta(rig)
+      for (i <- 0 until theirmeta.size)
+        mine(mymeta indexOf theirmeta(i)) = theirs(i)
+    }
+  }
+
+  def >>> (other: State) {
+    copyTo[Byte](other)
+    copyTo[Short](other)
+    copyTo[Int](other)
+    copyTo[Long](other)
+    copyTo[BigInt](other)
+    copyTo[Float](other)
+    copyTo[Double](other)
+    copyTo[BigDecimal](other)
+    copyTo[Complex[Double]](other)
+    copyTo[Real](other)
+    copyTo[Rational](other)
+    copyTo[Natural](other)
+    copyTo[Boolean](other)
+  }
+
+  def <<< (other: State) {
+    copyFrom[Byte](other)
+    copyFrom[Short](other)
+    copyFrom[Int](other)
+    copyFrom[Long](other)
+    copyFrom[BigInt](other)
+    copyFrom[Float](other)
+    copyFrom[Double](other)
+    copyFrom[BigDecimal](other)
+    copyFrom[Complex[Double]](other)
+    copyFrom[Real](other)
+    copyFrom[Rational](other)
+    copyFrom[Natural](other)
+    copyFrom[Boolean](other)
+  }
+}
 
 /** The State companion object provides an implicit function
   * to retrieve an arrayof the correct type just by referencing
@@ -26,7 +101,11 @@ case class State(
   */
 object State {
   implicit def getArray[T](s: State)(implicit rig: Rig[T]): Array[T] =
-    s.vars(rig).asInstanceOf[Array[T]]
+    {
+   //   println(s"$rig")
+   //   println(s"${s.vars(rig)}")
+      s.vars(rig).asInstanceOf[Array[T]]
+    }
 }
 
 /** An Index is used to access a specific [[State]] variable.
@@ -34,7 +113,7 @@ object State {
   * [[Index.setState]] before using it, otherwise null pointer
   * errors will result.
   *
-  * @param meta is used to find the right array and offset
+  * @param meta is used to find the amht array and offset
   *             into the state
   */
 class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) {
@@ -59,7 +138,7 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) {
   /** Update the underlying value in the state */
   @inline final def update(value: T) { array(index) = value }
   /** Syntax sugar for updating the underlying value in the state */
-  @inline final def :=(value: T) = update(value)
+  @inline final def :=(value: T) = { update(value); this }
 
   @inline def +(other: T) = rig.plus(value, other)
   @inline def +=(other: T) = update(rig.plus(value, other))
@@ -119,11 +198,13 @@ trait StateBuilder {
     * @param meta is the metadata used to index the state
     * @return a handle that can be used to access this variable later.
     */
-  def addVar[T](meta: VarMeta)(implicit rig: Rig[T]): Index[T] = {
+  def addVar[T](ident: String)(implicit rig: Rig[T]): Index[T] = {
     // we have never seen any variable of this type
     if (!(_vmeta contains rig))
       _vmeta += rig -> new mutable.ArrayBuffer[VarMeta]
     val vmeta = _vmeta(rig)
+
+    val meta = new VarMeta(ident, rig)
 
     // check that we do not already know this variable
     val allmeta = _vmeta.values.toList.foldLeft(mutable.ArrayBuffer.empty[VarMeta])(
@@ -133,7 +214,7 @@ trait StateBuilder {
 
     vmeta += meta
 
-    val i = new Index(meta)
+    val i = new Index[T](meta)
     indices += i
     i
   }
@@ -154,42 +235,42 @@ trait StateBuilder {
   }
 
   object Int {
-    def apply(ident: String) = addVar[Int](new VarMeta(ident))
+    def apply(ident: String) = addVar[Int](ident)
   }
   object Byte {
-    def apply(ident: String) = addVar[Byte](new VarMeta(ident))
+    def apply(ident: String) = addVar[Byte](ident)
   }
   object Long {
-    def apply(ident: String) = addVar[Long](new VarMeta(ident))
+    def apply(ident: String) = addVar[Long](ident)
   }
   object Real {
-    def apply(ident: String) = addVar[Real](new VarMeta(ident))
+    def apply(ident: String) = addVar[Real](ident)
   }
   object Float {
-    def apply(ident: String) = addVar[Float](new VarMeta(ident))
+    def apply(ident: String) = addVar[Float](ident)
   }
   object Short {
-    def apply(ident: String) = addVar[Short](new VarMeta(ident))
+    def apply(ident: String) = addVar[Short](ident)
   }
   object BigInt {
-    def apply(ident: String) = addVar[BigInt](new VarMeta(ident))
+    def apply(ident: String) = addVar[BigInt](ident)
   }
   object Double {
-    def apply(ident: String) = addVar[Double](new VarMeta(ident))
+    def apply(ident: String) = addVar[Double](ident)
   }
   object Boolean {
-    def apply(ident: String) = addVar[Boolean](new VarMeta(ident))
+    def apply(ident: String) = addVar[Boolean](ident)
   }
   object Complex {
-    def apply(ident: String) = addVar[Complex[Double]](new VarMeta(ident))
+    def apply(ident: String) = addVar[Complex[Double]](ident)
   }
   object Natural {
-    def apply(ident: String) = addVar[Natural](new VarMeta(ident))
+    def apply(ident: String) = addVar[Natural](ident)
   }
   object Rational {
-    def apply(ident: String) = addVar[Rational](new VarMeta(ident))
+    def apply(ident: String) = addVar[Rational](ident)
   }
   object BigDecimal {
-    def apply(ident: String) = addVar[BigDecimal](new VarMeta(ident))
+    def apply(ident: String) = addVar[BigDecimal](ident)
   }
 }

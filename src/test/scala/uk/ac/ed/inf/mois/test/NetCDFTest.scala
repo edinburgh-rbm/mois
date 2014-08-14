@@ -1,5 +1,5 @@
 /*
- *  MOIS: NetCDF Step Handler Test
+ *  MOIS: NetCdf Step Handler Test
  *  Copyright (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -17,18 +17,19 @@
  */
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{DiscreteProcess, NetCDFWriter}
+import uk.ac.ed.inf.mois.{DiscreteProcess, NetCdfWriter}
+import spire.implicits._
 
 import java.io.File
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 
-class NetCDFTest extends FlatSpec with Matchers with BeforeAndAfter {
+class NetCdfTest extends FlatSpec with Matchers with BeforeAndAfter {
 
   after {
     new File("test.nc").delete
   }
 
-  object p extends DiscreteProcess("p") {
+  object p extends DiscreteProcess[Double] {
     val x1 = Double("ex:x1")
     val x2 = Double("ex:x2")
     val x3 = Double("ex:x3")
@@ -39,10 +40,12 @@ class NetCDFTest extends FlatSpec with Matchers with BeforeAndAfter {
     next(x1) := x1 + 1 + x4
     next(x2) := x1 + x2 + 1 + x4
     next(x3) := x1 + x2 + x3 + 1 + x4
+
+    init(0)
   }
 
   "netcdf writer" should "store data scalably" in {
-    val cdf = new NetCDFWriter("test.nc")
+    val cdf = new NetCdfWriter("test.nc")
     p.addStepHandler(cdf)
 
     cdf.init(0, p)
