@@ -35,9 +35,13 @@ seq(bintrayResolverSettings:_*)
 resolvers += "ucar-unidata-releases" at
   "https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/"
 
+libraryDependencies += "com.googlecode.matrix-toolkits-java" % "mtj" % "1.0.1"
+
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.0" % "test"
 
 libraryDependencies += "org.apache.commons" % "commons-math3" % "3.3"
+
+libraryDependencies += "com.github.fommil.netlib" % "all" % "1.1.2" pomOnly()
 
 libraryDependencies += "org.json4s" %% "json4s-native" % "3.2.10"
 
