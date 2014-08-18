@@ -88,6 +88,16 @@ class VarTest extends FlatSpec with Matchers
     }
   }
 
+  it should "suport modifiers" in {
+    val x = Double("x")
+    x gte(0)
+    x lte(100)
+    x := -1
+    (x.value) should equal (0.0)
+    x := 101
+    (x.value) should equal (100.0)
+  }
+
   it should "have unambiguous keys" in {
     val v1 = Int("a")
     val v2 = Int("a")

@@ -75,9 +75,15 @@ abstract class Var[T] {
   // RHZ: I wanted to move constraints to VarMeta but VarMeta doesn't
   // know about T.
   type Constraint = T => Boolean
-
   val constraints: mutable.ArrayBuffer[Constraint] =
     mutable.ArrayBuffer.empty[Constraint]
+
+  // Could we merge modifiers (bounds, like NonZero) with constraints?
+  abstract class Modifier {
+    def apply(x: T): T
+  }
+  val modifiers : mutable.ArrayBuffer[Modifier] =
+    mutable.ArrayBuffer.empty[Modifier]
 
   // def merge(that: VarMeta): VarMeta = {
   //   require(this.identifier == that.identifier,
@@ -103,7 +109,7 @@ abstract class Var[T] {
     for (c <- constraints if !c(x))
       throw new ConstraintViolation("variable " + this +
         " violated a constraint by setting its value to " + x)
-    value = x
+    value = modifiers.foldLeft(x)((x, m) => m(x))
     this
   }
 
@@ -137,6 +143,26 @@ trait NumericVar[T] extends Var[T] {
   def *= (x: T): this.type
   def /= (x: T): this.type
   def %= (x: T): this.type
+
+  class LowerBound(b: T)(implicit num: Numeric[T]) extends Modifier {
+    def apply(x: T) = if (num.lteq(x, b)) b else x
+  }
+  class UpperBound(b: T)(implicit num: Numeric[T]) extends Modifier {
+    def apply(x: T) = if (num.gteq(x, b)) b else x
+  }
+
+  object clip {
+    def gte(b: T)(implicit num: Numeric[T]) = {
+      modifiers += new LowerBound(b)
+      this
+    }
+    def lte(b: T)(implicit num: Numeric[T]) = {
+      modifiers += new UpperBound(b)
+      this
+    }
+  }
+  def gte(b: T)(implicit num: Numeric[T]) = clip.gte(b)
+  def lte(b: T)(implicit num: Numeric[T]) = clip.lte(b)
 }
 
 trait IntVarIntf extends NumericVar[Int] {
