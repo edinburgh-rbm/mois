@@ -160,9 +160,14 @@ trait NumericVar[T] extends Var[T] {
       modifiers += new UpperBound(b)
       this
     }
+    def nonnegative()(implicit num: Numeric[T]) = {
+      modifiers += new LowerBound(num.zero)
+      this
+    }
   }
   def gte(b: T)(implicit num: Numeric[T]) = clip.gte(b)
   def lte(b: T)(implicit num: Numeric[T]) = clip.lte(b)
+  def nonnegative()(implicit num: Numeric[T]) = clip.gte(num.zero)
 }
 
 trait IntVarIntf extends NumericVar[Int] {

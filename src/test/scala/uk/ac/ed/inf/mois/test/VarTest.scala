@@ -96,6 +96,11 @@ class VarTest extends FlatSpec with Matchers
     (x.value) should equal (0.0)
     x := 101
     (x.value) should equal (100.0)
+
+    val y = Int("y")
+    y nonnegative()
+    y := -1
+    (y.value) should equal (0)
   }
 
   it should "have unambiguous keys" in {
