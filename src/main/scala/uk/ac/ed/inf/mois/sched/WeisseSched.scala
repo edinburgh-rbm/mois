@@ -34,18 +34,19 @@ class WeisseScheduler(
   private val rig = Rig[Double]
 
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
-    val x0: Array[Double] = group.state
+    val x0: Array[Double] = group.state.get[Double]
     val dx = Array.fill(x0.size)(rig.zero)
 
     val dt = calculateInitialTimestep(tau)
 
     for (child <- group.processes) {
       group.state >>> child.state
-      val doubles: Array[Double] = child.state
+      val doubles: Array[Double] = child.state.get[Double]
       // XXX should propagate all non-double vars here
       // XXXXX inefficient!!!
       for (i <- 0 until dx.size)
-        dx(i) += doubles(i) - x0(group.state.meta(rig) indexOf child.state.meta(rig)(i))
+        dx(i) += doubles(i) - x0(group.state.meta(rig) indexOf
+          child.state.meta(rig)(i))
     }
     calculateNewTimestep(x0, dx, t, dt, group)
   }

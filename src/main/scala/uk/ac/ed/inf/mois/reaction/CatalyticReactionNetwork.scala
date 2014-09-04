@@ -18,9 +18,10 @@
 package uk.ac.ed.inf.mois.reaction
 
 import scala.language.implicitConversions
-import uk.ac.ed.inf.mois.math.Multiset
+import scala.reflect.ClassTag
 import spire.algebra.Ring
 import spire.implicits._
+import uk.ac.ed.inf.mois.math.Multiset
 
 /** A trait for reaction networks that have catalysis. */
 trait CatalyticReactionNetwork[T] extends ReactionNetwork[T] {
@@ -49,9 +50,8 @@ trait KineticCatalyticReactionNetwork[T]
 
   type Reaction <: UnratedReaction with CatalysableReaction
 
-  def enzymeComplex(enzyme: Species, substrates: Species*)(implicit
-    ring: Ring[T]
-  ) =
+  def enzymeComplex(enzyme: Species, substrates: Species*)(
+    implicit ring: Ring[T], ct: ClassTag[T]) =
     Species(enzyme.meta + "-" + substrates.map(_.meta).mkString("-"))
 
   /** Michaelis-Menten mechanism: E + S <->[k1,k2] ES ->[k3] E + P */
@@ -143,7 +143,7 @@ trait KineticCatalyticReactionNetwork[T]
 
   // -- Expand catalytic reactions into sets of kinetic reactions --
 
-  implicit def mm(r: CatalysedReaction[MM])(implicit ring: Ring[T]) = {
+  implicit def mm(r: CatalysedReaction[MM])(implicit ring: Ring[T], ct: ClassTag[T]) = {
     check(r, 1, "Michaelis-Menten (MM)")
     val (s, _) = r.lhs.head
     val (p, _) = r.rhs.head
@@ -161,7 +161,8 @@ trait KineticCatalyticReactionNetwork[T]
       vmax * count(r.lhs) / (km + count(r.lhs)))
   }
 
-  implicit def tcrandom(r: CatalysedReaction[TCRandom])(implicit ring: Ring[T]) = {
+  implicit def tcrandom(r: CatalysedReaction[TCRandom])(
+    implicit ring: Ring[T], ct: ClassTag[T]) = {
     check(r, 2, "ternary-complex (TCRandom)")
     val Seq(s1, s2) = r.lhs.multiseq
     val Seq(p1, p2) = r.rhs.multiseq
@@ -193,7 +194,8 @@ trait KineticCatalyticReactionNetwork[T]
          e + p2 -> ep2 at bind4)
   }
 
-  implicit def tcordered(r: CatalysedReaction[TCOrdered])(implicit ring: Ring[T]) = {
+  implicit def tcordered(r: CatalysedReaction[TCOrdered])(
+    implicit ring: Ring[T], ct: ClassTag[T]) = {
     check(r, 2, "ternary-complex (TCOrdered)")
     import r.mechanism._
     val (s1, (bind1, unbind1)) = a
@@ -223,7 +225,8 @@ trait KineticCatalyticReactionNetwork[T]
          e + p2 -> ep2 at bind4)
   }
 
-  implicit def pp(r: CatalysedReaction[PP])(implicit ring: Ring[T]) = {
+  implicit def pp(r: CatalysedReaction[PP])(
+    implicit ring: Ring[T], ct: ClassTag[T]) = {
     check(r, 2, "ping-pong (PP)")
     val Seq(s1, s2) = r.lhs.multiseq
     val Seq(p1, p2) = r.rhs.multiseq

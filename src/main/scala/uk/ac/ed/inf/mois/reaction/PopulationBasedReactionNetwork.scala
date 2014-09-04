@@ -17,6 +17,7 @@
  */
 package uk.ac.ed.inf.mois.reaction
 
+import scala.reflect.ClassTag
 import spire.algebra.Ring
 import uk.ac.ed.inf.mois.{Index, VarMeta}
 
@@ -36,7 +37,7 @@ trait PopulationBasedReactionNetwork[T] extends ReactionNetwork[T] {
   }
 
   object Species extends SpeciesFactory {
-    def apply(ident: String)(implicit ring: Ring[T]) = {
+    def apply(ident: String)(implicit ring: Ring[T], ct: ClassTag[T]) = {
       val idx = addVar[T](ident)
       new PopulationBasedSpecies(idx)
     }

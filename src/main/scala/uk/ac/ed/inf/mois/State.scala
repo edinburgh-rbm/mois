@@ -4,6 +4,8 @@ import scala.collection.mutable
 import scala.language.existentials
 import scala.language.implicitConversions
 import scala.language.postfixOps
+import scala.reflect.ClassTag
+
 import spire.algebra.Rig
 import spire.math.{Complex, Natural, Rational, Real}
 import spire.implicits._
@@ -13,16 +15,22 @@ import spire.implicits._
   * an index so the state can be conveniently accessed.
   */
 case class State(
-  val meta: Map[Rig[_], Array[VarMeta]],
-  val vars: Map[Rig[_], Array[_]]
-) {
-  def deepCopy = copy(vars = vars map { case (rig, a) => (rig, a.clone) } toMap)
+  val meta: mutable.Map[Rig[_], Array[VarMeta]],
+  val vars: mutable.Map[Rig[_], Array[_]]) {
 
+  def deepCopy = copy(
+    vars = mutable.Map.empty[Rig[_],Array[_]] ++ vars.map({
+      case (rig, a) => (rig, a.clone) }))
+
+  // RHZ: After using update, indices don't work anymore (they point
+  // to the old state).
+  // def update[T](data: Array[T])(implicit rig: Rig[T]) =
+  //   copy(vars = vars + (rig -> data))
   def update[T](data: Array[T])(implicit rig: Rig[T]) =
-    copy(vars = vars map { case (r, a) =>
-      (r, if (r == rig) data else a)
-    } toMap)
-  @inline final def :=[T](data: Array[T])(implicit rig: Rig[T]) = update(data)
+    vars += (rig -> data)
+
+  @inline final def := [T](data: Array[T])(implicit rig: Rig[T]) =
+    update(data)
 
   def getIndex[T](m: VarMeta)(implicit rig: Rig[T]) = {
     if (!(meta contains m.rig) || !(meta(m.rig) contains m))
@@ -31,14 +39,18 @@ case class State(
     i.setState(this)
     i
   }
+
   def getMeta[T](implicit rig: Rig[T]): Array[VarMeta] =
     meta.getOrElse(rig, Array.empty[VarMeta])
+
+  def get[T](implicit rig: Rig[T]): Array[T] =
+    vars(rig).asInstanceOf[Array[T]]
 
   // xxx inefficient!
   def copyTo[T](other: State)(implicit rig: Rig[T]) {
     if (other.meta contains rig) {
-      val mine: Array[T] = this
-      val theirs: Array[T] = other
+      val mine: Array[T] = this.get[T]
+      val theirs: Array[T] = other.get[T]
       val mymeta = meta(rig)
       val theirmeta = other.meta(rig)
       for (i <- 0 until theirmeta.size)
@@ -49,8 +61,8 @@ case class State(
   // xxx inefficient!
   def copyFrom[T](other: State)(implicit rig: Rig[T]) {
     if (other.meta contains rig) {
-      val mine: Array[T] = this
-      val theirs: Array[T] = other
+      val mine: Array[T] = this.get[T]
+      val theirs: Array[T] = other.get[T]
       val mymeta = meta(rig)
       val theirmeta = other.meta(rig)
       for (i <- 0 until theirmeta.size)
@@ -58,6 +70,7 @@ case class State(
     }
   }
 
+  // FIXME: This should be just a for over meta and vars instead
   def >>> (other: State) {
     copyTo[Byte](other)
     copyTo[Short](other)
@@ -100,12 +113,15 @@ case class State(
   * }}}
   */
 object State {
-  implicit def getArray[T](s: State)(implicit rig: Rig[T]): Array[T] =
-    {
-   //   println(s"$rig")
-   //   println(s"${s.vars(rig)}")
-      s.vars(rig).asInstanceOf[Array[T]]
-    }
+  // RHZ: I really think it's not good to do this kind of implicit
+  // conversion because what you get back is not the state, it's
+  // something else and that should be apparent, as in state.get[T]
+  // implicit def getArray[T](s: State)(implicit rig: Rig[T])
+  //     : Array[T] = {
+  //   // println(s"$rig")
+  //   // println(s"${s.vars(rig)}")
+  //   s.vars(rig).asInstanceOf[Array[T]]
+  // }
 }
 
 /** An Index is used to access a specific [[State]] variable.
@@ -117,11 +133,14 @@ object State {
   *             into the state
   */
 class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) {
+
   private var _state: State = null
-  private lazy val state = _state
-  private lazy val array: Array[T] = state
+  // RHZ: Why do we need to cache state?
+  lazy val state = _state
+  def array: Array[T] = state.get[T]
   private lazy val index = state.meta(rig) indexOf meta
 
+  // RHZ: Why not just expose state_=?
   /** setState must be called once and only once before using
     * the index
     */
@@ -130,6 +149,7 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) {
     _state = s
   }
 
+  // RHZ: Why having a Function1 instead of a simple method?
   /** Add an [[Annotation]] onto the [[VarMeta]] */
   val annotate = meta.annotate _
 
@@ -138,7 +158,7 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) {
   /** Update the underlying value in the state */
   @inline final def update(value: T) { array(index) = value }
   /** Syntax sugar for updating the underlying value in the state */
-  @inline final def :=(value: T) = { update(value); this }
+  @inline final def := (value: T) = { update(value); this }
 
   @inline def +(other: T) = rig.plus(value, other)
   @inline def +=(other: T) = update(rig.plus(value, other))
@@ -179,18 +199,35 @@ object Index {
   * }}}
   */
 trait StateBuilder {
-  private[mois] val _vmeta = mutable.Map.empty[Rig[_], mutable.ArrayBuffer[VarMeta]]
-  private[mois] val indices = mutable.ArrayBuffer.empty[Index[_]]
 
+  class Bag[T: ClassTag](implicit rig: Rig[T]) {
+    self =>
+    val metas = mutable.ArrayBuffer.empty[VarMeta]
+    def add(meta: VarMeta) = metas += meta
+    def values: Array[T] = Array.fill[T](metas.size)(rig.zero)
+    def copy: Bag[T] = new Bag[T] {
+      override val metas = self.metas.clone
+    }
+  }
+
+  private[mois] val bags = mutable.Map.empty[Rig[_], Bag[_]]
+  private[mois] val indices = mutable.ArrayBuffer.empty[Index[_]]
+  private[mois] val allmeta = mutable.Set.empty[VarMeta]
+
+  // RHZ: Why sorted? Why not just keep the order in which the user
+  // declared the variables?
   /** Construct a [[State]] */
   def buildState = State(
-    _vmeta map { case (rig, metas) => (rig, metas.sorted.toArray) } toMap,
-    _vmeta map { case (rig, metas) => (rig, Array.fill(metas.size)(rig.zero)) } toMap
+    mutable.Map.empty[Rig[_],Array[VarMeta]] ++ bags.map({
+      case (rig, bag) => (rig, bag.metas.toArray) }),
+    mutable.Map.empty[Rig[_],Array[_]] ++ bags.map({
+      case (rig, bag) => (rig, bag.values)
+    })
   )
 
   /** Initialise all indices */
   def initStateIndices(s: State) {
-    indices map(_.setState(s))
+    indices map (_.setState(s))
   }
 
   /** Add a variable to the under construction proto[[State]]
@@ -198,21 +235,17 @@ trait StateBuilder {
     * @param meta is the metadata used to index the state
     * @return a handle that can be used to access this variable later.
     */
-  def addVar[T](ident: String)(implicit rig: Rig[T]): Index[T] = {
-    // we have never seen any variable of this type
-    if (!(_vmeta contains rig))
-      _vmeta += rig -> new mutable.ArrayBuffer[VarMeta]
-    val vmeta = _vmeta(rig)
-
+  def addVar[T: ClassTag](ident: String)(implicit rig: Rig[T]): Index[T] = {
     val meta = new VarMeta(ident, rig)
-
     // check that we do not already know this variable
-    val allmeta = _vmeta.values.toList.foldLeft(mutable.ArrayBuffer.empty[VarMeta])(
-      (z, r) => z ++ r
-    )
-    require(!(allmeta contains meta), s"$meta already added as a variable")
+    require(!(allmeta contains meta),
+      s"$meta already added as a variable")
+    allmeta += meta
 
-    vmeta += meta
+    // we have never seen any variable of this type
+    if (!(bags contains rig))
+      bags(rig) = new Bag[T]
+    bags(rig) add meta
 
     val i = new Index[T](meta)
     indices += i
@@ -221,13 +254,13 @@ trait StateBuilder {
 
   /** Merge a partially built [[State]] with this one */
   def merge(other: StateBuilder) {
-    for ((rig, metas) <- other._vmeta) {
-      if (!(_vmeta contains rig)) {
-        _vmeta += rig -> metas.clone
+    for ((rig, bag) <- other.bags) {
+      if (!(bags contains rig)) {
+        bags(rig) = bag.copy.asInstanceOf[Bag[_]]
       } else {
-        for(m <- metas) {
-          if (!(_vmeta(rig) contains m)) {
-            _vmeta(rig) += m
+        for(m <- bag.metas) {
+          if (!(bags(rig).metas contains m)) {
+            bags(rig) add m
           }
         }
       }

@@ -30,7 +30,6 @@ import collection.mutable
   */
 abstract class ODE extends Process
     with ode.FirstOrderDifferentialEquations {
-  self =>
 
   /** An array with all `Var`s for which to integrate. */
   val vars = mutable.ArrayBuffer.empty[Index[Double]]

@@ -19,6 +19,7 @@ package uk.ac.ed.inf.mois.reaction
 
 import scala.language.implicitConversions
 import scala.collection.mutable
+import scala.reflect.ClassTag
 import spire.algebra.Ring
 import uk.ac.ed.inf.mois.math.Multiset
 import uk.ac.ed.inf.mois.{Index, Process, VarMeta}
@@ -116,7 +117,7 @@ trait ReactionNetwork[T] extends Process {
   // -- Factories --
 
   abstract class SpeciesFactory {
-    def apply(ident: String)(implicit ring: Ring[T]): Species
+    def apply(ident: String)(implicit ring: Ring[T], ct: ClassTag[T]): Species
   }
 
   val Species: SpeciesFactory

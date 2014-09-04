@@ -8,6 +8,8 @@ import org.scalactic.TolerantNumerics
 import spire.implicits._
 
 object Brusselator extends DeterministicReactionNetwork {
+
+  // TODO: Write about this in mois-examples
   val A = Species("A")
   val B = Species("B")
   val X = Species("X")
