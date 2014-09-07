@@ -24,7 +24,7 @@ import uk.ac.ed.inf.mois.{Process, ProcessGroup, ODE}
 import uk.ac.ed.inf.mois.sched.NaiveScheduler
 
 /** Directly transcribed ODE system from Dominik's stuff. */
-object sampleEuler1 extends Process {
+class SampleEuler1 extends Process {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
 
@@ -33,7 +33,7 @@ object sampleEuler1 extends Process {
   }
 }
 
-object sampleEuler2 extends Process {
+class SampleEuler2 extends Process {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
 
@@ -66,15 +66,19 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
     TolerantNumerics.tolerantDoubleEquality(precision)
 
   "sample ode system" should "integrate using Euler's method" in {
-    val pg = new ProcessGroup
-
-    import pg._
-    val x1 = Double("ex:x1") := 25.0
-    val x2 = Double("ex:x2") := 50.0
+    val pg = new ProcessGroup {
+      val x1 = Double("ex:x1")
+      val x2 = Double("ex:x2")
+    }
 
     pg.scheduler = new NaiveScheduler(0.001)
-    pg += sampleEuler1
-    pg += sampleEuler2
+    pg += new SampleEuler1
+    pg += new SampleEuler2
+    pg.init(0)
+
+    import pg._
+    x1 := 25.0
+    x2 := 50.0
 
     pg.step(0, 50)
 
@@ -83,15 +87,19 @@ class NaiveSchedulerTest extends FlatSpec with Matchers {
   }
 
   it should "integrate using the apache ODE library too" in {
-    val pg = new ProcessGroup
-
-    import pg._
-    val x1 = Double("ex:x1") := 25.0
-    val x2 = Double("ex:x2") := 50.0
+    val pg = new ProcessGroup {
+      val x1 = Double("ex:x1")
+      val x2 = Double("ex:x2")
+    }
 
     pg.scheduler = new NaiveScheduler(0.005)
     pg += new SampleApache1
     pg += new SampleApache2
+    pg.init(0)
+
+    import pg._
+    x1 := 25.0
+    x2 := 50.0
 
     pg.step(0, 50)
 
