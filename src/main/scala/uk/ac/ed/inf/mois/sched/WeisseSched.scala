@@ -41,12 +41,16 @@ class WeisseScheduler(
 
     for (child <- group.processes) {
       group.state >>> child.state
+      child.step(t, tau)
       val doubles: Array[Double] = child.state.get[Double]
       // XXX should propagate all non-double vars here
       // XXXXX inefficient!!!
-      for (i <- 0 until dx.size)
-        dx(i) += doubles(i) - x0(group.state.meta(rig) indexOf
-          child.state.meta(rig)(i))
+      var i = 0
+      while (i < doubles.size) {
+        val j = group.state.meta(rig) indexOf child.state.meta(rig)(i)
+        dx(j) += doubles(i) - x0(j)
+        i += 1
+      }
     }
     calculateNewTimestep(x0, dx, t, dt, group)
   }
