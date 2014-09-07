@@ -238,15 +238,18 @@ trait StateBuilder {
   def addVar[T: ClassTag](ident: String)(implicit rig: Rig[T]): Index[T] = {
     val meta = new VarMeta(ident, rig)
     // check that we do not already know this variable
-    require(!(allmeta contains meta),
-      s"$meta already added as a variable")
-    allmeta += meta
-
-    // we have never seen any variable of this type
-    if (!(bags contains rig))
-      bags(rig) = new Bag[T]
-    bags(rig) add meta
-
+    if (!(allmeta contains meta)) {
+      allmeta += meta
+      // we have never seen any variable of this type
+      if (!(bags contains rig))
+        bags(rig) = new Bag[T]
+      bags(rig) add meta
+    } else {
+      // we already have a variable called this, and are just being
+      // asked for another index for it. make sure index is the right
+      // type
+      require(bags(rig).metas contains meta, "requested index for wrong type")
+    }
     val i = new Index[T](meta)
     indices += i
     i
