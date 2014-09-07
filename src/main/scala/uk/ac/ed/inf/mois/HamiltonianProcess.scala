@@ -68,7 +68,6 @@ abstract class HamiltonianProcess extends ODE {
       gradH = new GradientFunction(this)
       for (v <- phase)
         vars += v
-      totalEnergy = energy() // calculate initial energy
     }
 
     def value(point: Array[Double]): Double = {
@@ -84,6 +83,11 @@ abstract class HamiltonianProcess extends ODE {
       totalEnergy = energy()
       new DerivativeStructure(point.size, 1, Seq(totalEnergy) ++ partials: _*)
     }
+  }
+
+  override def init(t: Double) {
+    super.init(t)
+    totalEnergy = energy() // calculate initial energy
   }
 
   override def computeDerivatives(time: Double,
