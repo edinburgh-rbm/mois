@@ -79,6 +79,7 @@ class PythonProcessTest extends FlatSpec with Matchers {
     object none extends S {
       _py() := Python("basic_tests").none()
     }
+    none.init(0)
     none.step(0, 0.1)
   }
 
@@ -86,6 +87,7 @@ class PythonProcessTest extends FlatSpec with Matchers {
     object one extends S {
       _py(x) := Python("basic_tests").one()
     }
+    one.init(0)
     one.step(0, 0.1)
     one.x.value should equal(1.0)
   }
@@ -94,6 +96,7 @@ class PythonProcessTest extends FlatSpec with Matchers {
     object err extends S {
       _py(x) := Python("basic_tests").error()
     }
+    err.init(0)
     intercept[IllegalArgumentException] {
       err.step(0, 0.1)
     }
@@ -103,6 +106,7 @@ class PythonProcessTest extends FlatSpec with Matchers {
     object time extends S {
       _py(x,y) := Python("basic_tests").time()
     }
+    time.init(0)
     time.step(2,3)
     time.x.value should equal (2.0)
     time.y.value should equal (3.0)
