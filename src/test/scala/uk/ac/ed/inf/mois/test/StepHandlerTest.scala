@@ -23,18 +23,18 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class StepHandlerTest extends FlatSpec with Matchers {
 
-  object p extends Process {
+  class P extends Process {
     val x1 = Int("ex:x1")
     override def step(t: Double, tau: Double) {
       x1 += 1
     }
-    init(0)
   }
 
   "accumulator" should "accumulate state" in {
     val acc = new Accumulator
+    val p = new P
     p.addStepHandler(acc)
-    acc.handleStep(0, p)
+    p.init(0)
 
     p(0, 1)
     p(1, 1)
@@ -49,7 +49,7 @@ class StepHandlerTest extends FlatSpec with Matchers {
 
 class TsvWriterTest extends FlatSpec with Matchers {
 
-  object p extends Process {
+  class P extends Process {
     // purposely define them in the "wrong" order
     val x2 = Int("ex:x2")
     val x1 = Int("ex:x1")
@@ -57,23 +57,22 @@ class TsvWriterTest extends FlatSpec with Matchers {
       x1 += 1
       x2 := 2*x1
     }
-    init(0)
   }
 
   "file output" should "write tsv" in {
     val buffer = new java.io.StringWriter
     val fout = new TsvWriter(buffer)
-
+    val p = new P
     p.addStepHandler(fout)
-
-    fout.handleStep(0, p)
+    p.init(0)
 
     p(0, 1)
     p(1, 1)
     p(2, 1)
 
     val expected =
-"""0.0	0	0
+"""t	ex:x1	ex:x2
+0.0	0	0
 1.0	1	2
 2.0	2	4
 3.0	3	6
