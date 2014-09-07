@@ -92,7 +92,7 @@ class WeisseSchedulerTest extends FlatSpec with Matchers {
       .max
 
   def stateStr(s: State) = s.getMeta[Double].map(
-    m => s.getIndex[Double](m))
+    m => s.getIndex[Double](m)).toList
 
   "coupled oscillator" should "give similar results directly as with weisse" in {
     val direct = new CoupledOscillatorModel
@@ -106,9 +106,10 @@ class WeisseSchedulerTest extends FlatSpec with Matchers {
     group.run(0, 1)
     group.finish
 
+/*
     println(stateStr(direct.process.state))
     println(stateStr(group.process.state))
-
+ */
     val s1: Array[Double] = direct.process.state.get[Double]
     val s2: Array[Double] = group.process.state.get[Double]
     (maxerr(s1, s2) < 0.07) should  be (true)
