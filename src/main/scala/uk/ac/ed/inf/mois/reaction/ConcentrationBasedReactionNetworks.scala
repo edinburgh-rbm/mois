@@ -34,12 +34,15 @@ trait ConcentrationBasedReactionNetwork[T] extends ReactionNetwork[T] {
   class ConcentrationBasedSpecies(idx: Index[T])(implicit ring: Ring[T])
       extends BaseSpecies(idx) {
     type R = Species
+    override def toString = idx.toString
   }
 
   object Species extends SpeciesFactory {
-    def apply(ident: String)(implicit ring: Ring[T], ct: ClassTag[T]) = {
+    def apply(ident: String)(implicit ring: Ring[T], ct: ClassTag[T]): Species = {
       val idx = addVar[T](ident)
-      new ConcentrationBasedSpecies(idx)
+      val s = new ConcentrationBasedSpecies(idx)
+      species += s
+      s
     }
   }
 }

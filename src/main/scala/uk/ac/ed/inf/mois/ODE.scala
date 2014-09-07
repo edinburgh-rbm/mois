@@ -96,7 +96,6 @@ abstract class ODE extends Process
 
     // conduct the integration
     i.integrate(this, time, doubleY, time+tau, doubleY)
-
     // put the results of the integration into the variables
     for (i <- 0 until vars.size)
       vars(i) := doubleY(i)
@@ -109,13 +108,18 @@ abstract class ODE extends Process
     */
   def computeDerivatives(time: Double, ys: Array[Double], ydots: Array[Double]) {
     t = time
+    //print(s"computing Derivatives ${ys.toList} -> ")
+    assume(ys.size > 0, "we should have some ys to integrate")
     for (i <- 0 until ydots.size) {
       assume(funs isDefinedAt i, "no derivative defined for " + vars(i))
       assume(!ys(i).isNaN, "integration of " + vars(i).meta +
         " gave NaN (not a number)")
       vars(i) := ys(i)
       ydots(i) = funs(i)()
+      assume(!ydots(i).isNaN, "integration of " + vars(i).meta +
+        " gave NaN (not a number)")
     }
+    //println(s" ${ydots.toList}")
   }
 
   /** This is required by the ODE solver and gives the dimension of

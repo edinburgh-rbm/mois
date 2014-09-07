@@ -20,7 +20,7 @@ package uk.ac.ed.inf.mois.reaction
 import scala.language.implicitConversions
 import scala.collection.mutable
 import scala.reflect.ClassTag
-import spire.algebra.Ring
+import spire.algebra.{Rig, Ring}
 import uk.ac.ed.inf.mois.math.Multiset
 import uk.ac.ed.inf.mois.{Index, Process, VarMeta}
 

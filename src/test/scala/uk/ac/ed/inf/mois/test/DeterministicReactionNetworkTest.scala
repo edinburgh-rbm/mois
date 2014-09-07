@@ -7,7 +7,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 import spire.implicits._
 
-object Brusselator extends DeterministicReactionNetwork {
+class Brusselator extends DeterministicReactionNetwork {
 
   // TODO: Write about this in mois-examples
   val A = Species("A")
@@ -21,8 +21,6 @@ object Brusselator extends DeterministicReactionNetwork {
     B + X -> B + Y at 1.0,
     X -> () at 1.0
   )
-
-  init(0)
 }
 
 /**
@@ -30,11 +28,15 @@ object Brusselator extends DeterministicReactionNetwork {
  * decent model to test things like graphing out.
  */
 class BrusselatorModel extends Model {
-  val process = Brusselator
-  Brusselator.A := 1.0
-  Brusselator.B := 1.7
-  Brusselator.X := 1.0
-  Brusselator.Y := 1.0
+  val process = new Brusselator
+  override def init(t: Double) {
+    super.init(t)
+    import process._
+    A := 1.0
+    B := 1.7
+    X := 1.0
+    Y := 1.0
+  }
 }
 
 class DeterministicReactionNetworkTest extends FlatSpec with Matchers {
@@ -45,16 +47,19 @@ class DeterministicReactionNetworkTest extends FlatSpec with Matchers {
     TolerantNumerics.tolerantDoubleEquality(precision)
 
   "Brusselator" should "give expected results" in {
+    val brusselator = new Brusselator
+    brusselator.init(0)
+    import brusselator._
 
-    Brusselator.A := 1.0
-    Brusselator.B := 1.7
-    Brusselator.X := 1.0
-    Brusselator.Y := 1.0
+    A := 1.0
+    B := 1.7
+    X := 1.0
+    Y := 1.0
 
-    Brusselator.step(0, 50)
+    brusselator.step(0, 50)
 
     // Tests
-    Brusselator.X.value should equal (1.0)
-    Brusselator.Y.value should equal (1.7)
+    X.value should equal (1.0)
+    Y.value should equal (1.7)
   }
 }
