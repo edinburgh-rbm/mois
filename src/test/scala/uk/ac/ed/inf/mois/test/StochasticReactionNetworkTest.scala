@@ -9,7 +9,7 @@ import spire.implicits._
 
 class StochasticReactionNetworkTest extends FlatSpec with Matchers {
 
-  object GbKl extends StochasticReactionNetwork {
+  class GbKl extends StochasticReactionNetwork {
     annotate("long_name", "Goldbeter-Koshland")
 
     val A = Species("A")
@@ -24,16 +24,16 @@ class StochasticReactionNetworkTest extends FlatSpec with Matchers {
   }
 
   "Goldbeter-Koshland" should "give expected results" in {
-
-    import GbKl._
+    val gbkl = new GbKl
+    import gbkl._
+    val XA = enzymeComplex(X, A)
+    val YB = enzymeComplex(Y, B)
+    gbkl.init(0)
 
     A := 10000
     B := 10000
     X := 10000
     Y := 10000
-
-    val XA = enzymeComplex(X, A)
-    val YB = enzymeComplex(Y, B)
 
     val s = 1e-7
     for (i <- 0.0 until 1e-6 by s) {
