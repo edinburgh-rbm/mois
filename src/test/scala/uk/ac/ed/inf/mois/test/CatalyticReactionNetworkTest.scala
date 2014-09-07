@@ -24,6 +24,7 @@ object GbKl extends DeterministicReactionNetwork {
 
 class GbKlModel extends Model {
   val process = GbKl
+  process.init(0)
   GbKl.A := 1.0
   GbKl.B := 1.0
   GbKl.X := 1.0
