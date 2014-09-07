@@ -58,9 +58,16 @@ class Accumulator extends StepHandler {
  */
 class TsvWriter(fp: java.io.Writer, sep: String = "\t")
     extends StepHandler {
+  private val ordering = mutable.Map.empty[Rig[_], Array[Int]]
   def init(t: Double, proc: Process) {
     val rigs = proc.state.meta.keys.toSeq.sortBy(_.toString)
-    val metas = (for (rig <- rigs) yield proc.state.meta(rig))
+    for (rig <- rigs) {
+      ordering(rig) = proc.state.meta(rig).sortBy(_.identifier).map { m =>
+        proc.state.meta(rig).indexOf(m)
+      }.toArray
+    }
+    val metas = (for (rig <- rigs) yield ordering(rig)
+      .map(i => proc.state.meta(rig)(i)).toArray)
       .foldLeft(mutable.ArrayBuffer.empty[VarMeta])((z, a) => z ++ a)
     fp.write("t" + sep + metas.map(x => x.identifier).mkString(sep) + "\n")
     handleStep(t, proc)
@@ -68,7 +75,8 @@ class TsvWriter(fp: java.io.Writer, sep: String = "\t")
   def handleStep(t: Double, proc: Process) {
     // apply a predictable ordering
     val rigs = proc.state.meta.keys.toSeq.sortBy(_.toString)
-    val vars = (for (rig <- rigs) yield proc.state.vars(rig))
+    val vars = (for (rig <- rigs) yield ordering(rig)
+      .map(i => proc.state.vars(rig)(i)).toArray)
       .foldLeft(mutable.ArrayBuffer.empty[Any])((z, a) => z ++ a)
     fp.write(t.toString + sep + vars.mkString(sep) + "\n")
   }
