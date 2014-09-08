@@ -199,7 +199,7 @@ object MoisMain {
 
   def getDoubleVars(names: Seq[String], model: Model)(implicit
     rig: Rig[Double]
-  ): Seq[Index[Double]] = {
+  ): Seq[Var[Double]] = {
     val state = model.buildState
     for (name <- names
       if (state.meta.get(rig).isDefined) &&

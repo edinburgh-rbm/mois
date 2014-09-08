@@ -32,10 +32,10 @@ abstract class ODE extends Process
     with ode.FirstOrderDifferentialEquations {
 
   /** An array with all `Var`s for which to integrate. */
-  val vars = mutable.ArrayBuffer.empty[Index[Double]]
+  val vars = mutable.ArrayBuffer.empty[Var[Double]]
 
   /** A class to define derivatives of `Var`s. */
-  protected class AddODE(val vs: Seq[Index[Double]]) {
+  protected class AddODE(val vs: Seq[Var[Double]]) {
 
     /** Adds an ODE definition to the process. */
     def := (fs: (() => Double)*): Unit = {
@@ -48,10 +48,10 @@ abstract class ODE extends Process
     }
   }
   implicit def bynameToFun(f: => Double) = () => f
-  implicit def varToFun(f: Index[Double]) = () => f.value
+  implicit def varToFun(f: Var[Double]) = () => f.value
 
   /** Adds an ODE definition to the current `ODE`. */
-  protected def d(vs: Index[Double]*) = new AddODE(vs) {
+  protected def d(vs: Var[Double]*) = new AddODE(vs) {
     def / (d: dt.type) = new AddODE(vs)
   }
 

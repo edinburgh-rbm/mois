@@ -19,8 +19,7 @@ package uk.ac.ed.inf.mois
 
 import scala.language.existentials
 import scala.language.implicitConversions
-import spire.algebra.Rig
-import spire.implicits._
+import spire.algebra.{Rig, Ring, Field}
 
 /** This class is to abstract away the details of uniquely identifying a
   * state variable.
@@ -29,6 +28,16 @@ case class VarMeta(identifier: String, rig: Rig[T] forSome { type T })
     extends Ordered[VarMeta] with Annotation {
   def compare(that: VarMeta) = this.identifier compare that.identifier
   override def toString = identifier
+}
+
+trait Var[T] {
+  val meta: VarMeta
+  /** Add an [[Annotation]] onto the [[VarMeta]] */
+  val annotate = meta.annotate _
+
+  def value: T
+  def update(value: T): Unit
+  @inline final def := (value: T) = { update(value); this }
 }
 
 object VarMeta {

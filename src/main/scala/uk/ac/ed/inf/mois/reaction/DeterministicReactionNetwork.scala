@@ -56,7 +56,7 @@ abstract class DeterministicReactionNetwork
       vars.clear
       // compute derivates
       for (s <- species) {
-        d(s.idx) := (for (rxn <- rxns if rxn(s) != 0) yield
+        d(s.v) := (for (rxn <- rxns if rxn(s) != 0) yield
           rxn(s) * rxn.rate).sum
       }
     }

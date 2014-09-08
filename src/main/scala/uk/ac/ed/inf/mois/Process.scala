@@ -132,7 +132,7 @@ abstract class Process extends StateBuilder with Annotation {
   }
 
   /** Needed for NetCDF et al. TODO: explain better */
-  class Dimension[T](i: Index[T]) {
+  class Dimension[T](i: Var[T]) {
     def apply = dimensions(i.meta)
     def update(x: Int) { dimensions(i.meta) = x }
     def +=(x: Int) { dimensions(i.meta) = dimensions(i.meta) + x }
@@ -141,11 +141,11 @@ abstract class Process extends StateBuilder with Annotation {
     def /=(x: Int) { dimensions(i.meta) = dimensions(i.meta) / x }
   }
   object Dimension {
-    def apply[T](i: Index[T], size: Int): Dimension[T] = {
+    def apply[T](i: Var[T], size: Int): Dimension[T] = {
       dimensions += i.meta -> size
       Dimension(i)
     }
-    def apply[T](i: Index[T]): Dimension[T] = new Dimension(i)
+    def apply[T](i: Var[T]): Dimension[T] = new Dimension(i)
   }
 
   def stringPrefix = "Process"

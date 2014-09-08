@@ -18,6 +18,7 @@
 package uk.ac.ed.inf.mois.test
 
 import spire.implicits._
+import uk.ac.ed.inf.mois.implicits._
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics

@@ -43,7 +43,7 @@ abstract class HamiltonianProcess extends ODE {
    */
   var totalEnergy = 0.0
 
-  case class H(q: Index[Double]*)(p: Index[Double]*)
+  case class H(q: Var[Double]*)(p: Var[Double]*)
       extends MultivariateDifferentiableFunction {
     private val phase = q ++ p
     assert(q.size == p.size)

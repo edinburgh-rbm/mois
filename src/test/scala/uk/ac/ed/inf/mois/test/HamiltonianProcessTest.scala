@@ -22,6 +22,7 @@ import org.scalactic.TolerantNumerics
 
 import java.lang.Math.PI
 import uk.ac.ed.inf.mois.{HamiltonianProcess, Math}
+import uk.ac.ed.inf.mois.implicits._
 
 case class Pendulum(m: Double, l: Double) extends HamiltonianProcess with Math {
   annotate("description", "Pendulum")

@@ -19,6 +19,7 @@ package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.{Accumulator, Process, StepHandler, TsvWriter}
 import spire.implicits._
+import uk.ac.ed.inf.mois.implicits._
 import org.scalatest.{FlatSpec, Matchers}
 
 class StepHandlerTest extends FlatSpec with Matchers {

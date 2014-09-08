@@ -19,7 +19,7 @@ package uk.ac.ed.inf.mois.reaction
 
 import scala.reflect.ClassTag
 import spire.algebra.Ring
-import uk.ac.ed.inf.mois.{Index, VarMeta}
+import uk.ac.ed.inf.mois.{Var, VarMeta}
 
 /** Base trait for all reaction networks that use concentrations of
   * molecules as a measure for species (as opposed to
@@ -31,10 +31,10 @@ trait ConcentrationBasedReactionNetwork[T] extends ReactionNetwork[T] {
 
   type Species = ConcentrationBasedSpecies
 
-  class ConcentrationBasedSpecies(idx: Index[T])(implicit ring: Ring[T])
-      extends BaseSpecies(idx) {
+  class ConcentrationBasedSpecies(v: Var[T])(implicit ring: Ring[T])
+      extends BaseSpecies(v) {
     type R = Species
-    override def toString = idx.toString
+    override def toString = v.toString
   }
 
   object Species extends SpeciesFactory {

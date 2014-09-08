@@ -18,6 +18,7 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.Process
+import uk.ac.ed.inf.mois.implicits._
 
 import org.scalatest.{FlatSpec, Matchers}
 

@@ -25,13 +25,13 @@ trait VarCalc extends Process {
 
   private val funcs = mutable.ArrayBuffer.empty[Func]
 
-  protected class Calc[T](val v: Index[T]) {
+  protected class Calc[T](val v: Var[T]) {
     def := (e: => T): Unit = {
       funcs += (() => v := e)
     }
   }
 
-  @inline final def calc[T](v: Index[T]) = new Calc(v)
+  @inline final def calc[T](v: Var[T]) = new Calc(v)
 
   protected class CalcVars extends StepHandler {
     def init(t: Double, proc: Process) {

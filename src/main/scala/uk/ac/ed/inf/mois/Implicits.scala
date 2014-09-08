@@ -1,5 +1,5 @@
 /*
- *  MOIS: Package Top-level Documentation
+ *  MOIS: Implicit Conversions
  *  Copyright (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,15 +15,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.ed.inf
+package uk.ac.ed.inf.mois
 
-/**
- *
- * == Module Integration Simulator ==
- *
- */
-package object mois {
-  private val p = getClass.getPackage
-  val name = p.getImplementationTitle
-  val version = p.getImplementationVersion
+import scala.language.implicitConversions
+import spire.algebra.{Rig, Ring, Field}
+
+object implicits {
+  implicit def varValue[T](v: Var[T]) = v.value
+  implicit class RigSyntax0[T: Rig](v: Var[T]) extends RigSyntax[T](v)
+  implicit class RingSyntax0[T: Ring](v: Var[T]) extends RingSyntax[T](v)
+  implicit class FieldSyntax0[T: Field](v: Var[T]) extends FieldSyntax[T](v)
 }

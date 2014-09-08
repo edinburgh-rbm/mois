@@ -42,7 +42,7 @@ class Accumulator extends StepHandler {
   }
   def init(t: Double, proc: Process) = handleStep(t, proc)
   // TODO: Should the Accumulator interpolate?
-  def apply[T](t: Double)(key: Index[T])(implicit rig: Rig[T]) = {
+  def apply[T](t: Double)(key: Var[T])(implicit rig: Rig[T]) = {
     // FIXME really stupid linear search
     val state = history.filter(_._1 <= t).last._2
     state.getIndex(key.meta)

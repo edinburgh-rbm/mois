@@ -23,6 +23,7 @@ import scala.collection.mutable
 
 import spire.algebra.Rig
 import spire.implicits._
+import uk.ac.ed.inf.mois.implicits._
 import uk.ac.ed.inf.mois.{State, StateBuilder, VarMeta}
 
 class StateTest extends FlatSpec with Matchers {

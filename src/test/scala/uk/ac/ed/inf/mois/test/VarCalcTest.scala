@@ -21,6 +21,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{Process, VarCalc}
+import uk.ac.ed.inf.mois.implicits._
 
 class VarCalcTest extends FlatSpec with Matchers {
   class V extends Process with VarCalc {

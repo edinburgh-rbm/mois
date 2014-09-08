@@ -19,6 +19,7 @@ package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.{DiscreteProcess, NetCdfWriter}
 import spire.implicits._
+import uk.ac.ed.inf.mois.implicits._
 
 import java.io.File
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
@@ -29,7 +30,7 @@ class NetCdfTest extends FlatSpec with Matchers with BeforeAndAfter {
     new File("test.nc").delete
   }
 
-  object p extends DiscreteProcess[Double] {
+  class P extends DiscreteProcess[Double] {
     val x1 = Double("ex:x1")
     val x2 = Double("ex:x2")
     val x3 = Double("ex:x3")
@@ -40,15 +41,14 @@ class NetCdfTest extends FlatSpec with Matchers with BeforeAndAfter {
     next(x1) := x1 + 1 + x4
     next(x2) := x1 + x2 + 1 + x4
     next(x3) := x1 + x2 + x3 + 1 + x4
-
-    init(0)
   }
 
   "netcdf writer" should "store data scalably" in {
+    val p = new P
     val cdf = new NetCdfWriter("test.nc")
     p.addStepHandler(cdf)
 
-    cdf.init(0, p)
+    p.init(0)
 
     import p._
     for (d <- 0 until 3) {

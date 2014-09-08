@@ -37,13 +37,13 @@ import javax.swing.{JFrame, WindowConstants}
  */
 abstract class PlotWriter extends StepHandler {
   private val rig = Rig[Double]
-  val vars: Seq[Index[Double]]
-  val series = mutable.Map.empty[Index[Double], XYSeries]
+  val vars: Seq[Var[Double]]
+  val series = mutable.Map.empty[Var[Double], XYSeries]
   var title = "Untitled"
   var ylabel = ""
 
   // RHZ: This would actually make for a good Var.toString method
-  def label(v: Index[_]): String = {
+  def label(v: Var[_]): String = {
     if (v.meta.annotations contains "long_name") {
       v.meta.annotations("long_name").toString +
         (if (v.meta.annotations contains "units")
@@ -83,7 +83,7 @@ abstract class PlotWriter extends StepHandler {
   }
 }
 
-class PlotFileWriter(val filename: String, val vars: Index[Double]*)
+class PlotFileWriter(val filename: String, val vars: Var[Double]*)
     extends PlotWriter {
 
   def handleStep(t: Double, proc: Process) {
@@ -102,7 +102,7 @@ class PlotFileWriter(val filename: String, val vars: Index[Double]*)
   }
 }
 
-class PlotGUIWriter(val vars: Index[Double]*) extends PlotWriter {
+class PlotGUIWriter(val vars: Var[Double]*) extends PlotWriter {
 
   val dimTitle = new TextTitle
 

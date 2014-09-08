@@ -19,7 +19,7 @@ package uk.ac.ed.inf.mois.reaction
 
 import scala.reflect.ClassTag
 import spire.algebra.Ring
-import uk.ac.ed.inf.mois.{Index, VarMeta}
+import uk.ac.ed.inf.mois.{Var, VarMeta}
 
 /** Base trait for all reaction networks that use population of
   * molecules as a measure for species (as opposed to
@@ -31,15 +31,17 @@ trait PopulationBasedReactionNetwork[T] extends ReactionNetwork[T] {
 
   type Species = PopulationBasedSpecies
 
-  class PopulationBasedSpecies(idx: Index[T])(implicit ring: Ring[T])
-      extends BaseSpecies(idx) {
+  class PopulationBasedSpecies(v: Var[T])(implicit ring: Ring[T])
+      extends BaseSpecies(v) {
     type R = Species
   }
 
   object Species extends SpeciesFactory {
     def apply(ident: String)(implicit ring: Ring[T], ct: ClassTag[T]) = {
       val idx = addVar[T](ident)
-      new PopulationBasedSpecies(idx)
+      val s = new PopulationBasedSpecies(idx)
+      species += s
+      s
     }
   }
 }

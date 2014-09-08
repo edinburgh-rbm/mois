@@ -23,6 +23,7 @@ import scala.collection.mutable
 
 import spire.algebra.Rig
 import spire.implicits._
+import uk.ac.ed.inf.mois.implicits._
 
 import ucar.nc2
 import ucar.ma2
@@ -172,7 +173,7 @@ abstract class VarCdfWriter {
   def apply(origin: Array[Int], offset: Int): Int
 }
 
-abstract class NetCdfOps(i: Index[_]) {
+abstract class NetCdfOps(i: Var[_]) {
   val cdfType: ma2.DataType
   def cdfArray(shape: Array[Int]): ma2.Array
   def setData(data: ma2.Array, idx: ma2.Index): Unit
@@ -232,43 +233,43 @@ abstract class NetCdfOps(i: Index[_]) {
   }
 }
 
-class ByteToCdf(b: Index[Byte]) extends NetCdfOps(b) {
+class ByteToCdf(b: Var[Byte]) extends NetCdfOps(b) {
   val cdfType = ma2.DataType.BYTE
   def cdfArray(shape: Array[Int]) = new ma2.ArrayByte(shape)
   def setData(a: ma2.Array, idx: ma2.Index) = a.setByte(idx, b)
 }
 
-class IntToCdf(i: Index[Int]) extends NetCdfOps(i) {
+class IntToCdf(i: Var[Int]) extends NetCdfOps(i) {
   val cdfType = ma2.DataType.INT
   def cdfArray(shape: Array[Int]) = new ma2.ArrayInt(shape)
   def setData(a: ma2.Array, idx: ma2.Index) = a.setInt(idx, i)
 }
 
-class LongToCdf(l: Index[Long]) extends NetCdfOps(l) {
+class LongToCdf(l: Var[Long]) extends NetCdfOps(l) {
   val cdfType = ma2.DataType.LONG
   def cdfArray(shape: Array[Int]) = new ma2.ArrayLong(shape)
   def setData(a: ma2.Array, idx: ma2.Index) = a.setLong(idx, l)
 }
 
-class ShortToCdf(s: Index[Short]) extends NetCdfOps(s) {
+class ShortToCdf(s: Var[Short]) extends NetCdfOps(s) {
   val cdfType = ma2.DataType.SHORT
   def cdfArray(shape: Array[Int]) = new ma2.ArrayShort(shape)
   def setData(a: ma2.Array, idx: ma2.Index) = a.setShort(idx, s)
 }
 
-class FloatToCdf(f: Index[Float]) extends NetCdfOps(f) {
+class FloatToCdf(f: Var[Float]) extends NetCdfOps(f) {
   val cdfType = ma2.DataType.FLOAT
   def cdfArray(shape: Array[Int]) = new ma2.ArrayFloat(shape)
   def setData(a: ma2.Array, idx: ma2.Index) = a.setFloat(idx, f)
 }
 
-class DoubleToCdf(d: Index[Double]) extends NetCdfOps(d) {
+class DoubleToCdf(d: Var[Double]) extends NetCdfOps(d) {
   val cdfType = ma2.DataType.DOUBLE
   def cdfArray(shape: Array[Int]) = new ma2.ArrayDouble(shape)
   def setData(a: ma2.Array, idx: ma2.Index) = a.setDouble(idx, d)
 }
 
-class BooleanToCdf(b: Index[Boolean]) extends NetCdfOps(b) {
+class BooleanToCdf(b: Var[Boolean]) extends NetCdfOps(b) {
   val cdfType = ma2.DataType.BOOLEAN
   def cdfArray(shape: Array[Int]) = new ma2.ArrayBoolean(shape)
   def setData(a: ma2.Array, idx: ma2.Index) = a.setBoolean(idx, b)
@@ -294,12 +295,12 @@ class ProcToCdf(proc: Process) {
 }
 
 object NetCdfImplicits {
-  implicit final def byteImplicits(b: Index[Byte]): NetCdfOps = new ByteToCdf(b)
-  implicit final def intImplicits(i: Index[Int]): NetCdfOps = new IntToCdf(i)
-  implicit final def longImplicits(l: Index[Long]): NetCdfOps = new LongToCdf(l)
-  implicit final def shortImplicits(s: Index[Short]): NetCdfOps = new ShortToCdf(s)
-  implicit final def floatImplicits(f: Index[Float]): NetCdfOps = new FloatToCdf(f)
-  implicit final def doubleImplicits(d: Index[Double]): NetCdfOps = new DoubleToCdf(d)
-  implicit final def booleanImplicits(b: Index[Boolean]): NetCdfOps = new BooleanToCdf(b)
+  implicit final def byteImplicits(b: Var[Byte]): NetCdfOps = new ByteToCdf(b)
+  implicit final def intImplicits(i: Var[Int]): NetCdfOps = new IntToCdf(i)
+  implicit final def longImplicits(l: Var[Long]): NetCdfOps = new LongToCdf(l)
+  implicit final def shortImplicits(s: Var[Short]): NetCdfOps = new ShortToCdf(s)
+  implicit final def floatImplicits(f: Var[Float]): NetCdfOps = new FloatToCdf(f)
+  implicit final def doubleImplicits(d: Var[Double]): NetCdfOps = new DoubleToCdf(d)
+  implicit final def booleanImplicits(b: Var[Boolean]): NetCdfOps = new BooleanToCdf(b)
   implicit final def procImplicits(p: Process): ProcToCdf = new ProcToCdf(p)
 }

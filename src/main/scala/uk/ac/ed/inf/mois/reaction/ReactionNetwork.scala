@@ -22,7 +22,7 @@ import scala.collection.mutable
 import scala.reflect.ClassTag
 import spire.algebra.{Rig, Ring}
 import uk.ac.ed.inf.mois.math.Multiset
-import uk.ac.ed.inf.mois.{Index, Process, VarMeta}
+import uk.ac.ed.inf.mois.{Process, Var, VarMeta}
 
 /** A base trait for reaction networks.  These reaction network use
   * species as variables and let you define reactions using them.
@@ -43,12 +43,12 @@ trait ReactionNetwork[T] extends Process {
   val species = mutable.ArrayBuffer.empty[Species]
 
   // -- Species --
-  abstract class BaseSpecies(val idx: Index[T])(implicit ring: Ring[T]) {
+  abstract class BaseSpecies(val v: Var[T])(implicit ring: Ring[T]) {
     this: Species =>
 
-    val meta = idx.meta
+    val meta = v.meta
 
-    @inline final def value = idx.value
+    @inline final def value = v.value
 
     type R >: this.type <: Species
 
@@ -63,10 +63,10 @@ trait ReactionNetwork[T] extends Process {
     def -> () = Reaction(Multiset(this), Multiset())
 
     // -- Assignment methods
-    def := (v: T) = idx := v
+    def := (x: T) = v := x
     // -- Arithmetic methods
-    def += (v: T) = idx := ring.plus(idx, v)
-    def -= (v: T) = idx := ring.minus(idx, v)
+    def += (x: T) = v := ring.plus(v.value, x)
+    def -= (x: T) = v := ring.minus(v.value, x)
 
     def stringPrefix = "Species"
   }

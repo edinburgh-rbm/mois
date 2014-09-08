@@ -32,7 +32,7 @@ case class State(
   @inline final def := [T](data: Array[T])(implicit rig: Rig[T]) =
     update(data)
 
-  def getIndex[T](m: VarMeta)(implicit rig: Rig[T]) = {
+  def getIndex[T](m: VarMeta)(implicit rig: Rig[T]): Var[T] = {
     if (!(meta contains m.rig) || !(meta(m.rig) contains m))
       throw new NoSuchElementException(s"key not found $m")
     val i = new Index[T](m)
@@ -110,7 +110,7 @@ object State {
   * @param meta is used to find the amht array and offset
   *             into the state
   */
-class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) {
+class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) extends Var[T] {
 
   private var _state: State = null
   // RHZ: Why do we need to cache state?
@@ -127,22 +127,17 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) {
     _state = s
   }
 
-  // RHZ: Why having a Function1 instead of a simple method?
-  /** Add an [[Annotation]] onto the [[VarMeta]] */
-  val annotate = meta.annotate _
-
   /** Explicitly retrieve the underlying value in the state */
   @inline final def value = array(index)
   /** Update the underlying value in the state */
   @inline final def update(value: T) { array(index) = value }
-  /** Syntax sugar for updating the underlying value in the state */
-  @inline final def := (value: T) = { update(value); this }
 
+/*
   @inline def +(other: T) = rig.plus(value, other)
   @inline def +=(other: T) = update(rig.plus(value, other))
   @inline def *(other: T) = rig.times(value, other)
   @inline def *=(other: T) = update(rig.times(value, other))
-
+ */
   override def toString = s"$meta = $value"
 }
 
@@ -213,7 +208,7 @@ trait StateBuilder {
     * @param meta is the metadata used to index the state
     * @return a handle that can be used to access this variable later.
     */
-  def addVar[T: ClassTag](ident: String)(implicit rig: Rig[T]): Index[T] = {
+  def addVar[T: ClassTag](ident: String)(implicit rig: Rig[T]): Var[T] = {
     val meta = new VarMeta(ident, rig)
     // check that we do not already know this variable
     if (!(allmeta contains meta)) {

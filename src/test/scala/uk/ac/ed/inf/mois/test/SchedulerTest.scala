@@ -22,6 +22,8 @@ import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{Process, ProcessGroup, ODE}
 import uk.ac.ed.inf.mois.sched.NaiveScheduler
+import spire.implicits._
+import uk.ac.ed.inf.mois.implicits._
 
 /** Directly transcribed ODE system from Dominik's stuff. */
 class SampleEuler1 extends Process {

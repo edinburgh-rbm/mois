@@ -22,6 +22,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{Math, ODE}
+import uk.ac.ed.inf.mois.implicits._
 
 /** Directly calculated ODE system from Dominik's stuff. */
 object sampleODE extends ODE with Math {

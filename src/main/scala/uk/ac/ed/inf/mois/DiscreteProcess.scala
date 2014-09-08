@@ -20,7 +20,6 @@ package uk.ac.ed.inf.mois
 import scala.collection.mutable
 import scala.reflect.ClassTag
 import spire.algebra.Rig
-import spire.implicits._
 
 abstract class DiscreteProcess[T: ClassTag](implicit rig: Rig[T]) extends Process {
   type Func = () => T
@@ -32,22 +31,22 @@ abstract class DiscreteProcess[T: ClassTag](implicit rig: Rig[T]) extends Proces
     */
   val stepSize = 1.0
 
-  private val _vars = mutable.ArrayBuffer.empty[Index[T]]
+  private val _vars = mutable.ArrayBuffer.empty[Var[T]]
   private lazy val vars = _vars.toArray
   private val _funcs = mutable.ArrayBuffer.empty[Func]
   private lazy val funcs = _funcs.toArray
 
-  protected class Next(val v: Index[T]) {
+  protected class Next(val v: Var[T]) {
     def := (e: => T): Unit = addNext(v, () => e)
   }
 
-  protected def addNext(v: Index[T], f: Func) {
+  protected def addNext(v: Var[T], f: Func) {
     _vars += v
     _funcs += f
   }
 
-  @inline final def next(v: Index[T]) = new Next(v)
-  @inline final def n(v: Index[T]) = new Next(v)
+  @inline final def next(v: Var[T]) = new Next(v)
+  @inline final def n(v: Var[T]) = new Next(v)
 
   override def step(t0: Double, tau: Double) {
     var t = t0
