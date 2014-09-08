@@ -72,35 +72,13 @@ case class State(
 
   // FIXME: This should be just a for over meta and vars instead
   def >>> (other: State) {
-    copyTo[Byte](other)
-    copyTo[Short](other)
-    copyTo[Int](other)
-    copyTo[Long](other)
-    copyTo[BigInt](other)
-    copyTo[Float](other)
-    copyTo[Double](other)
-    copyTo[BigDecimal](other)
-    copyTo[Complex[Double]](other)
-    copyTo[Real](other)
-    copyTo[Rational](other)
-    copyTo[Natural](other)
-    copyTo[Boolean](other)
+    for (rig <- other.meta.keys if meta contains rig)
+      copyTo(other)(rig)
   }
 
   def <<< (other: State) {
-    copyFrom[Byte](other)
-    copyFrom[Short](other)
-    copyFrom[Int](other)
-    copyFrom[Long](other)
-    copyFrom[BigInt](other)
-    copyFrom[Float](other)
-    copyFrom[Double](other)
-    copyFrom[BigDecimal](other)
-    copyFrom[Complex[Double]](other)
-    copyFrom[Real](other)
-    copyFrom[Rational](other)
-    copyFrom[Natural](other)
-    copyFrom[Boolean](other)
+    for (rig <- meta.keys if other.meta contains rig)
+      copyFrom(other)(rig)
   }
 }
 
