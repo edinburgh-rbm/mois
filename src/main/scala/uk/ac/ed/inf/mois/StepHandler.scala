@@ -45,7 +45,7 @@ class Accumulator extends StepHandler {
   def apply[T](t: Double)(key: Var[T])(implicit rig: Rig[T]) = {
     // FIXME really stupid linear search
     val state = history.filter(_._1 <= t).last._2
-    state.getIndex(key.meta)
+    state.getVar(key.meta)
   }
 }
 

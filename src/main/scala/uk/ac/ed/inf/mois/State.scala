@@ -22,17 +22,13 @@ case class State(
     vars = mutable.Map.empty[Rig[_],Array[_]] ++ vars.map({
       case (rig, a) => (rig, a.clone) }))
 
-  // RHZ: After using update, indices don't work anymore (they point
-  // to the old state).
-  // def update[T](data: Array[T])(implicit rig: Rig[T]) =
-  //   copy(vars = vars + (rig -> data))
   def update[T](data: Array[T])(implicit rig: Rig[T]) =
     vars += (rig -> data)
 
   @inline final def := [T](data: Array[T])(implicit rig: Rig[T]) =
     update(data)
 
-  def getIndex[T](m: VarMeta)(implicit rig: Rig[T]): Var[T] = {
+  def getVar[T](m: VarMeta)(implicit rig: Rig[T]): Var[T] = {
     if (!(meta contains m.rig) || !(meta(m.rig) contains m))
       throw new NoSuchElementException(s"key not found $m")
     val i = new Index[T](m)
@@ -82,30 +78,10 @@ case class State(
   }
 }
 
-/** The State companion object provides an implicit function
-  * to retrieve an arrayof the correct type just by referencing
-  * the state itself. For example,
-  *
-  * {{{
-  * val doubles: Array[Double] = state
-  * }}}
-  */
-object State {
-  // RHZ: I really think it's not good to do this kind of implicit
-  // conversion because what you get back is not the state, it's
-  // something else and that should be apparent, as in state.get[T]
-  // implicit def getArray[T](s: State)(implicit rig: Rig[T])
-  //     : Array[T] = {
-  //   // println(s"$rig")
-  //   // println(s"${s.vars(rig)}")
-  //   s.vars(rig).asInstanceOf[Array[T]]
-  // }
-}
-
 /** An Index is used to access a specific [[State]] variable.
   * It is instantiated lazily, and it is important to call
   * [[Index.setState]] before using it, otherwise null pointer
-  * errors will result.
+  * errors will result. It exposes the [[Var]] interface.
   *
   * @param meta is used to find the amht array and offset
   *             into the state
@@ -132,20 +108,7 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) extends Var[T] {
   /** Update the underlying value in the state */
   @inline final def update(value: T) { array(index) = value }
 
-/*
-  @inline def +(other: T) = rig.plus(value, other)
-  @inline def +=(other: T) = update(rig.plus(value, other))
-  @inline def *(other: T) = rig.times(value, other)
-  @inline def *=(other: T) = update(rig.times(value, other))
- */
   override def toString = s"$meta = $value"
-}
-
-/** Index companion object provides implicit function to retrieve
-  * the underlying value in the state automatically
-  */
-object Index {
-  @inline implicit def value[T](i: Index[T]): T = i.value
 }
 
 /** StateBuilder is used, unsurprisingly, to build a [[State]]. It

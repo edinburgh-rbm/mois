@@ -47,20 +47,20 @@ class StateTest extends FlatSpec with Matchers {
   }
 
   it should "create indices that can access their value" in {
-    val x = s.getIndex[Int](VarMeta("x", i))
-    val y = s.getIndex[Int](VarMeta("y", i))
-    val z = s.getIndex[Double](VarMeta("z", d))
-    val w = s.getIndex[Double](VarMeta("w", d))
+    val x = s.getVar[Int](VarMeta("x", i))
+    val y = s.getVar[Int](VarMeta("y", i))
+    val z = s.getVar[Double](VarMeta("z", d))
+    val w = s.getVar[Double](VarMeta("w", d))
     x.value should be (0)
     y.value should be (1)
     z.value should be (2.0)
     w.value should be (3.0)
   }
 
-  val x = s.getIndex[Int](VarMeta("x", i))
-  val y = s.getIndex[Int](VarMeta("y", i))
-  val z = s.getIndex[Double](VarMeta("z", d))
-  val w = s.getIndex[Double](VarMeta("w", d))
+  val x = s.getVar[Int](VarMeta("x", i))
+  val y = s.getVar[Int](VarMeta("y", i))
+  val z = s.getVar[Double](VarMeta("z", d))
+  val w = s.getVar[Double](VarMeta("w", d))
 
   it should "create indices that can modify their value" in {
     x := 4

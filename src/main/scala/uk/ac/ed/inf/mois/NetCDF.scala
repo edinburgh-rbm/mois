@@ -87,19 +87,19 @@ class NetCdfWriter(filename: String) extends StepHandler {
     proc.dimensions.keys.toSeq.sorted map { meta =>
       val length = proc.dimensions(meta)
       if (meta.rig == Rig[Byte])
-        _writers += addDim(state.getIndex[Byte](meta), byteData, length)
+        _writers += addDim(state.getVar[Byte](meta), byteData, length)
       else if (meta.rig == Rig[Short])
-        _writers += addDim(state.getIndex[Short](meta), shortData, length)
+        _writers += addDim(state.getVar[Short](meta), shortData, length)
       else if (meta.rig == Rig[Int])
-        _writers += addDim(state.getIndex[Int](meta), intData, length)
+        _writers += addDim(state.getVar[Int](meta), intData, length)
       else if (meta.rig == Rig[Long])
-        _writers += addDim(state.getIndex[Long](meta), longData, length)
+        _writers += addDim(state.getVar[Long](meta), longData, length)
       else if (meta.rig == Rig[Float])
-        _writers += addDim(state.getIndex[Float](meta), floatData, length)
+        _writers += addDim(state.getVar[Float](meta), floatData, length)
       else if (meta.rig == Rig[Double])
-        _writers += addDim(state.getIndex[Double](meta), doubleData, length)
+        _writers += addDim(state.getVar[Double](meta), doubleData, length)
       else if (meta.rig == Rig[Boolean])
-        _writers += addDim(state.getIndex[Boolean](meta), booleanData, length)
+        _writers += addDim(state.getVar[Boolean](meta), booleanData, length)
       else
         throw new IllegalArgumentException("Only numeric types supported as dimensions for now")
       proc.dimensions(meta) = 0
@@ -116,22 +116,22 @@ class NetCdfWriter(filename: String) extends StepHandler {
     }
 
     notDims[Byte]
-      .map(m => addVar(proc.state.getIndex[Byte](m), byteData))
+      .map(m => addVar(proc.state.getVar[Byte](m), byteData))
       .foldLeft(_writers)((z, w) => z += w)
     notDims[Short]
-      .map(m => addVar(proc.state.getIndex[Short](m), byteData))
+      .map(m => addVar(proc.state.getVar[Short](m), byteData))
       .foldLeft(_writers)((z, w) => z += w)
     notDims[Int]
-      .map(m => addVar(proc.state.getIndex[Int](m), byteData))
+      .map(m => addVar(proc.state.getVar[Int](m), byteData))
       .foldLeft(_writers)((z, w) => z += w)
     notDims[Long]
-      .map(m => addVar(proc.state.getIndex[Long](m), byteData))
+      .map(m => addVar(proc.state.getVar[Long](m), byteData))
       .foldLeft(_writers)((z, w) => z += w)
     notDims[Float]
-      .map(m => addVar(proc.state.getIndex[Float](m), byteData))
+      .map(m => addVar(proc.state.getVar[Float](m), byteData))
       .foldLeft(_writers)((z, w) => z += w)
     notDims[Boolean]
-      .map(m => addVar(proc.state.getIndex[Boolean](m), byteData))
+      .map(m => addVar(proc.state.getVar[Boolean](m), byteData))
       .foldLeft(_writers)((z, w) => z += w)
 
     // create the file

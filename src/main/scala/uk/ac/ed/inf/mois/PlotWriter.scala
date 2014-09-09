@@ -58,7 +58,7 @@ abstract class PlotWriter extends StepHandler {
   def init(t: Double, proc: Process) {
     if (vars.size == 0) { // try to plot everything!
       val allvars = proc.state.meta.getOrElse(rig, Array.empty[VarMeta])
-      for (v <- proc.state.getMeta[Double].map(proc.state.getIndex[Double](_))) {
+      for (v <- proc.state.getMeta[Double].map(proc.state.getVar[Double](_))) {
         if (!proc.dimensions.contains(v.meta)) {
           series += v -> new XYSeries(label(v))
         }

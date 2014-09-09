@@ -204,7 +204,7 @@ object MoisMain {
     for (name <- names
       if (state.meta.get(rig).isDefined) &&
       (state.meta(rig) contains name)
-    ) yield state.getIndex(name)
+    ) yield state.getVar(name)
   }
 
   def getStepHandler(spec: String, model: Model): Option[StepHandler] = {

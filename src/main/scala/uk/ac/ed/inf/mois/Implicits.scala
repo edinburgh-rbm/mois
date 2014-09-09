@@ -22,7 +22,7 @@ import spire.algebra.{Rig, Ring, Field}
 
 object implicits {
   implicit def varValue[T](v: Var[T]) = v.value
-  implicit class RigSyntax0[T: Rig](v: Var[T]) extends RigSyntax[T](v)
-  implicit class RingSyntax0[T: Ring](v: Var[T]) extends RingSyntax[T](v)
-  implicit class FieldSyntax0[T: Field](v: Var[T]) extends FieldSyntax[T](v)
+  implicit def rigSyntax[T: Rig](v: Var[T]) = new RigVarSyntax[T](v)
+  implicit def ringSyntax[T: Ring](v: Var[T]) = new RingVarSyntax[T](v)
+  implicit def fieldSyntax[T: Field](v: Var[T]) = new FieldVarSyntax[T](v)
 }

@@ -93,7 +93,7 @@ class WeisseSchedulerTest extends FlatSpec with Matchers {
       .max
 
   def stateStr(s: State) = s.getMeta[Double].map(
-    m => s.getIndex[Double](m)).toList
+    m => s.getVar[Double](m)).toList
 
   "coupled oscillator" should "give similar results directly as with weisse" in {
     val direct = new CoupledOscillatorModel
