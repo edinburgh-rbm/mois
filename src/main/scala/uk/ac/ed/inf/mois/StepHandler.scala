@@ -42,6 +42,7 @@ class Accumulator extends StepHandler {
   }
   def init(t: Double, proc: Process) = handleStep(t, proc)
   // TODO: Should the Accumulator interpolate?
+  // Q: How do we interpolate booleans?
   def apply[T](t: Double)(key: Var[T])(implicit rig: Rig[T]) = {
     // FIXME really stupid linear search
     val state = history.filter(_._1 <= t).last._2
