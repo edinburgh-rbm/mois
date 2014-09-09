@@ -20,6 +20,7 @@ package uk.ac.ed.inf.mois
 import scala.language.implicitConversions
 import spire.algebra.{Rig, Ring, Field}
 
+/** syntax sugar, mostly relating to assignment and updating */
 trait Syntax {
   implicit def rigSyntax[T: Rig](v: Var[T]) = new RigVarSyntax[T](v)
   implicit def ringSyntax[T: Ring](v: Var[T]) = new RingVarSyntax[T](v)
@@ -27,9 +28,14 @@ trait Syntax {
   implicit def stateSyntax(s: State) = new StateSyntax(s)
 }
 
+/** automatic type conversions */
 trait Conversions {
   implicit def varValue[T](v: Var[T]) = v.value
 }
 
+/** import this to get automatic type conversion implicits */
+object conversions extends Conversions
+/** import this to get syntax sugar */
 object syntax extends Syntax
+/** import this to get both automatic type conversion and syntax sugar */
 object implicits extends Syntax with Conversions
