@@ -47,7 +47,7 @@ class WeisseScheduler(
       // XXXXX inefficient!!!
       var i = 0
       while (i < doubles.size) {
-        val j = group.state.meta(rig) indexOf child.state.meta(rig)(i)
+        val j = group.state.getMeta(rig) indexOf child.state.getMeta(rig)(i)
         dx(j) += doubles(i) - x0(j)
         i += 1
       }

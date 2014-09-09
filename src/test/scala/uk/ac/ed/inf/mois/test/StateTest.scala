@@ -19,48 +19,44 @@ package uk.ac.ed.inf.mois.test
 
 import org.scalatest.{FlatSpec, Matchers}
 
-import scala.collection.mutable
-
 import spire.algebra.Rig
 import spire.implicits._
 import uk.ac.ed.inf.mois.implicits._
-import uk.ac.ed.inf.mois.{State, StateBuilder, VarMeta}
+import uk.ac.ed.inf.mois.{ArrayBackedState, ArrayBackedStateBuilder, State, StateBuilder, VarMeta}
 
 class StateTest extends FlatSpec with Matchers {
 
-  val i = implicitly[Rig[Int]]
-  val d = implicitly[Rig[Double]]
-  val vs = mutable.Map[Rig[_], Array[_]](
-    i -> Array(0, 1),
-    d -> Array(2.0, 3.0))
-  val ms = mutable.Map[Rig[_], Array[VarMeta]](
-    i -> Array(VarMeta("x", i), VarMeta("y", i)),
-    d -> Array(VarMeta("z", d), VarMeta("w", d)))
+  val vs = Map[Rig[_], Array[_]](
+    Rig[Int] -> Array(0, 1),
+    Rig[Double] -> Array(2.0, 3.0))
+  val ms = Map[Rig[_], Array[VarMeta]](
+    Rig[Int] -> Array(VarMeta("x", Rig[Int]), VarMeta("y", Rig[Int])),
+    Rig[Double] -> Array(VarMeta("z", Rig[Double]), VarMeta("w", Rig[Double])))
 
-  val s = new State(ms, vs)
+  val s = new ArrayBackedState(ms, vs)
 
   "State" should "give metas and vars when asked" in {
-    s.getMeta[Int] should be (ms(i))
-    s.getMeta[Double] should be (ms(d))
-    s.get[Int] should be (vs(i))
-    s.get[Double] should be (vs(d))
+    s.getMeta[Int] should be (ms(Rig[Int]))
+    s.getMeta[Double] should be (ms(Rig[Double]))
+    s.get[Int] should be (vs(Rig[Int]))
+    s.get[Double] should be (vs(Rig[Double]))
   }
 
   it should "create indices that can access their value" in {
-    val x = s.getVar[Int](VarMeta("x", i))
-    val y = s.getVar[Int](VarMeta("y", i))
-    val z = s.getVar[Double](VarMeta("z", d))
-    val w = s.getVar[Double](VarMeta("w", d))
+    val x = s.getVar[Int](VarMeta("x", Rig[Int]))
+    val y = s.getVar[Int](VarMeta("y", Rig[Int]))
+    val z = s.getVar[Double](VarMeta("z", Rig[Double]))
+    val w = s.getVar[Double](VarMeta("w", Rig[Double]))
     x.value should be (0)
     y.value should be (1)
     z.value should be (2.0)
     w.value should be (3.0)
   }
 
-  val x = s.getVar[Int](VarMeta("x", i))
-  val y = s.getVar[Int](VarMeta("y", i))
-  val z = s.getVar[Double](VarMeta("z", d))
-  val w = s.getVar[Double](VarMeta("w", d))
+  val x = s.getVar[Int](VarMeta("x", Rig[Int]))
+  val y = s.getVar[Int](VarMeta("y", Rig[Int]))
+  val z = s.getVar[Double](VarMeta("z", Rig[Double]))
+  val w = s.getVar[Double](VarMeta("w", Rig[Double]))
 
   it should "create indices that can modify their value" in {
     x := 4
@@ -83,33 +79,30 @@ class StateTest extends FlatSpec with Matchers {
   // -- StateBuilders --
 
   "a StateBuilder" should "create a State" in {
-    val sb = new StateBuilder { }
+    val sb = new ArrayBackedStateBuilder { }
     val x = sb.addVar[Int]("x")
     val s = sb.buildState
-    println(s.meta(i)(0).rig)
-    val m = VarMeta("x", i)
-    s.meta(i)(0) should be (m)
-    s.meta(i) should be (Array(m))
-    s.meta.head._1 should be (i)
-    s.meta.head._2 should be (Array(m))
+    val m = VarMeta("x", Rig[Int])
+    s.getMeta(Rig[Int])(0) should be (m)
+    s.getMeta(Rig[Int]) should be (Array(m))
     // RHZ: Array equality doesn't work...  It works in the last line
     // because ScalaTest probably calls sameElements instead of equals
     // s.meta.head should equal ((i, Array(m)))
     // s.meta should be (Map(i -> Array(VarMeta("x", i))))
     // s.vars should be (Map(i -> Array(0)))
     // x.value should throw NullPointerException
-    sb.initStateIndices(s)
+    sb.initState(s)
     x.value should be (0)
   }
 
-  class DummyState extends StateBuilder {
+  class DummyState extends ArrayBackedStateBuilder {
     val x = Int("x")
     val y = Int("y")
     val u = Double("u")
     val v = Double("v")
     val b = Boolean("b")
     val state = buildState
-    initStateIndices(state)
+    initState(state)
   }
 
   it should "support adding and retrieving variables" in {

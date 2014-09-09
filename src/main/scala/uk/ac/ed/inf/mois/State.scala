@@ -1,3 +1,20 @@
+/*
+ *  MOIS: State interface
+ *  Copyright (C) 2014 University of Edinburgh School of Informatics
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
@@ -14,101 +31,35 @@ import spire.implicits._
   * and a corresponding list of metadata that is used to build
   * an index so the state can be conveniently accessed.
   */
-case class State(
-  val meta: mutable.Map[Rig[_], Array[VarMeta]],
-  val vars: mutable.Map[Rig[_], Array[_]]) {
+trait State {
+  def getVar[T](m: VarMeta)(implicit rig: Rig[T]): Var[T]
+  def getMeta[T](implicit rig: Rig[T]): Seq[VarMeta]
+  def getTypes: Seq[Rig[_]]
+  def get[T](implicit rig: Rig[T]): Array[T]
 
-  def deepCopy = copy(
-    vars = mutable.Map.empty[Rig[_],Array[_]] ++ vars.map({
-      case (rig, a) => (rig, a.clone) }))
+  def hasVar(m: VarMeta): Boolean
+  def hasType(rig: Rig[_]): Boolean
+  def hasVarType[T](m: VarMeta)(implicit rig: Rig[T]): Boolean
 
-  def update[T](data: Array[T])(implicit rig: Rig[T]) =
-    vars += (rig -> data)
+  def copyTo[T](other: State)(implicit rig: Rig[T]): Unit
+  def copyFrom[T](other: State)(implicit rig: Rig[T]): Unit
+  def deepCopy: State
 
+  def update[T](data: Array[T])(implicit rig: Rig[T]): Unit
   @inline final def := [T](data: Array[T])(implicit rig: Rig[T]) =
     update(data)
 
-  def getVar[T](m: VarMeta)(implicit rig: Rig[T]): Var[T] = {
-    if (!(meta contains m.rig) || !(meta(m.rig) contains m))
-      throw new NoSuchElementException(s"key not found $m")
-    val i = new Index[T](m)
-    i.setState(this)
-    i
-  }
-
-  def getMeta[T](implicit rig: Rig[T]): Array[VarMeta] =
-    meta.getOrElse(rig, Array.empty[VarMeta])
-
-  def get[T](implicit rig: Rig[T]): Array[T] =
-    vars(rig).asInstanceOf[Array[T]]
-
-  // xxx inefficient!
-  def copyTo[T](other: State)(implicit rig: Rig[T]) {
-    if (other.meta contains rig) {
-      val mine: Array[T] = this.get[T]
-      val theirs: Array[T] = other.get[T]
-      val mymeta = meta(rig)
-      val theirmeta = other.meta(rig)
-      for (i <- 0 until theirmeta.size)
-        theirs(i) = mine(mymeta indexOf theirmeta(i))
-    }
-  }
-
-  // xxx inefficient!
-  def copyFrom[T](other: State)(implicit rig: Rig[T]) {
-    if (other.meta contains rig) {
-      val mine: Array[T] = this.get[T]
-      val theirs: Array[T] = other.get[T]
-      val mymeta = meta(rig)
-      val theirmeta = other.meta(rig)
-      for (i <- 0 until theirmeta.size)
-        mine(mymeta indexOf theirmeta(i)) = theirs(i)
-    }
-  }
-
-  // FIXME: This should be just a for over meta and vars instead
   def >>> (other: State) {
-    for (rig <- other.meta.keys if meta contains rig)
+    val types = getTypes
+    for (rig <- other.getTypes if types contains rig)
       copyTo(other)(rig)
   }
 
   def <<< (other: State) {
-    for (rig <- meta.keys if other.meta contains rig)
+    val types = other.getTypes
+    for (rig <- getTypes if types contains rig)
       copyFrom(other)(rig)
   }
-}
-
-/** An Index is used to access a specific [[State]] variable.
-  * It is instantiated lazily, and it is important to call
-  * [[Index.setState]] before using it, otherwise null pointer
-  * errors will result. It exposes the [[Var]] interface.
-  *
-  * @param meta is used to find the amht array and offset
-  *             into the state
-  */
-class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) extends Var[T] {
-
-  private var _state: State = null
-  // RHZ: Why do we need to cache state?
-  lazy val state = _state
-  def array: Array[T] = state.get[T]
-  private lazy val index = state.meta(rig) indexOf meta
-
-  // RHZ: Why not just expose state_=?
-  /** setState must be called once and only once before using
-    * the index
-    */
-  def setState(s: State) {
-    require(_state == null, "setState may not be called more than once")
-    _state = s
-  }
-
-  /** Explicitly retrieve the underlying value in the state */
-  @inline final def value = array(index)
-  /** Update the underlying value in the state */
-  @inline final def update(value: T) { array(index) = value }
-
-  override def toString = s"$meta = $value"
 }
 
 /** StateBuilder is used, unsurprisingly, to build a [[State]]. It
@@ -117,7 +68,7 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) extends Var[T] {
   * forth, and when this is all done, creating a compact and useable
   * [[State]].
   *
-  * It is very important to call [[StateBuilder.initStateIndices]]
+  * It is very important to call [[StateBuilder.initState]]
   * once and only once before using any state.
   *
   * Example:
@@ -128,15 +79,20 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) extends Var[T] {
   *   val z = BigInt("z")
   *
   *   val state = buildState
-  *   initStateIndices(state)
+  *   initState(state)
   *
   *   // now x, y, z can be used as desired
   * }
   * }}}
   */
 trait StateBuilder {
+  /** Construct a [[State]] */
+  def buildState: State
+  /** Initialise the [[State]] */
+  def initState(s: State)
 
-  class Bag[T: ClassTag](implicit rig: Rig[T]) {
+  // intermediate datastructures to hold a partially built state
+  protected[mois] class Bag[T: ClassTag](implicit rig: Rig[T]) {
     self =>
     val metas = mutable.ArrayBuffer.empty[VarMeta]
     def add(meta: VarMeta) = metas += meta
@@ -145,25 +101,24 @@ trait StateBuilder {
       override val metas = self.metas.clone
     }
   }
+  protected[mois] val bags = mutable.Map.empty[Rig[_], Bag[_]]
+  protected[mois] val indices = mutable.ArrayBuffer.empty[Index[_]]
+  protected[mois] val allmeta = mutable.Set.empty[VarMeta]
 
-  private[mois] val bags = mutable.Map.empty[Rig[_], Bag[_]]
-  private[mois] val indices = mutable.ArrayBuffer.empty[Index[_]]
-  private[mois] val allmeta = mutable.Set.empty[VarMeta]
 
-  // RHZ: Why sorted? Why not just keep the order in which the user
-  // declared the variables?
-  /** Construct a [[State]] */
-  def buildState = State(
-    mutable.Map.empty[Rig[_],Array[VarMeta]] ++ bags.map({
-      case (rig, bag) => (rig, bag.metas.toArray) }),
-    mutable.Map.empty[Rig[_],Array[_]] ++ bags.map({
-      case (rig, bag) => (rig, bag.values)
-    })
-  )
-
-  /** Initialise all indices */
-  def initStateIndices(s: State) {
-    indices map (_.setState(s))
+  /** Merge a partially built [[State]] with this one */
+  def merge(other: StateBuilder) {
+    for ((rig, bag) <- other.bags) {
+      if (!(bags contains rig)) {
+        bags(rig) = bag.copy.asInstanceOf[Bag[_]]
+      } else {
+        for(m <- bag.metas) {
+          if (!(bags(rig).metas contains m)) {
+            bags(rig) add m
+          }
+        }
+      }
+    }
   }
 
   /** Add a variable to the under construction proto[[State]]
@@ -189,21 +144,6 @@ trait StateBuilder {
     val i = new Index[T](meta)
     indices += i
     i
-  }
-
-  /** Merge a partially built [[State]] with this one */
-  def merge(other: StateBuilder) {
-    for ((rig, bag) <- other.bags) {
-      if (!(bags contains rig)) {
-        bags(rig) = bag.copy.asInstanceOf[Bag[_]]
-      } else {
-        for(m <- bag.metas) {
-          if (!(bags(rig).metas contains m)) {
-            bags(rig) add m
-          }
-        }
-      }
-    }
   }
 
   object Int {

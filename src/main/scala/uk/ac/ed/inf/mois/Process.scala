@@ -34,7 +34,7 @@ import scala.collection.mutable
   * [[Process.Dimension]]s and are of fixed size -- unlike time which
   * has unlimited range.
   */
-abstract class Process extends StateBuilder with Annotation {
+abstract class Process extends ArrayBackedStateBuilder with Annotation {
   lazy val state = buildState
 
   /** the list of handlers that run after each step */
@@ -96,7 +96,7 @@ abstract class Process extends StateBuilder with Annotation {
     * @param t the time at the beginning of the simulation
     */
   def init(t: Double) {
-    initStateIndices(state)
+    initState(state)
     addBasicAnnotations
     for (sh <- stepHandlers)
       sh.init(t, this)

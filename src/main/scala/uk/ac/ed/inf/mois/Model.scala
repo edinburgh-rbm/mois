@@ -20,7 +20,7 @@ package uk.ac.ed.inf.mois
 import scala.collection.mutable
 import scala.util.matching.Regex
 
-abstract class Model extends StateBuilder {
+abstract class Model extends ArrayBackedStateBuilder {
 
   val process: Process
 

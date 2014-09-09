@@ -202,8 +202,8 @@ object MoisMain {
   ): Seq[Var[Double]] = {
     val state = model.buildState
     for (name <- names
-      if (state.meta.get(rig).isDefined) &&
-      (state.meta(rig) contains name)
+      if (state.getTypes contains rig) &&
+      (state.getMeta(rig) contains name)
     ) yield state.getVar(name)
   }
 
@@ -278,10 +278,11 @@ object MoisMain {
     model.init(0)
     val state = model.buildState
     println("model parameters:")
-    for (v <- state.meta.values.foldLeft(Array.empty[VarMeta])((z, a) => z ++ a)) {
-      println(String.format("    %s", v))
-      for ((k, a) <- v.annotations)
-        println(String.format("%24s: %s", k, a.toString))
+    for (r <- state.getTypes)
+      for (v <- state.getMeta(r)) {
+        println(String.format("    %s", v))
+        for ((k, a) <- v.annotations)
+          println(String.format("%24s: %s", k, a.toString))
     }
 
     println("process tree:")
