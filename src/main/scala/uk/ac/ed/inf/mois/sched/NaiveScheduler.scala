@@ -20,6 +20,7 @@ package uk.ac.ed.inf.mois.sched
 import scala.util.Random
 
 import uk.ac.ed.inf.mois.{ProcessGroup, Scheduler}
+import uk.ac.ed.inf.mois.syntax._
 
 class NaiveScheduler(step: Double) extends Scheduler {
   def apply(t: Double, tau: Double, group: ProcessGroup) = {

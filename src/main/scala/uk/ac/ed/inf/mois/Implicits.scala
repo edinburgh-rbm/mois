@@ -20,9 +20,16 @@ package uk.ac.ed.inf.mois
 import scala.language.implicitConversions
 import spire.algebra.{Rig, Ring, Field}
 
-object implicits {
-  implicit def varValue[T](v: Var[T]) = v.value
+trait Syntax {
   implicit def rigSyntax[T: Rig](v: Var[T]) = new RigVarSyntax[T](v)
   implicit def ringSyntax[T: Ring](v: Var[T]) = new RingVarSyntax[T](v)
   implicit def fieldSyntax[T: Field](v: Var[T]) = new FieldVarSyntax[T](v)
+  implicit def stateSyntax(s: State) = new StateSyntax(s)
 }
+
+trait Conversions {
+  implicit def varValue[T](v: Var[T]) = v.value
+}
+
+object syntax extends Syntax
+object implicits extends Syntax with Conversions

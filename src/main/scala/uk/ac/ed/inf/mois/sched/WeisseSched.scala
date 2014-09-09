@@ -18,6 +18,7 @@
 package uk.ac.ed.inf.mois.sched
 
 import uk.ac.ed.inf.mois.{ProcessGroup, Scheduler, AdaptiveTimestep, VarMeta}
+import uk.ac.ed.inf.mois.syntax._
 
 import spire.algebra.Rig
 import spire.math.{abs, min, max}

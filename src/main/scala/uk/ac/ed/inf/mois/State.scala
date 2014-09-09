@@ -41,25 +41,22 @@ trait State {
   def hasType(rig: Rig[_]): Boolean
   def hasVarType[T](m: VarMeta)(implicit rig: Rig[T]): Boolean
 
+  def deepCopy: State
   def copyTo[T](other: State)(implicit rig: Rig[T]): Unit
   def copyFrom[T](other: State)(implicit rig: Rig[T]): Unit
-  def deepCopy: State
-
-  def update[T](data: Array[T])(implicit rig: Rig[T]): Unit
-  @inline final def := [T](data: Array[T])(implicit rig: Rig[T]) =
-    update(data)
-
-  def >>> (other: State) {
+  def copyToAll(other: State) {
     val types = getTypes
     for (rig <- other.getTypes if types contains rig)
       copyTo(other)(rig)
   }
 
-  def <<< (other: State) {
+  def copyFromAll(other: State) {
     val types = other.getTypes
     for (rig <- getTypes if types contains rig)
       copyFrom(other)(rig)
   }
+
+  def update[T](data: Array[T])(implicit rig: Rig[T]): Unit
 }
 
 /** StateBuilder is used, unsurprisingly, to build a [[State]]. It

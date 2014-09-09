@@ -14,3 +14,10 @@ final class FieldVarSyntax[T: Field](v: Var[T]) {
   def /= (y: T) { v.update(Field[T].div(v.value, y)) }
   def %= (y: T) { v.update(Field[T].mod(v.value, y)) }
 }
+
+final class StateSyntax(s: State) {
+  @inline final def := [T](data: Array[T])(implicit rig: Rig[T]) =
+    s.update(data)
+  @inline final def >>> (other: State) = s.copyToAll(other)
+  @inline final def <<< (other: State) = s.copyFromAll(other)
+}
