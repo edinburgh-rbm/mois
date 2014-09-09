@@ -32,30 +32,52 @@ import spire.implicits._
   * an index so the state can be conveniently accessed.
   */
 trait State {
+  /** return a variable handle for the given metadata.
+    * this is a relatively expensive operation because it may
+    * allocate objects and should be avoided where possible
+    */
   def getVar[T](m: VarMeta)(implicit rig: Rig[T]): Var[T]
+  /** return the list of metadata for the given type */
   def getMeta[T](implicit rig: Rig[T]): Seq[VarMeta]
+  /** return the types that have been registered in this state */
   def getTypes: Seq[Rig[_]]
+  /** return all of the variables of a given type */
   def get[T](implicit rig: Rig[T]): Array[T]
 
+  /** does this variable exist in this state? */
   def hasVar(m: VarMeta): Boolean
+  /** do any variables of the given type (Rig) exist in this state? */
   def hasType(rig: Rig[_]): Boolean
+  /** does the variable exist in this state with the given type */
   def hasVarType[T](m: VarMeta)(implicit rig: Rig[T]): Boolean
 
+  /** copy the state including any backing storage */
   def deepCopy: State
+  /** write all variables of the given type in the intersection of
+    * this and other from this to other */
   def copyTo[T](other: State)(implicit rig: Rig[T]): Unit
+  /** write all variables of the given type in the intersection of
+    * other and this from other to this */
   def copyFrom[T](other: State)(implicit rig: Rig[T]): Unit
+  /** write all variables in the intersection of this and other
+    * from this to other (seeAlso [[StateSyntax.<<<]]*/
   def copyToAll(other: State) {
     val types = getTypes
     for (rig <- other.getTypes if types contains rig)
       copyTo(other)(rig)
   }
-
+  /** write all variables in the intersection of other and this
+    * from other to this (seeAlso [[StateSyntax.<<<]]) */
   def copyFromAll(other: State) {
     val types = other.getTypes
     for (rig <- getTypes if types contains rig)
       copyFrom(other)(rig)
   }
 
+  /** bulk update the data backing store for the given type.
+    * this assumes that data and the backing store are of the
+    * same size, or otherwise compatible in an implementation
+    * specific way */
   def update[T](data: Array[T])(implicit rig: Rig[T]): Unit
 }
 
@@ -101,7 +123,6 @@ trait StateBuilder {
   protected[mois] val bags = mutable.Map.empty[Rig[_], Bag[_]]
   protected[mois] val indices = mutable.ArrayBuffer.empty[Index[_]]
   protected[mois] val allmeta = mutable.Set.empty[VarMeta]
-
 
   /** Merge a partially built [[State]] with this one */
   def merge(other: StateBuilder) {
