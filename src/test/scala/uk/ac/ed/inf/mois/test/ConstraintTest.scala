@@ -18,16 +18,9 @@
 package uk.ac.ed.inf.mois.test
 
 import org.scalatest.{FlatSpec, Matchers}
-import org.scalactic.TolerantNumerics
-
 import uk.ac.ed.inf.mois.{ArrayBackedStateBuilder, ConstraintViolation}
 
 class ConstraintTest extends FlatSpec with Matchers with ArrayBackedStateBuilder {
-  // Use approximate equality in `should equal` for doubles
-  val precision = 1e-8
-  implicit val doubleEquality =
-    TolerantNumerics.tolerantDoubleEquality(precision)
-
   val i1 = Int("i1")
   val i2 = Int("i2")
   val b1 = Boolean("b1")
