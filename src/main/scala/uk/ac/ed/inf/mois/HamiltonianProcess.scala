@@ -37,7 +37,7 @@ abstract class HamiltonianProcess extends ODE {
 
   /**
    * `E` is an automatically created variable that holds the total energy of the
-   * system. It is assigned the identifier "p${pid}:E", the prefix with process id being
+   * system. It is assigned the identifier "p\${pid}:E", the prefix with process id being
    * intended to facilitate combining several Hamiltonian processes together in
    * a single process group.
    */

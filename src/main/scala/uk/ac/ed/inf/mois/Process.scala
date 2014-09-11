@@ -20,7 +20,7 @@ package uk.ac.ed.inf.mois
 import scala.collection.mutable
 
 /** A `Process` is basically a container of mutable variables
-  * ([[VarContainer]]) and a function that operates them parametrised
+  * ([[State]]) and a function that operates them parametrised
   * by time. It may be [[Process.annotate]]d so that it may
   * be self-documenting and introspectable.
   *

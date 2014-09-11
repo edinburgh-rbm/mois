@@ -42,7 +42,7 @@ abstract class Model extends ArrayBackedStateBuilder {
   }
 
   /** Convenience method to add a step handler onto the process.
-    * see [[BaseProcess.addStepHandler]] */
+    * see [[Process.addStepHandler]] */
   def addStepHandler(sh: StepHandler) {
     process.addStepHandler(sh)
   }
