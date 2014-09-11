@@ -21,3 +21,17 @@ final class StateSyntax(s: State) {
   @inline final def >>> (other: State) = s.copyToAll(other)
   @inline final def <<< (other: State) = s.copyFromAll(other)
 }
+
+final class ConstraintSyntax[T](v: Var[T]) {
+  object addConstraint {
+    def and(c: v.Constraint) = {
+      v.addConstraint(c)
+      this
+    }
+  }
+  def must(c: v.Constraint) = {
+    v.addConstraint(c)
+    addConstraint
+  }
+  def assertConstraints = v.doAssertConstraints(v.value)
+}

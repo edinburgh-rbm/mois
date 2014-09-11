@@ -30,7 +30,7 @@ case class VarMeta(identifier: String, rig: Rig[T] forSome { type T })
   override def toString = identifier
 }
 
-trait Var[T] {
+trait Var[T] extends Constraints[T] {
   val meta: VarMeta
   /** Add an [[Annotation]] onto the [[VarMeta]] */
   val annotate = meta.annotate _
