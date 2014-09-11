@@ -30,6 +30,11 @@ case class VarMeta(identifier: String, rig: Rig[T] forSome { type T })
   override def toString = identifier
 }
 
+object VarMeta {
+  implicit def stringToMeta[T](s: String)(implicit rig: Rig[T])
+    = VarMeta(s, rig)
+}
+
 trait Var[T] extends Constraints[T] {
   val meta: VarMeta
   /** Add an [[Annotation]] onto the [[VarMeta]] */
@@ -38,9 +43,4 @@ trait Var[T] extends Constraints[T] {
   def value: T
   def update(value: T): Unit
   @inline final def := (value: T) = { update(value); this }
-}
-
-object VarMeta {
-  implicit def stringToMeta[T](s: String)(implicit rig: Rig[T])
-    = VarMeta(s, rig)
 }

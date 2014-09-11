@@ -64,9 +64,16 @@ class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
       YB -> B + Y at 1,
       YB -> Y + A at 1)
 
-    for (r <- rxns) println(r)
-    println("----------------")
-    for (r <- expectedReactions) println(r)
+//    for (r <- rxns) println(r)
+//    println("----------------")
+//    for (r <- expectedReactions) println(r)
+
+    println("XXXXXXXXXXXXXXX")
+    println(rxns(0))
+    println(expectedReactions(0))
+
+    assert(rxns(0).lhs == expectedReactions(0).lhs)
+    assert(rxns(0).rhs == expectedReactions(0).rhs)
 
     rxns.toList should equal (expectedReactions)
 
