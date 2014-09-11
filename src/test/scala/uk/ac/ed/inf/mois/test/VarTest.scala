@@ -60,27 +60,6 @@ class VarTest extends FlatSpec with Matchers with ArrayBackedStateBuilder {
     (d2 - d1) should equal (0.3)
   }
 
-  it should "respect constraints" in {
-    import uk.ac.ed.inf.mois.implicits._
-    d1 must (_ >= 0)
-
-    intercept[ConstraintViolation] {
-      d1 := -1.0
-      d1.assertConstraints
-    }
-
-    d2 must (_ >= 0) and (_ <= 2)
-    intercept[ConstraintViolation] {
-      d2 := -1.0
-      d2.assertConstraints
-    }
-
-    intercept[ConstraintViolation] {
-      d2 := 3.0
-      d2.assertConstraints
-    }
-  }
-
   it should "have unambiguous keys" in {
     d2.meta should be (xd2.meta)
     d2.meta should not be (d1.meta)

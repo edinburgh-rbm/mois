@@ -34,4 +34,5 @@ final class ConstraintSyntax[T](v: Var[T]) {
     addConstraint
   }
   def assertConstraints = v.doAssertConstraints(v.value)
+  def checkConstraints = v.doCheckConstraints(v.value)
 }

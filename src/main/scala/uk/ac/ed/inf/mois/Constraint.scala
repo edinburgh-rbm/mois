@@ -27,9 +27,9 @@ trait Constraints[T] {
   private val constraints = mutable.ArrayBuffer.empty[Constraint]
   private val bounds = mutable.ArrayBuffer.empty[Bound]
   def addConstraint(c: Constraint) { constraints += c }
+  def doCheckConstraints(x: T): Boolean = constraints.forall(_(x))
   def doAssertConstraints(x: T) {
-    for (c <- constraints) {
-      if (!c(x)) throw new ConstraintViolation(s"$c violated constraint by setting $x")
-    }
+    if (!doCheckConstraints(x))
+      throw new ConstraintViolation(s"$this violated constraint by setting $x")
   }
 }

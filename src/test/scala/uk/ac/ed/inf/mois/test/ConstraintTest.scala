@@ -42,20 +42,22 @@ class ConstraintTest extends FlatSpec with Matchers with ArrayBackedStateBuilder
     import uk.ac.ed.inf.mois.implicits._
     d1 must (_ >= 0)
 
+    d1.checkConstraints should be (true)
+
+    d1 := -1.0
+    d1.checkConstraints should be (false)
     intercept[ConstraintViolation] {
-      d1 := -1.0
       d1.assertConstraints
     }
 
     d2 must (_ >= 0) and (_ <= 2)
-    intercept[ConstraintViolation] {
-      d2 := -1.0
-      d2.assertConstraints
-    }
+    d2 := -1.0
+    d2.checkConstraints should be (false)
 
-    intercept[ConstraintViolation] {
-      d2 := 3.0
-      d2.assertConstraints
-    }
+    d2 := 3.0
+    d2.checkConstraints should be (false)
+
+    d2 := 0.0
+    d2.checkConstraints should be (true)
   }
 }
