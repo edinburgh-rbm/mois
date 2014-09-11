@@ -19,7 +19,7 @@ name := "mois"
 
 organization := "uk.ac.ed.inf"
 
-version := "1.99.5-SNAPSHOT"
+version := "1.99.6-SNAPSHOT"
 
 scalaVersion := "2.11.2"
 
@@ -48,6 +48,8 @@ libraryDependencies += "org.json4s" %% "json4s-native" % "3.2.10"
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
 
 libraryDependencies += "org.jfree" % "jfreechart" % "1.0.14"  exclude("xml-apis", "xml-apis")
+
+libraryDependencies += "org.spire-math" %% "spire" % "0.8.2"
 
 libraryDependencies += "edu.ucar" % "netcdf" % "4.3.22"
 

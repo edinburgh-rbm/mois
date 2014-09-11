@@ -15,10 +15,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.ed.inf.mois
+package uk.ac.ed.inf.mois.reaction
+
+import uk.ac.ed.inf.mois.math.Multiset
 
 /** A trait for reaction networks that have kinetic rates. */
-trait KineticReactionNetwork extends ReactionNetwork {
+trait KineticReactionNetwork[R] extends ReactionNetwork[R] {
 
   type Reaction <: UnratedReaction
 
@@ -35,14 +37,14 @@ trait KineticReactionNetwork extends ReactionNetwork {
   }
 
   trait KineticReactionFactory {
-    def apply(lhs: Multiset, rhs: Multiset, k: () => Double)
+    def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => Double)
         : KineticReaction
   }
 
-  def count(m: Multiset): Double
+  def count(m: Multiset[Species]): Double
 
   class MassActionReaction(
-    val lhs: Multiset, val rhs: Multiset, val k: () => Double)
+    val lhs: Multiset[Species], val rhs: Multiset[Species], val k: () => Double)
       extends KineticReaction {
     override def stringPrefix = "MassActionReaction"
     def rate = count(lhs) * k()
@@ -50,12 +52,12 @@ trait KineticReactionNetwork extends ReactionNetwork {
 
   val MassActionReaction: KineticReactionFactory =
     new KineticReactionFactory {
-      def apply(lhs: Multiset, rhs: Multiset, k: () => Double) =
+      def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => Double) =
         new MassActionReaction(lhs, rhs, k)
     }
 
   class RateLawReaction(
-    val lhs: Multiset, val rhs: Multiset, val k: () => Double)
+    val lhs: Multiset[Species], val rhs: Multiset[Species], val k: () => Double)
       extends KineticReaction {
     override def stringPrefix = "RateLawReaction"
     def rate = k()
@@ -63,7 +65,7 @@ trait KineticReactionNetwork extends ReactionNetwork {
 
   val RateLawReaction: KineticReactionFactory =
     new KineticReactionFactory {
-      def apply(lhs: Multiset, rhs: Multiset, k: () => Double) =
+      def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => Double) =
         new RateLawReaction(lhs, rhs, k)
     }
 }

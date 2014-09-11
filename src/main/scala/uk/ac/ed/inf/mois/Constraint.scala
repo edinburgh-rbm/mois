@@ -1,5 +1,5 @@
 /*
- *  MOIS: Package Top-level Documentation
+ *  MOIS: Variable Constraints
  *  Copyright (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,15 +15,21 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.ed.inf
+package uk.ac.ed.inf.mois
 
-/**
- *
- * == Module Integration Simulator ==
- *
- */
-package object mois {
-  private val p = getClass.getPackage
-  val name = p.getImplementationTitle
-  val version = p.getImplementationVersion
+import scala.collection.mutable
+
+class ConstraintViolation(s: String) extends Exception(s)
+
+trait Constraints[T] {
+  type Constraint = T => Boolean
+  type Bound = T => T
+  private val constraints = mutable.ArrayBuffer.empty[Constraint]
+  private val bounds = mutable.ArrayBuffer.empty[Bound]
+  def addConstraint(c: Constraint) { constraints += c }
+  def doCheckConstraints(x: T): Boolean = constraints.forall(_(x))
+  def doAssertConstraints(x: T) {
+    if (!doCheckConstraints(x))
+      throw new ConstraintViolation(s"$this violated constraint by setting $x")
+  }
 }

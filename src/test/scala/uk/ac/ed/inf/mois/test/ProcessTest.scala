@@ -18,12 +18,13 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.Process
+import uk.ac.ed.inf.mois.implicits._
 
 import org.scalatest.{FlatSpec, Matchers}
 
 class ProcessTest extends FlatSpec with Matchers {
 
-  class P extends Process("p") {
+  class P extends Process {
     val x1 = Double("ex:x1")
     val x2 = Double("ex:x2")
     val x3 = Boolean("ex:x3")
@@ -36,16 +37,19 @@ class ProcessTest extends FlatSpec with Matchers {
 
   it should "run and do arithmetic" in {
     val p = new P
+    p.init(0)
+
     p.x1 := 2.0
     p.x2 := 3.0
     p.x3 := true
 
-    p.step(0, 1)
+    p(0, 1)
+
     p.x1.value should be (6.0)
     p.x2.value should be (9.0)
     p.x3.value should be (true)
 
-    p.step(1, 1)
+    p(1, 1)
     p.x1.value should be (55.0)
     p.x2.value should be (9.0)
     p.x3.value should be (false)

@@ -24,7 +24,7 @@ class TestModel1 extends Model {
   val a = Double("a")
   a.annotate("long_name", "The a parameter")
   a.annotate("units", "1/u")
-  object process extends Process("test model 1") {
+  object process extends Process {
     annotate("title", "This is TestModel1")
     val x = Double("x")
     x.annotate("long_name", "The x value")
@@ -33,7 +33,7 @@ class TestModel1 extends Model {
 }
 
 class TestModel2 extends Model {
-  object process extends Process("test model 2")
+  object process extends Process
 }
 
 class ModelTest extends FlatSpec with Matchers {

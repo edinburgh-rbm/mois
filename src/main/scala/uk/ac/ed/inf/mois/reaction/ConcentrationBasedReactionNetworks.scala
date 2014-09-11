@@ -1,6 +1,6 @@
 /*
  *  MOIS: Concentration-based Reaction Network
- *  Copyright (C) 2014 University of Edinburgh School of Informatics
+ *  Copyringht (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,32 +15,34 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.ed.inf.mois
+package uk.ac.ed.inf.mois.reaction
+
+import scala.reflect.ClassTag
+import spire.algebra.Ring
+import uk.ac.ed.inf.mois.{Var, VarMeta}
 
 /** Base trait for all reaction networks that use concentrations of
   * molecules as a measure for species (as opposed to
   * population-based reaction networks).
   */
-trait ConcentrationBasedReactionNetwork extends ReactionNetwork {
+trait ConcentrationBasedReactionNetwork[T] extends ReactionNetwork[T] {
 
   override def stringPrefix = "ConcentrationBasedReactionNetwork"
 
-  type Base = Double
   type Species = ConcentrationBasedSpecies
 
-  class ConcentrationBasedSpecies(val meta: VarMeta)
-      extends BaseSpecies with DoubleVarIntf {
+  class ConcentrationBasedSpecies(v: Var[T])(implicit ring: Ring[T])
+      extends BaseSpecies(v) {
     type R = Species
-    override def copy = new ConcentrationBasedSpecies(meta) := value
+    override def toString = v.toString
   }
 
   object Species extends SpeciesFactory {
-    def apply(meta: VarMeta) =
-      if (species contains meta) species(meta)
-      else {
-        val s = new ConcentrationBasedSpecies(meta)
-        species += meta -> s
-        s
-      }
+    def apply(ident: String)(implicit ring: Ring[T], ct: ClassTag[T]): Species = {
+      val idx = addVar[T](ident)
+      val s = new ConcentrationBasedSpecies(idx)
+      species += s
+      s
+    }
   }
 }

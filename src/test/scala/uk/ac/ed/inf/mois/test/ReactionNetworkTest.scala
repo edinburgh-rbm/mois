@@ -1,20 +1,23 @@
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{VarMeta, PopulationBasedReactionNetwork}
+import spire.implicits._
+
+import uk.ac.ed.inf.mois.reaction.PopulationBasedReactionNetwork
+import uk.ac.ed.inf.mois.math.Multiset
 
 import org.scalatest.{FlatSpec, Matchers}
 
 class ReactionNetworkTest extends FlatSpec with Matchers {
 
-  object ReactionNetwork extends PopulationBasedReactionNetwork {
+  object ReactionNetwork extends PopulationBasedReactionNetwork[Int] {
 
     val name = "ReactionNetwork"
 
-    class Reaction(val lhs: Multiset, val rhs: Multiset)
+    class Reaction(val lhs: Multiset[Species], val rhs: Multiset[Species])
        extends BaseReaction
 
     object Reaction extends ReactionFactory {
-      def apply(lhs: Multiset, rhs: Multiset) =
+      def apply(lhs: Multiset[Species], rhs: Multiset[Species]) =
         new Reaction(lhs, rhs)
     }
 
@@ -28,7 +31,11 @@ class ReactionNetworkTest extends FlatSpec with Matchers {
     val Y = Species("Y")
 
     val r1  = A -> X
-    val r2a = 2 * X + Y -> 3 * X
+    // XXX spire broke this syntax because of some nonsense about
+    // multiplicative semi-groups. It might be possible to make it
+    // work more elegantly by doing something spire-compatib
+    // val r2a = 2 * X + Y -> 3 * X
+    val r2a = 2(X) + Y -> 3(X)
     val r2b = Y + X + X -> X * 2 + X
     val r3  = B + X -> Y + D
     val r4  = X -> E

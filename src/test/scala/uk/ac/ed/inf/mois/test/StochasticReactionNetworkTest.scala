@@ -1,20 +1,21 @@
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{StochasticReactionNetwork, PlotFileWriter}
+import uk.ac.ed.inf.mois.reaction.StochasticReactionNetwork
 
+import scala.language.reflectiveCalls
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
+import spire.implicits._
 
 class StochasticReactionNetworkTest extends FlatSpec with Matchers {
 
-  object GbKl extends StochasticReactionNetwork("Goldbeter-Koshland") {
+  class GbKl extends StochasticReactionNetwork {
+    annotate("long_name", "Goldbeter-Koshland")
 
     val A = Species("A")
     val B = Species("B")
     val X = Species("X")
     val Y = Species("Y")
-
-    addStepHandler(new PlotFileWriter("goldbeter-koshland.png"))
 
     reactions(
       A -> B catalysedBy X using MM(1, 1, 1),
@@ -23,16 +24,16 @@ class StochasticReactionNetworkTest extends FlatSpec with Matchers {
   }
 
   "Goldbeter-Koshland" should "give expected results" in {
-
-    import GbKl._
+    val gbkl = new GbKl
+    import gbkl._
+    val XA = enzymeComplex(X, A)
+    val YB = enzymeComplex(Y, B)
+    gbkl.init(0)
 
     A := 10000
     B := 10000
     X := 10000
     Y := 10000
-
-    val XA = enzymeComplex(X, A)
-    val YB = enzymeComplex(Y, B)
 
     val s = 1e-7
     for (i <- 0.0 until 1e-6 by s) {

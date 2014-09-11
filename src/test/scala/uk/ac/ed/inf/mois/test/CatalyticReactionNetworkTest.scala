@@ -1,11 +1,15 @@
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{DeterministicReactionNetwork, Model, PlotFileWriter}
+import uk.ac.ed.inf.mois.reaction.DeterministicReactionNetwork
+import uk.ac.ed.inf.mois.Model
+import scala.language.reflectiveCalls
+import spire.implicits._
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-object GbKl extends DeterministicReactionNetwork("Goldbeter-Koshland") {
+class GbKl extends DeterministicReactionNetwork {
+  annotate("description", "Goldbeter-Koshland")
 
   val A = Species("A")
   val B = Species("B")
@@ -19,11 +23,14 @@ object GbKl extends DeterministicReactionNetwork("Goldbeter-Koshland") {
 }
 
 class GbKlModel extends Model {
-  val process = GbKl
-  GbKl.A := 1.0
-  GbKl.B := 1.0
-  GbKl.X := 1.0
-  GbKl.Y := 1.0
+  val process = new GbKl
+  override def init(t: Double) {
+    super.init(t)
+    process.A := 1.0
+    process.B := 1.0
+    process.X := 1.0
+    process.Y := 1.0
+  }
 }
 
 class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
@@ -35,7 +42,12 @@ class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
 
   "Goldbeter-Koshland" should "give expected results" in {
 
-    import GbKl._
+    val gbkl = new GbKl
+    import gbkl._
+    val XA = enzymeComplex(X, A)
+    val YB = enzymeComplex(Y, B)
+
+    gbkl.init(0)
 
     A := 1.0
     B := 1.0
@@ -44,16 +56,19 @@ class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
 
     step(0, 5)
 
-    val XA = enzymeComplex(X, A)
-    val YB = enzymeComplex(Y, B)
-
-    rxns should equal (Seq(
+    val expectedReactions = Seq(
       A + X -> XA at 1,
       XA -> A + X at 1,
       XA -> B + X at 1,
       B + Y -> YB at 1,
       YB -> B + Y at 1,
-      YB -> Y + A at 1))
+      YB -> Y + A at 1)
+
+    for (r <- rxns) println(r)
+    println("----------------")
+    for (r <- expectedReactions) println(r)
+
+    rxns.toList should equal (expectedReactions)
 
     (X.value + XA.value) should equal (1.0)
     (Y.value + YB.value) should equal (1.0)

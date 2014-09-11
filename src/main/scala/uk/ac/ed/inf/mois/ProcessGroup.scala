@@ -19,8 +19,8 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 
-/** A `ProcessGroup` is a list of [[BaseProcess]]es and a [[Scheduler]].
-  * It presents the same interface as a [[BaseProcess]] and so hierarchies
+/** A `ProcessGroup` is a list of [[Process]]es and a [[Scheduler]].
+  * It presents the same interface as a [[Process]] and so hierarchies
   * of them can be built.
   *
   * It is typically created like so
@@ -29,7 +29,7 @@ import scala.collection.mutable
   * import uk.ac.ed.inf.mois.ProcessGroup
   * import uk.ac.ed.inf.mois.sched.WeisseScheduler
   *
-  * val group = new ProcessGroup("my group")
+  * val group = new ProcessGroup
   * group.scheduler = new WeisseScheduler(tolerance=0.1)
   *
   * group += new SomeSortOfProcess
@@ -39,33 +39,30 @@ import scala.collection.mutable
   *
   * @param name the name of the process
   */
-class ProcessGroup(val name: String) extends BaseProcess {
-
-  override def stringPrefix = "ProcessGroup"
+class ProcessGroup extends Process {
 
   /** The list of child processes */
-  var processes = mutable.ArrayBuffer.empty[BaseProcess]
+  val processes = mutable.ArrayBuffer.empty[Process]
+
   /** The scheduler */
   var scheduler: Scheduler = null
 
   /** The += operator adds a process to the group. */
-  def += (proc: BaseProcess) = {
-    // merge vars to this (lhs) from proc (rhs)
-    leftMerge(proc)
-
+  def += (proc: Process) = {
+    // merge the state builder instance from that process to this
+    merge(proc)
     processes += proc
-
     this
   }
 
   /** (Unimplemented) The -= operator removes a process from the group. */
-  def -= (proc: BaseProcess) = {
+  def -= (proc: Process) = {
     // TODO: needed for process migration. Keeping state
     // coherent is important here
     throw new Exception("unimplemented")
   }
 
-  /** The [[BaseProcess.step]] method of the [[BaseProcess]] interface calls
+  /** The [[Process.step]] method of the [[Process]] interface calls
     * the [[Scheduler]] on the list of processes together with the group
     * state table and time parameters.
     */
@@ -81,10 +78,12 @@ class ProcessGroup(val name: String) extends BaseProcess {
       _step(t, dt, end)
   }
 
-  /** Override the [[BaseProcess.apply]] method because we take on
+  /** Override the [[Process.apply]] method because we take on
     * responsibility for calling the step handlers.
     */
-  @inline override def apply(t: Double, tau: Double) = step(t, tau)
+  @inline override def apply(t: Double, tau: Double) = {
+    step(t, tau)
+  }
 
   /** Override init hook by calling all of our children's before our own */
   override def init(t: Double) {

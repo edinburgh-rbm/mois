@@ -18,15 +18,22 @@
 package uk.ac.ed.inf.mois.sched
 
 import scala.util.Random
-
-import uk.ac.ed.inf.mois.{ProcessGroup, Scheduler}
+import scala.collection.mutable
+import uk.ac.ed.inf.mois.{Process, ProcessGroup, Projection, Scheduler}
 
 class NaiveScheduler(step: Double) extends Scheduler {
+  private var projections = mutable.Map.empty[Process, Projection]
+  override def init(group: ProcessGroup) {
+    for (child <- group.processes) {
+      projections(child) = Projection(group.state, child.state)
+    }
+  }
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
     for (child <- Random.shuffle(group.processes)) {
-      group >>> child
-      child.step(t, step)
-      group <<< child
+      val proj = projections(child)
+      proj.forward
+      child(t, step)
+      proj.reverse
     }
     (t+step, step)
   }

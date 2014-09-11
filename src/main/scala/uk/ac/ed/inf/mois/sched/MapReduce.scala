@@ -20,7 +20,7 @@ package uk.ac.ed.inf.mois.sched
 import scala.util.Random
 import java.lang.Math.min
 
-import uk.ac.ed.inf.mois.{Scheduler, BaseProcess, ProcessGroup}
+import uk.ac.ed.inf.mois.{Scheduler, Process, ProcessGroup}
 
 abstract class MapReduceScheduler(step: Double) extends Scheduler {
 
@@ -28,8 +28,8 @@ abstract class MapReduceScheduler(step: Double) extends Scheduler {
 
   def accumulator: Acc
 
-  def m(t: Double, dt: Double, group: ProcessGroup, proc: BaseProcess): BaseProcess
-  def r(acc: Acc, proc: BaseProcess): Acc
+  def m(t: Double, dt: Double, group: ProcessGroup, proc: Process): Process
+  def r(acc: Acc, proc: Process): Acc
 
   def before(t: Double, dt: Double, acc: Acc, group: ProcessGroup) = dt
   def after(t: Double, dt: Double, acc: Acc, group: ProcessGroup) = (t+dt, dt)

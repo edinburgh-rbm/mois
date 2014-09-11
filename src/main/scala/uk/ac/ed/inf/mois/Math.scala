@@ -23,47 +23,32 @@ package uk.ac.ed.inf.mois
  * definitions.
  */
 trait Math {
-  // import all of java Math
-  import java.lang.{Math => jm}
+  // import all of scala/java Math
+  import scala.math
 
-  /** Syntax Sugar for Doubles
-   *
-   * XXX Do not use! Scala confusingly treats * as higher precendence
-   * than ^ defined in this way! */
-  implicit class DoubleSugar(x: Double) {
-    @inline def ^(y: Double) = jm.pow(x, y)
-  }
-  /** Syntax Sugar for DoubleVars
-   *
-   * XXX Do not use! Scala confusingly treats * as higher precendence
-   * than ^ defined in this way! */
-  implicit class VarSugar(x: DoubleVar) {
-    @inline def ^(y: Double) = jm.pow(x.value, y)
-  }
+  @inline final def sin(x: Double) = math.sin(x)
+  @inline final def cos(x: Double) = math.cos(x)
+  @inline final def cosh(x: Double) = math.cosh(x)
+  @inline final def tan(x: Double) = math.tan(x)
+  @inline final def asin(x: Double) = math.asin(x)
+  @inline final def acos(x: Double) = math.acos(x)
+  @inline final def atan(x: Double) = math.atan(x)
+  @inline final def atan2(x: Double, y: Double) = math.atan2(x, y)
+  @inline final def hypot(x: Double, y: Double) = math.hypot(x, y)
 
-  @inline final def sin(x: Double) = jm.sin(x)
-  @inline final def cos(x: Double) = jm.cos(x)
-  @inline final def cosh(x: Double) = jm.cosh(x)
-  @inline final def tan(x: Double) = jm.tan(x)
-  @inline final def asin(x: Double) = jm.asin(x)
-  @inline final def acos(x: Double) = jm.acos(x)
-  @inline final def atan(x: Double) = jm.atan(x)
-  @inline final def atan2(x: Double, y: Double) = jm.atan2(x, y)
-  @inline final def hypot(x: Double, y: Double) = jm.hypot(x, y)
+  @inline final def degrees(x: Double) = math.toDegrees(x)
+  @inline final def radians(x: Double) = math.toRadians(x)
 
-  @inline final def degrees(x: Double) = jm.toDegrees(x)
-  @inline final def radians(x: Double) = jm.toRadians(x)
+  @inline final def abs(x: Double) = math.abs(x)
+  @inline final def ceil(x: Double) = math.ceil(x)
+  @inline final def floor(x: Double) = math.floor(x)
+  @inline final def min(x: Double, y: Double) = math.min(x, y)
+  @inline final def max(x: Double, y: Double) = math.max(x, y)
 
-  @inline final def abs(x: Double) = jm.abs(x)
-  @inline final def ceil(x: Double) = jm.ceil(x)
-  @inline final def floor(x: Double) = jm.floor(x)
-  @inline final def min(x: Double, y: Double) = jm.min(x, y)
-  @inline final def max(x: Double, y: Double) = jm.max(x, y)
-
-  @inline final def exp(x: Double) = jm.exp(x)
-  @inline final def pow(x: Double, y: Double) = jm.pow(x, y)
-  @inline final def sqrt(x: Double) = jm.sqrt(x)
-  @inline final def ln(x: Double) = jm.log(x)
+  @inline final def exp(x: Double) = math.exp(x)
+  @inline final def pow(x: Double, y: Double) = math.pow(x, y)
+  @inline final def sqrt(x: Double) = math.sqrt(x)
+  @inline final def ln(x: Double) = math.log(x)
   @inline final def log(x: Double): Double = log(x, 10)
-  @inline final def log(x: Double, base: Double): Double = jm.log(x)/jm.log(base)
+  @inline final def log(x: Double, base: Double): Double = math.log(x)/math.log(base)
 }

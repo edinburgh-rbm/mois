@@ -26,9 +26,7 @@ import org.apache.commons.math3.analysis.differentiation.MultivariateDifferentia
 import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction
 import org.apache.commons.math3.analysis.MultivariateVectorFunction
 
-abstract class HamiltonianProcess(val name: String)
-    extends BaseODE with VarConversions {
-
+abstract class HamiltonianProcess extends ODE {
   override def stringPrefix = "Hamiltonian"
 
   type F = () => Double
@@ -39,13 +37,13 @@ abstract class HamiltonianProcess(val name: String)
 
   /**
    * `E` is an automatically created variable that holds the total energy of the
-   * system. It is assigned the identifier "p${pid}:E", the prefix with process id being
+   * system. It is assigned the identifier "p\${pid}:E", the prefix with process id being
    * intended to facilitate combining several Hamiltonian processes together in
    * a single process group.
    */
   var totalEnergy = 0.0
 
-  case class H(q: DoubleVar*)(p: DoubleVar*)
+  case class H(q: Var[Double]*)(p: Var[Double]*)
       extends MultivariateDifferentiableFunction {
     private val phase = q ++ p
     assert(q.size == p.size)
@@ -70,7 +68,6 @@ abstract class HamiltonianProcess(val name: String)
       gradH = new GradientFunction(this)
       for (v <- phase)
         vars += v
-      totalEnergy = energy() // calculate initial energy
     }
 
     def value(point: Array[Double]): Double = {
@@ -86,6 +83,11 @@ abstract class HamiltonianProcess(val name: String)
       totalEnergy = energy()
       new DerivativeStructure(point.size, 1, Seq(totalEnergy) ++ partials: _*)
     }
+  }
+
+  override def init(t: Double) {
+    super.init(t)
+    totalEnergy = energy() // calculate initial energy
   }
 
   override def computeDerivatives(time: Double,

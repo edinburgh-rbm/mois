@@ -21,9 +21,10 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{Process, VarCalc}
+import uk.ac.ed.inf.mois.implicits._
 
 class VarCalcTest extends FlatSpec with Matchers {
-  class V extends Process("v") with VarCalc {
+  class V extends Process with VarCalc {
     val x = Double("x")
     val y = Double("y")
     calc(y) := x
@@ -39,6 +40,8 @@ class VarCalcTest extends FlatSpec with Matchers {
       TolerantNumerics.tolerantDoubleEquality(precision)
 
     val vs = new V
+    vs.init(0)
+
     import vs._
 
     x := 0.0
