@@ -26,22 +26,5 @@ import uk.ac.ed.inf.mois.{Var, VarMeta}
   * concentration-based reaction networks).
   */
 trait PopulationBasedReactionNetwork[T] extends ReactionNetwork[T] {
-
   override def stringPrefix = "PopulationBasedReactionNetwork"
-
-  type Species = PopulationBasedSpecies
-
-  class PopulationBasedSpecies(v: Var[T])(implicit ring: Ring[T])
-      extends BaseSpecies(v) {
-    type R = Species
-  }
-
-  object Species extends SpeciesFactory {
-    def apply(ident: String)(implicit ring: Ring[T], ct: ClassTag[T]) = {
-      val idx = addVar[T](ident)
-      val s = new PopulationBasedSpecies(idx)
-      species += s
-      s
-    }
-  }
 }

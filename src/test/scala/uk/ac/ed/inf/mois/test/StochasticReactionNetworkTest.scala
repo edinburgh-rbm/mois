@@ -18,8 +18,8 @@ class StochasticReactionNetworkTest extends FlatSpec with Matchers {
     val Y = Species("Y")
 
     reactions(
-      A -> B catalysedBy X using MM(1, 1, 1),
-      B -> A catalysedBy Y using MM(1, 1, 1)
+      A --> B catalysedBy X using MM(1, 1, 1),
+      B --> A catalysedBy Y using MM(1, 1, 1)
     )
   }
 

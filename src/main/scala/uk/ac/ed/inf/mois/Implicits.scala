@@ -39,4 +39,4 @@ object conversions extends Conversions
 /** import this to get syntax sugar */
 object syntax extends Syntax
 /** import this to get both automatic type conversion and syntax sugar */
-object implicits extends Syntax with Conversions
+object implicits extends Syntax with Conversions with math.MultisetInstances

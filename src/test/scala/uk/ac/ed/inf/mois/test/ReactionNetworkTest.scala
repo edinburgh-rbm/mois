@@ -30,15 +30,16 @@ class ReactionNetworkTest extends FlatSpec with Matchers {
     val X = Species("X")
     val Y = Species("Y")
 
-    val r1  = A -> X
+    val r1  = A --> X
     // XXX spire broke this syntax because of some nonsense about
     // multiplicative semi-groups. It might be possible to make it
     // work more elegantly by doing something spire-compatib
     // val r2a = 2 * X + Y -> 3 * X
-    val r2a = 2(X) + Y -> 3(X)
-    val r2b = Y + X + X -> X * 2 + X
-    val r3  = B + X -> Y + D
-    val r4  = X -> E
+    val r2a = 2(X) + Y --> 3(X)
+    val r2b = Y + X + X --> X * 2 + X
+    val r3  = B + X --> Y + D
+    val r4  = X --> E
+    init(0)
   }
 
   // -- Tests --

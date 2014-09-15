@@ -16,10 +16,10 @@ class Brusselator extends DeterministicReactionNetwork {
   val Y = Species("Y")
 
   reactions(
-    A -> X + A at 1.0,
-    2(X) + Y -> 3(X) at 1.0,
-    B + X -> B + Y at 1.0,
-    X -> () at 1.0
+    A --> X + A at 1.0,
+    2(X) + Y --> 3(X) at 1.0,
+    B + X --> B + Y at 1.0,
+    X --> () at 1.0
   )
 }
 

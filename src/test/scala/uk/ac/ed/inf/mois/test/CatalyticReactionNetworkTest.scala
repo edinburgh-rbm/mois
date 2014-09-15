@@ -17,8 +17,8 @@ class GbKl extends DeterministicReactionNetwork {
   val Y = Species("Y")
 
   reactions(
-    A -> B catalysedBy X using MM(1, 1, 1),
-    B -> A catalysedBy Y using MM(1, 1, 1)
+    A --> B catalysedBy X using MM(1, 1, 1),
+    B --> A catalysedBy Y using MM(1, 1, 1)
   )
 }
 
@@ -57,23 +57,12 @@ class CatalyticReactionNetworkTest extends FlatSpec with Matchers {
     step(0, 5)
 
     val expectedReactions = Seq(
-      A + X -> XA at 1,
-      XA -> A + X at 1,
-      XA -> B + X at 1,
-      B + Y -> YB at 1,
-      YB -> B + Y at 1,
-      YB -> Y + A at 1)
-
-//    for (r <- rxns) println(r)
-//    println("----------------")
-//    for (r <- expectedReactions) println(r)
-
-    println("XXXXXXXXXXXXXXX")
-    println(rxns(0))
-    println(expectedReactions(0))
-
-    assert(rxns(0).lhs == expectedReactions(0).lhs)
-    assert(rxns(0).rhs == expectedReactions(0).rhs)
+      A + X --> XA at 1,
+      XA --> A + X at 1,
+      XA --> B + X at 1,
+      B + Y --> YB at 1,
+      YB --> B + Y at 1,
+      YB --> Y + A at 1)
 
     rxns.toList should equal (expectedReactions)
 

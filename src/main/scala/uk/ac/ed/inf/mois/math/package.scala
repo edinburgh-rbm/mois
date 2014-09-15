@@ -1,6 +1,6 @@
 /*
- *  MOIS: Concentration-based Reaction Network
- *  Copyringht (C) 2014 University of Edinburgh School of Informatics
+ *  MOIS: Math functions Top-level Documentation
+ *  Copyright (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,16 +15,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.ed.inf.mois.reaction
+package uk.ac.ed.inf.mois
 
-import scala.reflect.ClassTag
-import spire.algebra.Ring
-import uk.ac.ed.inf.mois.{Var, VarMeta}
-
-/** Base trait for all reaction networks that use concentrations of
-  * molecules as a measure for species (as opposed to
-  * population-based reaction networks).
-  */
-trait ConcentrationBasedReactionNetwork[T] extends ReactionNetwork[T] {
-  override def stringPrefix = "ConcentrationBasedReactionNetwork"
+package object math {
+  object multiset extends MultisetInstances
 }

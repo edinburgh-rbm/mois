@@ -19,7 +19,7 @@ package uk.ac.ed.inf.mois
 
 import scala.language.existentials
 import scala.language.implicitConversions
-import spire.algebra.{Rig, Ring, Field}
+import spire.algebra.{Rig, Ring, Field, Eq}
 
 /** This class is to abstract away the details of uniquely identifying a
   * state variable.
@@ -35,6 +35,19 @@ object VarMeta {
     = VarMeta(s, rig)
 }
 
+final class VarMetaEq extends Eq[VarMeta] {
+  def eqv(x: VarMeta, y: VarMeta) = {
+    import spire.std.string._
+    Eq[String].eqv(x.identifier, y.identifier)
+  }
+}
+
+trait VarMetaInstances {
+  implicit val VarMetaEq = new VarMetaEq
+}
+
+object var_meta extends VarMetaInstances
+
 trait Var[T] extends Constraints[T] {
   val meta: VarMeta
   /** Add an [[Annotation]] onto the [[VarMeta]] */
@@ -43,4 +56,46 @@ trait Var[T] extends Constraints[T] {
   def value: T
   def update(value: T): Unit
   @inline final def := (value: T) = { update(value); this }
+  override def equals(other: Any) = {
+    import var_meta._
+    other match {
+      case that: Var[T] => Eq[VarMeta].eqv(meta, that.meta)
+      case _ => false
+    }
+  }
+  override def hashCode = meta.identifier.hashCode
 }
+
+final class VarEqByMeta[T] extends Eq[Var[T]] {
+  def eqv(x: Var[T], y: Var[T]) =  {
+    import var_meta._
+    Eq[VarMeta].eqv(x.meta, y.meta)
+  }
+}
+
+final class VarEqByValue[T: Eq] extends Eq[Var[T]] {
+  def eqv(x: Var[T], y: Var[T]) = Eq[T].eqv(x.value, y.value)
+}
+
+final class VarEqByBoth[T: Eq] extends Eq[Var[T]] {
+  def eqv(x: Var[T], y: Var[T]) = {
+    import var_meta._
+    Eq[T].eqv(x.value, y.value) && Eq[VarMeta].eqv(x.meta, y.meta)
+  }
+}
+
+trait VarByMetaInstances {
+  implicit def VarEq[T] = new VarEqByMeta[T]
+}
+
+trait VarByValueInstances {
+  implicit def VarEq[T: Eq] = new VarEqByValue[T]
+}
+
+trait VarByBothInstances {
+  implicit def VarEq[T: Eq] = new VarEqByBoth[T]
+}
+
+object var_bymeta extends VarByMetaInstances
+object var_byvalue extends VarByValueInstances
+object var_byboth extends VarByBothInstances

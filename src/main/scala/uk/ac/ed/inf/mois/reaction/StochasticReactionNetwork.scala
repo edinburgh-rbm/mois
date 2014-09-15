@@ -62,6 +62,7 @@ abstract class StochasticReactionNetwork
   }
 
   def applyReaction(rxn: KineticReaction) {
+    import spire.implicits._
     for ((s, n) <- rxn.lhs) s -= n
     for ((s, n) <- rxn.rhs) s += n
   }

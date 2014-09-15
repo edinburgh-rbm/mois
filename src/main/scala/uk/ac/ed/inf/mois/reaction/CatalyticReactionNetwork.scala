@@ -39,7 +39,7 @@ trait CatalyticReactionNetwork[T] extends ReactionNetwork[T] {
 
   case class CatalysedReaction[Mechanism <: EnzymeMechanism](
     lhs: Multiset[Species], rhs: Multiset[Species], catalyser: Species,
-    mechanism: Mechanism) extends SimpleReaction
+    mechanism: Mechanism) extends BaseReaction
 }
 
 
@@ -150,14 +150,14 @@ trait KineticCatalyticReactionNetwork[T]
     val e  = r.catalyser
     val es = enzymeComplex(e, s)
     import r.mechanism._
-    List(e + s -> es at k1,
-         es -> e + s at k2,
-         es -> e + p at k3)
+    List(e + s --> es at k1,
+         es --> e + s at k2,
+         es --> e + p at k3)
   }
 
   implicit def qss(r: CatalysedReaction[QSS]) = {
     import r.mechanism.{vmax, km}
-    List(r.lhs -> r.rhs `at!`
+    List(r.lhs --> r.rhs `at!`
       vmax * count(r.lhs) / (km + count(r.lhs)))
   }
 
@@ -174,24 +174,24 @@ trait KineticCatalyticReactionNetwork[T]
     val ep2 = enzymeComplex(e, p2)
     val ep12 = enzymeComplex(ep1, p2)
     import r.mechanism._
-    List(e + s1 -> es1 at bind1,
-         e + s2 -> es2 at bind2,
-         es1 -> e + s1 at unbind1,
-         es2 -> e + s2 at unbind2,
-         es2 + s1 -> es12 at bind1,
-         es1 + s2 -> es12 at bind2,
-         es12 -> es2 + s1 at unbind1,
-         es12 -> es1 + s2 at unbind2,
-         es12 -> ep12 at fwdCat,
-         ep12 -> es12 at bwdCat,
-         ep12 -> ep2 + p1 at unbind3,
-         ep12 -> ep1 + p2 at unbind4,
-         ep2 + p1 -> ep12 at bind3,
-         ep1 + p2 -> ep12 at bind4,
-         ep1 -> e + p1 at unbind3,
-         ep2 -> e + p2 at unbind4,
-         e + p1 -> ep1 at bind3,
-         e + p2 -> ep2 at bind4)
+    List(e + s1 --> es1 at bind1,
+         e + s2 --> es2 at bind2,
+         es1 --> e + s1 at unbind1,
+         es2 --> e + s2 at unbind2,
+         es2 + s1 --> es12 at bind1,
+         es1 + s2 --> es12 at bind2,
+         es12 --> es2 + s1 at unbind1,
+         es12 --> es1 + s2 at unbind2,
+         es12 --> ep12 at fwdCat,
+         ep12 --> es12 at bwdCat,
+         ep12 --> ep2 + p1 at unbind3,
+         ep12 --> ep1 + p2 at unbind4,
+         ep2 + p1 --> ep12 at bind3,
+         ep1 + p2 --> ep12 at bind4,
+         ep1 --> e + p1 at unbind3,
+         ep2 --> e + p2 at unbind4,
+         e + p1 --> ep1 at bind3,
+         e + p2 --> ep2 at bind4)
   }
 
   implicit def tcordered(r: CatalysedReaction[TCOrdered])(
@@ -213,16 +213,16 @@ trait KineticCatalyticReactionNetwork[T]
     val es12 = enzymeComplex(es1, s2)
     val ep2  = enzymeComplex(e, p2)
     val ep12 = enzymeComplex(ep2, p1)
-    List(e + s1 -> es1 at bind1,
-         es1 -> e + s1 at unbind1,
-         es1 + s2 -> es12 at bind2,
-         es12 -> es1 + s2 at unbind2,
-         es12 -> ep12 at fwdCat,
-         ep12 -> es12 at bwdCat,
-         ep12 -> ep2 + p1 at unbind3,
-         ep2 + p1 -> ep12 at bind3,
-         ep2 -> e + p2 at unbind4,
-         e + p2 -> ep2 at bind4)
+    List(e + s1 --> es1 at bind1,
+         es1 --> e + s1 at unbind1,
+         es1 + s2 --> es12 at bind2,
+         es12 --> es1 + s2 at unbind2,
+         es12 --> ep12 at fwdCat,
+         ep12 --> es12 at bwdCat,
+         ep12 --> ep2 + p1 at unbind3,
+         ep2 + p1 --> ep12 at bind3,
+         ep2 --> e + p2 at unbind4,
+         e + p2 --> ep2 at bind4)
   }
 
   implicit def pp(r: CatalysedReaction[PP])(
@@ -237,17 +237,17 @@ trait KineticCatalyticReactionNetwork[T]
     val e2s2 = enzymeComplex(e2, s2)
     val e1p2 = enzymeComplex(e1, p2)
     import r.mechanism._
-    List(e1 + s1 -> e1s1 at bind1,
-         e1s1 -> e1 + s1 at unbind1,
-         e1s1 -> e2p1 at fwd1,
-         e2p1 -> e1s1 at bwd1,
-         e2p1 -> e2 + p1 at unbind3,
-         e2 + p1 -> e2p1 at bind3,
-         e2 + s2 -> e2s2 at bind2,
-         e2s2 -> e2 + s2 at unbind2,
-         e2s2 -> e1p2 at fwd2,
-         e1p2 -> e2s2 at bwd2,
-         e1p2 -> e1 + p2 at unbind4,
-         e1 + p2 -> e1p2 at bind4)
+    List(e1 + s1 --> e1s1 at bind1,
+         e1s1 --> e1 + s1 at unbind1,
+         e1s1 --> e2p1 at fwd1,
+         e2p1 --> e1s1 at bwd1,
+         e2p1 --> e2 + p1 at unbind3,
+         e2 + p1 --> e2p1 at bind3,
+         e2 + s2 --> e2s2 at bind2,
+         e2s2 --> e2 + s2 at unbind2,
+         e2s2 --> e1p2 at fwd2,
+         e1p2 --> e2s2 at bwd2,
+         e1p2 --> e1 + p2 at unbind4,
+         e1 + p2 --> e1p2 at bind4)
   }
 }

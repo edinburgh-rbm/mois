@@ -32,7 +32,6 @@ abstract class DeterministicReactionNetwork
     extends ODE
        with ConcentrationBasedReactionNetwork[Double]
        with KineticCatalyticReactionNetwork[Double] {
-
   override def stringPrefix = "DeterministicReactionNetwork"
 
   val rxns = mutable.ArrayBuffer.empty[KineticReaction]
@@ -56,7 +55,7 @@ abstract class DeterministicReactionNetwork
       vars.clear
       // compute derivates
       for (s <- species) {
-        d(s.v) := (for (rxn <- rxns if rxn(s) != 0) yield
+        d(s) := (for (rxn <- rxns if rxn(s) != 0) yield
           rxn(s) * rxn.rate).sum
       }
     }

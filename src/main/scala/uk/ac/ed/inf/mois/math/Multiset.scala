@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.mois.math
 
-import spire.algebra.AdditiveMonoid
+import spire.algebra.{AdditiveMonoid, Eq}
 
 class Multiset[T] private (val members: Map[T, Int])
     extends Map[T, Int] {
@@ -60,18 +60,31 @@ object Multiset {
   def apply[T](ms: T*) = new Multiset(
     ms.groupBy(x => x).map({ case (s, ss) => (s, ss.size) }))
   def empty[T] = new Multiset[T](Map.empty[T, Int])
-
-  implicit final val IntMultisetInstances = new MultisetInstances[Int]
-  implicit final val LongMultisetInstances = new MultisetInstances[Long]
-  implicit final val BigIntMultisetInstances = new MultisetInstances[BigInt]
-  implicit final val FloatMultisetInstances = new MultisetInstances[Float]
-  implicit final val DoubleMultisetInstances = new MultisetInstances[Double]
-  implicit final val BigDecimalMultisetInstances = new MultisetInstances[BigDecimal]
 }
 
-trait MultisetIsAdditive[T] extends AdditiveMonoid[Multiset[T]] {
+final class MultisetAdditive[T] extends AdditiveMonoid[Multiset[T]] {
   def zero = Multiset.empty[T]
   def plus(x: Multiset[T], y: Multiset[T]) = x + y
 }
 
-class MultisetInstances[T] extends MultisetIsAdditive[T]
+final class MultisetEq[T](implicit eq: Eq[T], meq: Eq[Map[T, Int]] )
+    extends Eq[Multiset[T]] {
+  def eqv(x: Multiset[T], y: Multiset[T]) = {
+    println(s"XXXXXX ${x.members}")
+    println(s"CCCCCC ${y.members}")
+    for ( (u, v) <- x.members.keys zip y.members.keys ) {
+      println(s"UVUVU $u $v ${Eq[T].eqv(u, v)}")
+    }
+    import spire.std.int._
+    for ( (u, v) <- x.members.values zip y.members.values ) {
+      println(s"WWWWWW $u $v ${Eq[Int].eqv(u, v)}")
+    }
+    meq.eqv(x.members, y.members)
+  }
+}
+
+trait MultisetInstances {
+  import spire.implicits._
+  implicit def MultisetAdditive[T] = new MultisetAdditive[T]
+  implicit def MultisetEq[T: Eq] = new MultisetEq[T]
+}
