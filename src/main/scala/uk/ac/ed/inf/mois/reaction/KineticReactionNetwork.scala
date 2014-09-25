@@ -19,16 +19,7 @@ package uk.ac.ed.inf.mois.reaction
 
 import uk.ac.ed.inf.mois.math.Multiset
 
-/** A trait for reaction networks that have kinetic rates. */
-trait KineticReactionNetwork[R] extends ReactionNetwork[R] {
-
-  type Reaction <: UnratedReaction
-
-  trait UnratedReaction extends BaseReaction {
-    def at(k: => Double) = MassActionReaction(lhs, rhs, () => k)
-    def `at!`(k: => Double) = RateLawReaction(lhs, rhs, () => k)
-  }
-
+private[mois] trait BaseKineticReactionNetwork[R] extends ReactionNetwork[R] {
   trait KineticReaction extends BaseReaction {
     def rate: Double
     override def stringPrefix = "KineticReaction"
@@ -40,7 +31,9 @@ trait KineticReactionNetwork[R] extends ReactionNetwork[R] {
     def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => Double)
         : KineticReaction
   }
+}
 
+trait MassActionReactionNetwork[R] extends BaseKineticReactionNetwork[R] {
   def count(m: Multiset[Species]): Double
 
   class MassActionReaction(
@@ -55,7 +48,9 @@ trait KineticReactionNetwork[R] extends ReactionNetwork[R] {
       def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => Double) =
         new MassActionReaction(lhs, rhs, k)
     }
+}
 
+trait RateLawReactionNetwork[R] extends BaseKineticReactionNetwork[R] {
   class RateLawReaction(
     val lhs: Multiset[Species], val rhs: Multiset[Species], val k: () => Double)
       extends KineticReaction {
@@ -68,4 +63,17 @@ trait KineticReactionNetwork[R] extends ReactionNetwork[R] {
       def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => Double) =
         new RateLawReaction(lhs, rhs, k)
     }
+}
+
+/** A trait for reaction networks that have kinetic rates. */
+trait KineticReactionNetwork[R]
+    extends MassActionReactionNetwork[R]
+    with RateLawReactionNetwork[R] {
+
+  type Reaction <: UnratedReaction
+
+  trait UnratedReaction extends BaseReaction {
+    def at(k: => Double) = MassActionReaction(lhs, rhs, () => k)
+    def `at!`(k: => Double) = RateLawReaction(lhs, rhs, () => k)
+  }
 }
