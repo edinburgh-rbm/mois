@@ -34,14 +34,21 @@ trait Constraints[T] {
 }
 
 trait Bounds[T] {
-  private val bounds = mutable.ArrayBuffer.empty[Bound]
-  type Bound = T => T
-  def addBound(b: Bound) { bounds += b }
-  def doClamp(x: T) = bounds.foldLeft(x)((z,f) => f(z))
+  abstract class Bound {
+    val bound: T
+    def apply(x: T): T
+  }
+  var lowerBound: Option[Bound] = None
+  var upperBound: Option[Bound] = None
   class LowerBound(val bound: T)(implicit o: Order[T]) extends Bound {
     def apply(x: T) = if (o.gteqv(x, bound)) x else bound
   }
   class UpperBound(val bound: T)(implicit o: Order[T]) extends Bound {
     def apply(x: T) = if (o.lteqv(x, bound)) x else bound
+  }
+  def doClamp(x: T): T = {
+    def clampLower(x: T): T = if (lowerBound.isDefined) lowerBound.get(x) else x
+    def clampUpper(x: T): T = if (upperBound.isDefined) upperBound.get(x) else x
+    clampUpper(clampLower(x))
   }
 }

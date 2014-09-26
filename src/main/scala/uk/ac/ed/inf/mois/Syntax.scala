@@ -38,7 +38,7 @@ final class ConstraintSyntax[T](v: Var[T]) {
 }
 
 final class BoundSyntax[T : Order : Rig](v: Var[T]) {
-  def lte(b: T) = { v.addBound(new v.UpperBound(b)); v }
-  def gte(b: T) = { v.addBound(new v.LowerBound(b)); v }
+  def gte(b: T) = { v.lowerBound = Some(new v.LowerBound(b)); v }
+  def lte(b: T) = { v.upperBound = Some(new v.UpperBound(b)); v }
   def nonnegative()(implicit r: Rig[T], o: Order[T]) = gte(r.zero)
 }
