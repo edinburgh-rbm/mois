@@ -48,14 +48,14 @@ trait VarMetaInstances {
 
 object var_meta extends VarMetaInstances
 
-trait Var[T] extends Constraints[T] {
+trait Var[T] extends Constraints[T] with Bounds[T] {
   val meta: VarMeta
   /** Add an [[Annotation]] onto the [[VarMeta]] */
   val annotate = meta.annotate _
 
   def value: T
   def update(value: T): Unit
-  @inline final def := (value: T) = { update(value); this }
+  @inline final def := (value: T) = { update(doClamp(value)); this }
   override def equals(other: Any) = {
     import var_meta._
     other match {

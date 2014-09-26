@@ -1,5 +1,5 @@
 package uk.ac.ed.inf.mois
-import spire.algebra.{Rig, Ring, Field}
+import spire.algebra.{Order, Rig, Ring, Field}
 
 final class RigVarSyntax[T : Rig](v: Var[T]) {
   def += (y: T) { v.update(Rig[T].plus(v.value, y)) }
@@ -35,4 +35,10 @@ final class ConstraintSyntax[T](v: Var[T]) {
   }
   def assertConstraints = v.doAssertConstraints(v.value)
   def checkConstraints = v.doCheckConstraints(v.value)
+}
+
+final class BoundSyntax[T : Order : Rig](v: Var[T]) {
+  def lte(b: T) = { v.addBound(new v.UpperBound(b)); v }
+  def gte(b: T) = { v.addBound(new v.LowerBound(b)); v }
+  def nonnegative()(implicit r: Rig[T], o: Order[T]) = gte(r.zero)
 }

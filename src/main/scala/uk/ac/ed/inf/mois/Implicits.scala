@@ -18,7 +18,7 @@
 package uk.ac.ed.inf.mois
 
 import scala.language.implicitConversions
-import spire.algebra.{Rig, Ring, Field}
+import spire.algebra.{Order, Rig, Ring, Field}
 
 /** syntax sugar, mostly relating to assignment and updating */
 trait Syntax {
@@ -27,6 +27,7 @@ trait Syntax {
   implicit def fieldSyntax[T: Field](v: Var[T]) = new FieldVarSyntax[T](v)
   implicit def stateSyntax(s: State) = new StateSyntax(s)
   implicit def constraintSyntax[T](v: Var[T]) = new ConstraintSyntax[T](v)
+  implicit def boundSyntax[T : Order : Rig](v: Var[T]) = new BoundSyntax[T](v)
 }
 
 /** automatic type conversions */

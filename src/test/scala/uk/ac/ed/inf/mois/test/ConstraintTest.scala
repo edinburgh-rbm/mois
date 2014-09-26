@@ -53,4 +53,25 @@ class ConstraintTest extends FlatSpec with Matchers with ArrayBackedStateBuilder
     d2 := 0.0
     d2.checkConstraints should be (true)
   }
+
+  it should "respect bounds" in {
+    import spire.implicits._
+    import uk.ac.ed.inf.mois.implicits._
+
+    i1 gte(0)
+    i1 lte(5)
+
+    i1 := -1
+    i1.value should equal (0)
+    i1 := 10
+    i1.value should equal (5)
+    i1 := 3
+    i1.value should equal (3)
+
+    i2 nonnegative()
+    i2 := -1
+    i2.value should equal (0)
+    i2 := 10
+    i2.value should equal (10)
+  }
 }

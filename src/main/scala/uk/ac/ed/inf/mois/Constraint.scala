@@ -18,18 +18,30 @@
 package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
+import spire.algebra.{Order, Rig}
 
 class ConstraintViolation(s: String) extends Exception(s)
 
 trait Constraints[T] {
   type Constraint = T => Boolean
-  type Bound = T => T
   private val constraints = mutable.ArrayBuffer.empty[Constraint]
-  private val bounds = mutable.ArrayBuffer.empty[Bound]
   def addConstraint(c: Constraint) { constraints += c }
   def doCheckConstraints(x: T): Boolean = constraints.forall(_(x))
   def doAssertConstraints(x: T) {
     if (!doCheckConstraints(x))
       throw new ConstraintViolation(s"$this violated constraint by setting $x")
+  }
+}
+
+trait Bounds[T] {
+  private val bounds = mutable.ArrayBuffer.empty[Bound]
+  type Bound = T => T
+  def addBound(b: Bound) { bounds += b }
+  def doClamp(x: T) = bounds.foldLeft(x)((z,f) => f(z))
+  class LowerBound(val bound: T)(implicit o: Order[T]) extends Bound {
+    def apply(x: T) = if (o.gteqv(x, bound)) x else bound
+  }
+  class UpperBound(val bound: T)(implicit o: Order[T]) extends Bound {
+    def apply(x: T) = if (o.lteqv(x, bound)) x else bound
   }
 }
