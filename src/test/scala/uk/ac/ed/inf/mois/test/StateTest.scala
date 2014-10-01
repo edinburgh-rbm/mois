@@ -97,7 +97,7 @@ class StateTest extends FlatSpec with Matchers {
 
   class DummyState extends ArrayBackedStateBuilder {
     val x = Int("x")
-    val y = Int("y")
+    val y = Int("y") default(2)
     val u = Double("u")
     val v = Double("v")
     val b = Boolean("b")
@@ -108,7 +108,7 @@ class StateTest extends FlatSpec with Matchers {
   it should "support adding and retrieving variables" in {
     val s = new DummyState
     s.x.value should equal (0)
-    s.y.value should equal (0)
+    s.y.value should equal (2)
     s.x := 2
     s.y := 3
     s.x+s.y should equal(5)
@@ -118,7 +118,7 @@ class StateTest extends FlatSpec with Matchers {
     val s = new DummyState
     val ints = s.state.get[Int]
     val doubles = s.state.get[Double]
-    ints should be (Array(0, 0))
+    ints should be (Array(0, 2))
     doubles should be (Array(0.0, 0.0))
   }
 }

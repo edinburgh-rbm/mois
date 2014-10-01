@@ -124,6 +124,17 @@ trait StateBuilder {
   protected[mois] val indices = mutable.ArrayBuffer.empty[Index[_]]
   protected[mois] val allmeta = mutable.Set.empty[VarMeta]
 
+  protected[mois] val _defaults = mutable.ArrayBuffer.empty[(() => Unit)]
+  protected[mois] implicit class Default[T](v: Var[T]) {
+    def default(x: T) = {
+      _defaults += (() => v.update(x))
+      v
+    }
+  }
+  def setDefaults {
+    for (f <- _defaults) f()
+  }
+
   /** Merge a partially built [[State]] with this one */
   def merge(other: StateBuilder) {
     for ((rig, bag) <- other.bags) {

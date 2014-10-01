@@ -31,6 +31,13 @@ import collection.mutable
 abstract class ODE extends Process
     with ode.FirstOrderDifferentialEquations {
 
+  type Derivative = () => Double
+
+  /** Functions defining the derivatives of the variables in `vars`.
+    * The two arrays are indexed equally.
+    */
+  val funs = mutable.ArrayBuffer.empty[Derivative]
+
   /** An array with all `Var`s for which to integrate. */
   val vars = mutable.ArrayBuffer.empty[Var[Double]]
 
@@ -38,7 +45,7 @@ abstract class ODE extends Process
   protected class AddODE(val vs: Seq[Var[Double]]) {
 
     /** Adds an ODE definition to the process. */
-    def := (fs: (() => Double)*): Unit = {
+    def := (fs: Derivative*): Unit = {
       require(fs.size == vs.size,
         "lhs and rhs of ODE system must have same size")
       for ((v, f) <- vs zip fs) {
@@ -60,13 +67,6 @@ abstract class ODE extends Process
 
   /** `Var` used to construct derivatives that depend on time. */
   var t = 0.0
-
-  type Derivative = () => Double
-
-  /** Functions defining the derivatives of the variables in `vars`.
-    * The two arrays are indexed equally.
-    */
-  val funs = mutable.ArrayBuffer.empty[Derivative]
 
   /** The integrator object which can be any implementation compatible
     * with the Apache Commons Math ODE library. Free to override in

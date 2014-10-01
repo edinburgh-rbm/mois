@@ -131,5 +131,6 @@ trait ArrayBackedStateBuilder extends StateBuilder {
   def initState(s: State) {
     assume(s.isInstanceOf[ArrayBackedState], "state must be of ArrayBackedState type")
     indices map (_.setState(s.asInstanceOf[ArrayBackedState]))
+    setDefaults
   }
 }
