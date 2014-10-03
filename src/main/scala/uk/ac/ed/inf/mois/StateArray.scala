@@ -17,6 +17,8 @@
  */
 package uk.ac.ed.inf.mois
 
+import scala.collection.mutable
+import scala.reflect.ClassTag
 import spire.algebra.Rig
 
 case class ArrayBackedState(
@@ -124,6 +126,14 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) extends Var[T] {
   * an [[ArrayBackedState]]
   */
 trait ArrayBackedStateBuilder extends StateBuilder {
+  protected[mois] val indices = mutable.ArrayBuffer.empty[Index[_]]
+
+  def createVar[T : Rig : ClassTag](meta: VarMeta): Var[T] = {
+    val i = new Index[T](meta)
+    indices += i
+    i
+  }
+
   def buildState: State = ArrayBackedState(
       bags.map({ case (rig, bag) => (rig, bag.metas.toArray) }).toMap,
       bags.map({ case (rig, bag) => (rig, bag.values) }).toMap

@@ -19,6 +19,7 @@ package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
 import scala.language.existentials
+import scala.language.higherKinds
 import scala.language.implicitConversions
 import scala.language.postfixOps
 import scala.reflect.ClassTag
@@ -121,9 +122,7 @@ trait StateBuilder {
     }
   }
   protected[mois] val bags = mutable.Map.empty[Rig[_], Bag[_]]
-  protected[mois] val indices = mutable.ArrayBuffer.empty[Index[_]]
   protected[mois] val allmeta = mutable.Set.empty[VarMeta]
-
   protected[mois] val _defaults = mutable.ArrayBuffer.empty[(() => Unit)]
   protected[mois] implicit class Default[T](v: Var[T]) {
     def default(x: T) = {
@@ -150,6 +149,8 @@ trait StateBuilder {
     }
   }
 
+  def createVar[T : Rig : ClassTag](meta: VarMeta): Var[T]
+
   /** Add a variable to the under construction proto[[State]]
     *
     * @param meta is the metadata used to index the state
@@ -170,9 +171,7 @@ trait StateBuilder {
       // type
       require(bags(rig).metas contains meta, "requested index for wrong type")
     }
-    val i = new Index[T](meta)
-    indices += i
-    i
+    createVar[T](meta)
   }
 
   object Int {
