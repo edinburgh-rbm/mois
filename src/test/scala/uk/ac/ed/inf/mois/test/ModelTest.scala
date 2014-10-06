@@ -18,7 +18,7 @@
 package uk.ac.ed.inf.mois.test
 
 import org.scalatest.{FlatSpec, Matchers}
-import uk.ac.ed.inf.mois.{Process, Model}
+import uk.ac.ed.inf.mois.{Process, Model, VarCalc}
 
 class TestModel1 extends Model {
   val a = Double("a")
@@ -34,6 +34,16 @@ class TestModel1 extends Model {
 
 class TestModel2 extends Model {
   object process extends Process
+}
+
+// used for regression, model has to initialise state
+// properly too
+class TestModel3 extends Model {
+  val a = Double("a")
+  object process extends Process with VarCalc {
+    val x = Double("x")
+    calc(x) := a.value
+  }
 }
 
 class ModelTest extends FlatSpec with Matchers {
@@ -62,5 +72,10 @@ class ModelTest extends FlatSpec with Matchers {
 
   it should "find at least four models when asked for all of them" in {
     (Model.all.size >= 4) should be (true)
+  }
+
+  it should "initialise the state properly" in {
+    val testModel = new TestModel3
+    testModel.init(0)
   }
 }

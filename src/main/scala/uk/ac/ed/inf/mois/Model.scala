@@ -26,6 +26,7 @@ abstract class Model extends ArrayBackedStateBuilder {
 
   def init(t: Double) {
     merge(process)
+    initState(buildState)
     process.init(t)
   }
 
