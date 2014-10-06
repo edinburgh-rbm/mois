@@ -19,7 +19,7 @@ name := "mois"
 
 organization := "uk.ac.ed.inf"
 
-version := "1.99.7-SNAPSHOT"
+version := "1.99.8-SNAPSHOT"
 
 scalaVersion := "2.11.2"
 
