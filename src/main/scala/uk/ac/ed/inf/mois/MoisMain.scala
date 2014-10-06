@@ -77,6 +77,7 @@ object MoisMain {
     val command: Option[String] = None,
     val begin: Option[Double] = Some(0.0),
     val duration: Option[Double] = None,
+    val steps: Option[Int] = Some(100),
     val stepHandlers: Seq[Model => Option[StepHandler]] =
       Seq.empty[Model => Option[StepHandler]],
     val dumpState: Boolean = false,
@@ -136,6 +137,10 @@ object MoisMain {
       opt[Double]('b', "begin") action { (x, c) =>
         c.copy(begin = Some(x))
       } text("Simulation start time (default: 0.0)"),
+
+      opt[Int]('n', "steps") action { (x, c) =>
+        c.copy(steps = Some(x))
+      } text("Number of steps for reporting (default: 100)"),
 
       opt[String]('i', "initial") action { (filename, c) =>
         val fp = scala.io.Source.fromFile(filename)
@@ -319,13 +324,16 @@ object MoisMain {
     // get duration
     val duration = cfg.duration.get
 
+    // get steps
+    val steps = cfg.steps.get
+
     // set up output
     for (sh <- cfg.stepHandlers)
       model.process.addStepHandler(sh(model).get)
 
     // run the simulation
     model.init(begin)
-    model.run(begin, duration)
+    model.run(begin, duration, steps)
     model.finish
 
     // clean up output

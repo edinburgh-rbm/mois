@@ -100,11 +100,11 @@ class WeisseSchedulerTest extends FlatSpec with Matchers {
     val group = new CoupledOscillatorGroupModel
 
     direct.init(0)
-    direct.run(0, 1)
+    direct.run(0, 1, 1)
     direct.finish
 
     group.init(0)
-    group.run(0, 1)
+    group.run(0, 1, 1)
     group.finish
 
 /*

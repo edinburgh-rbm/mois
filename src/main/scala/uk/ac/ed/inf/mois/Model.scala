@@ -30,8 +30,13 @@ abstract class Model extends ArrayBackedStateBuilder {
     process.init(t)
   }
 
-  def run(t: Double, tau: Double) {
-    process(t, tau)
+  def run(t: Double, tau: Double, n: Int) {
+    var i = 0
+    val dt = tau/n
+    while (i < n) {
+      process(t + dt*i, dt)
+      i += 1
+    }
   }
 
   def finish {
