@@ -121,4 +121,24 @@ class StateTest extends FlatSpec with Matchers {
     ints should be (Array(0, 2))
     doubles should be (Array(0.0, 0.0))
   }
+
+  class DummyState2 extends ArrayBackedStateBuilder {
+    val x = Int("x") default(1)
+  }
+
+  class DummyState3 extends ArrayBackedStateBuilder {
+    val x = Int("x")
+  }
+
+  it should "propagate defaults on merge" in {
+    val s2 = new DummyState2
+    val s3 = new DummyState3
+
+    s3.merge(s2)
+    s2.initState(s2.buildState)
+    s3.initState(s3.buildState)
+
+    s2.x.value should equal (1)
+    s3.x.value should equal (1)
+  }
 }

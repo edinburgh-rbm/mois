@@ -100,7 +100,7 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) extends Var[T] {
   // RHZ: Why do we need to cache state?
   // WW: because it is a lazily built var
   lazy val state = _state
-  def array: Array[T] = state.get[T]
+  private def array: Array[T] = state.get[T]
   private lazy val index = state.meta(rig) indexOf meta
 
   // RHZ: Why not just expose state_=?
@@ -115,9 +115,9 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) extends Var[T] {
   }
 
   /** Explicitly retrieve the underlying value in the state */
-  @inline final def value = array(index)
+  @inline def value = array(index)
   /** Update the underlying value in the state */
-  @inline final def update(value: T) { array(index) = value }
+  @inline def update(value: T) { array(index) = value }
 
   override def toString = s"$meta = $value"
 }
@@ -126,7 +126,9 @@ class Index[T](val meta: VarMeta)(implicit val rig: Rig[T]) extends Var[T] {
   * an [[ArrayBackedState]]
   */
 trait ArrayBackedStateBuilder extends StateBuilder {
+  type VarType[T] = Index[T]
   protected[mois] val indices = mutable.ArrayBuffer.empty[Index[_]]
+  private var _state: ArrayBackedState = null
 
   def createVar[T : Rig : ClassTag](meta: VarMeta): Var[T] = {
     val i = new Index[T](meta)
@@ -138,9 +140,14 @@ trait ArrayBackedStateBuilder extends StateBuilder {
       bags.map({ case (rig, bag) => (rig, bag.metas.toArray) }).toMap,
       bags.map({ case (rig, bag) => (rig, bag.values) }).toMap
   )
+
   def initState(s: State) {
     assume(s.isInstanceOf[ArrayBackedState], "state must be of ArrayBackedState type")
-    indices map (_.setState(s.asInstanceOf[ArrayBackedState]))
+    val abs = s.asInstanceOf[ArrayBackedState]
+    _state = abs
+    indices map (_.setState(abs))
     setDefaults
   }
+
+  def getState: State = _state
 }

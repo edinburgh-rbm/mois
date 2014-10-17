@@ -110,6 +110,8 @@ trait StateBuilder {
   def buildState: State
   /** Initialise the [[State]] */
   def initState(s: State)
+  /** Get the [[State]] */
+  def getState: State
 
   // intermediate datastructures to hold a partially built state
   protected[mois] class Bag[T: ClassTag](implicit rig: Rig[T]) {
@@ -123,15 +125,15 @@ trait StateBuilder {
   }
   protected[mois] val bags = mutable.Map.empty[Rig[_], Bag[_]]
   protected[mois] val allmeta = mutable.Set.empty[VarMeta]
-  protected[mois] val _defaults = mutable.ArrayBuffer.empty[(() => Unit)]
-  protected[mois] implicit class Default[T](v: Var[T]) {
+  protected[mois] val _defaults = mutable.ArrayBuffer.empty[(State => Unit)]
+  protected[mois] implicit class Default[T](v: Var[T])(implicit rig: Rig[T]) {
     def default(x: T) = {
-      _defaults += (() => v.update(x))
+      _defaults += (state => state.getVar[T](v.meta).update(x))
       v
     }
   }
   def setDefaults {
-    for (f <- _defaults) f()
+    for (f <- _defaults) f(getState)
   }
 
   /** Merge a partially built [[State]] with this one */
@@ -147,9 +149,10 @@ trait StateBuilder {
         }
       }
     }
+    _defaults prependAll(other._defaults)
   }
 
-  def createVar[T : Rig : ClassTag](meta: VarMeta): Var[T]
+  protected def createVar[T : Rig : ClassTag](meta: VarMeta): Var[T]
 
   /** Add a variable to the under construction proto[[State]]
     *
