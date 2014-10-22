@@ -37,12 +37,14 @@ final class VarSyntax[T](v: Var[T]) {
   }
 }
 
-final class DimensionSyntax(s: StateBuilder) {
-  class Dimension[T](v: Var[T]) {
-    def +=(n: Int) {
-      v.meta.flags.slices += n
-    }
+// XXX this belongs *inside* the following class!
+class Dimension[T](v: Var[T]) {
+  def +=(n: Int) {
+    v.meta.flags.slices += n
   }
+}
+
+final class DimensionSyntax(s: StateBuilder) {
   def dimension[T](v: Var[T]) = new Dimension(v)
 }
 

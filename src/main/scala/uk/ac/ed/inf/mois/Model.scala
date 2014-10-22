@@ -59,6 +59,9 @@ abstract class Model extends ArrayBackedStateBuilder {
     process.asInstanceOf[ProcessGroup].scheduler = sched
   }
 
+  /** manipulate dimensions -- should be in syntax !? */
+  def dimension[T](v: Var[T]) = new Dimension(v)
+
   /** set a model parameter */
   // def setParam(name: String, value: Double) {
   //   doubleVars(VarMeta(name)) := value
