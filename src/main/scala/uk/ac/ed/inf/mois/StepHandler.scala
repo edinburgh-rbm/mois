@@ -63,9 +63,11 @@ class TsvWriter(fp: java.io.Writer, sep: String = "\t")
   def init(t: Double, proc: Process) {
     val rigs = proc.state.getTypes.sortBy(_.toString)
     for (rig <- rigs) {
-      ordering(rig) = proc.state.getMeta(rig).sortBy(_.identifier).map { m =>
-        proc.state.getMeta(rig).indexOf(m)
-      }.toArray
+      ordering(rig) = proc.state.getMeta(rig)
+        .filter(m => (!m.flags.param && !m.flags.dimension))
+        .sortBy(m => m.identifier)
+        .map(m => proc.state.getMeta(rig).indexOf(m))
+        .toArray
     }
     val metas = (for (rig <- rigs) yield ordering(rig)
       .map(i => proc.state.getMeta(rig)(i)).toArray)
