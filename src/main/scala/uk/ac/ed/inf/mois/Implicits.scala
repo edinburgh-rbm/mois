@@ -29,7 +29,7 @@ trait Syntax {
   implicit def varSyntax[T](v: Var[T]) = new VarSyntax[T](v)
   implicit def constraintSyntax[T](v: Var[T]) = new ConstraintSyntax[T](v)
   implicit def boundSyntax[T : Order : Rig](v: Var[T]) = new BoundSyntax[T](v)
-  implicit def processSyntax(p: Process) = new ProcessSyntax(p)
+  implicit def dimensionSyntax(p: Process) = new DimensionSyntax(p)
 }
 
 /** automatic type conversions */
