@@ -19,7 +19,14 @@ package uk.ac.ed.inf.mois
 
 import scala.language.existentials
 import scala.language.implicitConversions
+import scala.math.max
 import spire.algebra.{Rig, Ring, Field, Eq}
+
+case class VarFlags(
+  val param: Boolean = false,
+  val dimension: Boolean = false,
+  val slices: Int = 1
+)
 
 /** This class is to abstract away the details of uniquely identifying a
   * state variable.
@@ -28,6 +35,18 @@ case class VarMeta(identifier: String, rig: Rig[T] forSome { type T })
     extends Ordered[VarMeta] with Annotation {
   def compare(that: VarMeta) = this.identifier compare that.identifier
   override def toString = identifier
+  def merge(other: VarMeta) {
+    // TODO: Sanity Check things like units and types
+    annotations ++= other.annotations
+    flags.param = flags.param || other.flags.param
+    flags.dimension = flags.dimension || other.flags.dimension
+    flags.slices = max(flags.slices, other.flags.slices)
+  }
+  protected[mois] object flags {
+    var param: Boolean = false
+    var dimension: Boolean = false
+    var slices: Int = 1
+  }
 }
 
 object VarMeta {
@@ -64,6 +83,9 @@ trait Var[T] extends Constraints[T] with Bounds[T] {
     }
   }
   override def hashCode = meta.identifier.hashCode
+
+  def isParam = meta.flags.param
+  def isDimension = meta.flags.dimension
 }
 
 final class VarEqByMeta[T] extends Eq[Var[T]] {

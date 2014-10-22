@@ -34,9 +34,7 @@ class NetCdfTest extends FlatSpec with Matchers with BeforeAndAfter {
     val x1 = Double("ex:x1")
     val x2 = Double("ex:x2")
     val x3 = Double("ex:x3")
-    val x4 = Double("ex:D")
-
-    Dimension(x4, 3)
+    val x4 = Double("ex:D") dimension(3)
 
     next(x1) := x1 + 1 + x4
     next(x2) := x1 + x2 + 1 + x4
@@ -59,7 +57,8 @@ class NetCdfTest extends FlatSpec with Matchers with BeforeAndAfter {
       for (t <- 0 until 4) {
         p(t, 1)
       }
-      Dimension(x4) += 1
+
+      p.dimension(x4) += 1
       x4 += 10
     }
 

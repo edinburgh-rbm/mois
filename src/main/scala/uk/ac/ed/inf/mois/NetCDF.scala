@@ -102,7 +102,7 @@ class NetCdfWriter(filename: String) extends StepHandler {
         _writers += addDim(state.getVar[Boolean](meta), booleanData, length)
       else
         throw new IllegalArgumentException("Only numeric types supported as dimensions for now")
-      proc.dimensions(meta) = 0
+      meta.flags.slices = 0
     }
 
     // add the regular variables

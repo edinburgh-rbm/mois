@@ -143,7 +143,10 @@ trait StateBuilder {
         bags(rig) = bag.copy.asInstanceOf[Bag[_]]
       } else {
         for(m <- bag.metas) {
-          if (!(bags(rig).metas contains m)) {
+          if (bags(rig).metas contains m) {
+            val mine = bags(rig).metas(bags(rig).metas.indexOf(m))
+            mine merge(m)
+          } else {
             bags(rig) add m
           }
         }

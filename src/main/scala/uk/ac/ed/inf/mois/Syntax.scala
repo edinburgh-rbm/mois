@@ -22,6 +22,30 @@ final class StateSyntax(s: State) {
   @inline final def <<< (other: State) = s.copyFromAll(other)
 }
 
+final class VarSyntax[T](v: Var[T]) {
+  def param() = {
+    v.meta.flags.param = true
+    v
+  }
+  def dimension() = {
+    v.meta.flags.dimension = true
+  }
+  def dimension(n: Int) = {
+    v.meta.flags.dimension = true
+    v.meta.flags.slices = n
+    v
+  }
+}
+
+final class ProcessSyntax(p: Process) {
+  class Dimension[T](v: Var[T]) {
+    def +=(n: Int) {
+      v.meta.flags.slices += n
+    }
+  }
+  def dimension[T](v: Var[T]) = new Dimension(v)
+}
+
 final class ConstraintSyntax[T](v: Var[T]) {
   object addConstraint {
     def and(c: v.Constraint) = {

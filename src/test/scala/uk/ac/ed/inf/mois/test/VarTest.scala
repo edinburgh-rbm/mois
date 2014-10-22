@@ -21,6 +21,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{ArrayBackedStateBuilder, ConstraintViolation}
+import uk.ac.ed.inf.mois.implicits._
 
 class VarTest extends FlatSpec with Matchers with ArrayBackedStateBuilder {
   // Use approximate equality in `should equal` for doubles
@@ -35,6 +36,8 @@ class VarTest extends FlatSpec with Matchers with ArrayBackedStateBuilder {
   val d1 = Double("d1")
   val d2 = Double("d2")
   val xd2 = Double("d2") // alias
+  val p1 = Int("p1") param()
+  val di = Int("dim") dimension()
   val state = buildState
   initState(state)
 
@@ -86,5 +89,8 @@ class VarTest extends FlatSpec with Matchers with ArrayBackedStateBuilder {
     i1.value should be (i2.value)
 
     (i1 - d) should be (i2 - d)
+  }
+
+  it should "have different kinds" in {
   }
 }

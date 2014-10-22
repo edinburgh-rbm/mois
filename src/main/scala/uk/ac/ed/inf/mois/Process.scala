@@ -42,7 +42,11 @@ abstract class Process extends ArrayBackedStateBuilder with Annotation {
   lazy val stepHandlers = _stepHandlers.toArray
 
   /** a list of dimensions and their size/index */
-  val dimensions = mutable.Map.empty[VarMeta, Int]
+  lazy val dimensions = state.getTypes.map(rig => state.getMeta(rig))
+    .foldLeft(Seq.empty[VarMeta])((z: Seq[VarMeta], ml: Seq[VarMeta]) => z ++ ml)
+    .filter(meta => meta.flags.dimension)
+    .map(meta => (meta, meta.flags.slices))
+    .toMap
 
   /** Automatically annotate the process with its software name and version */
   protected def addBasicAnnotations = {
@@ -129,23 +133,6 @@ abstract class Process extends ArrayBackedStateBuilder with Annotation {
     */
   def addStepHandler(sh: StepHandler) {
     _stepHandlers += sh
-  }
-
-  /** Needed for NetCDF et al. TODO: explain better */
-  class Dimension[T](i: Var[T]) {
-    def apply = dimensions(i.meta)
-    def update(x: Int) { dimensions(i.meta) = x }
-    def +=(x: Int) { dimensions(i.meta) = dimensions(i.meta) + x }
-    def -=(x: Int) { dimensions(i.meta) = dimensions(i.meta) - x }
-    def *=(x: Int) { dimensions(i.meta) = dimensions(i.meta) * x }
-    def /=(x: Int) { dimensions(i.meta) = dimensions(i.meta) / x }
-  }
-  object Dimension {
-    def apply[T](i: Var[T], size: Int): Dimension[T] = {
-      dimensions += i.meta -> size
-      Dimension(i)
-    }
-    def apply[T](i: Var[T]): Dimension[T] = new Dimension(i)
   }
 
   def stringPrefix = "Process"

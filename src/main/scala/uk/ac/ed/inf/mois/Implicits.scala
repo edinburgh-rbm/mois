@@ -26,8 +26,10 @@ trait Syntax {
   implicit def ringSyntax[T: Ring](v: Var[T]) = new RingVarSyntax[T](v)
   implicit def fieldSyntax[T: Field](v: Var[T]) = new FieldVarSyntax[T](v)
   implicit def stateSyntax(s: State) = new StateSyntax(s)
+  implicit def varSyntax[T](v: Var[T]) = new VarSyntax[T](v)
   implicit def constraintSyntax[T](v: Var[T]) = new ConstraintSyntax[T](v)
   implicit def boundSyntax[T : Order : Rig](v: Var[T]) = new BoundSyntax[T](v)
+  implicit def processSyntax(p: Process) = new ProcessSyntax(p)
 }
 
 /** automatic type conversions */
