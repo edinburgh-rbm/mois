@@ -37,7 +37,9 @@ class VarTest extends FlatSpec with Matchers with ArrayBackedStateBuilder {
   val d2 = Double("d2")
   val xd2 = Double("d2") // alias
   val p1 = Int("p1") param()
-  val di = Int("dim") dimension()
+  val di1 = Int("di1") dimension()
+  val di2 = Int("di2") dimension(10)
+
   val state = buildState
   initState(state)
 
@@ -92,5 +94,13 @@ class VarTest extends FlatSpec with Matchers with ArrayBackedStateBuilder {
   }
 
   it should "have different kinds" in {
+    p1.isParam should be (true)
+    p1.isDimension should be (false)
+    di1.isParam should be (false)
+    di1.isDimension should be (true)
+    di2.isParam should be (false)
+    di2.isDimension should be (true)
+    i1.isParam should be (false)
+    i1.isDimension should be (false)
   }
 }

@@ -29,6 +29,7 @@ final class VarSyntax[T](v: Var[T]) {
   }
   def dimension() = {
     v.meta.flags.dimension = true
+    v
   }
   def dimension(n: Int) = {
     v.meta.flags.dimension = true
