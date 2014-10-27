@@ -23,6 +23,15 @@ class Brusselator extends DeterministicReactionNetwork {
   )
 }
 
+// catch type problem discovered by jwk
+class RateAdaptiveReaction extends DeterministicReactionNetwork {
+  val A = Species("A")
+  val B = Species("B")
+  val k = Double("k")
+  val r = Double("r")
+  reactions( A --> B at (k * r) )
+}
+
 /**
  * BrusselatorModel is used generically in test:run because it is a
  * decent model to test things like graphing out.

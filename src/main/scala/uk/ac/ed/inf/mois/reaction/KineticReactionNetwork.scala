@@ -17,6 +17,8 @@
  */
 package uk.ac.ed.inf.mois.reaction
 
+import spire.math.ConvertableFrom
+import uk.ac.ed.inf.mois.Var
 import uk.ac.ed.inf.mois.math.Multiset
 
 private[mois] trait BaseKineticReactionNetwork[R] extends ReactionNetwork[R] {
@@ -75,5 +77,13 @@ trait KineticReactionNetwork[R]
   trait UnratedReaction extends BaseReaction {
     def at(k: => Double) = MassActionReaction(lhs, rhs, () => k)
     def `at!`(k: => Double) = RateLawReaction(lhs, rhs, () => k)
+  }
+
+  implicit class DoubleArithmetic(v: Var[R])(
+    implicit d: ConvertableFrom[R]
+  ){
+    def *(u: Var[R]): Double = d.toDouble(v.value) * d.toDouble(u.value)
+    def *(x: R): Double = d.toDouble(v.value) * d.toDouble(x)
+    def *(x: Double): Double = d.toDouble(v.value) * x
   }
 }
