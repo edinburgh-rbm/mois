@@ -63,7 +63,7 @@ class VarCalcTest extends FlatSpec with Matchers {
 
 class VarCalcReactionTest extends FlatSpec with Matchers {
   class R extends DeterministicReactionNetwork with VarCalc {
-    val u = Species("u")
+    val u = Double("u")
     val v = Species("v")
     val w = Species("w")
     val x = Species("x")
@@ -73,6 +73,6 @@ class VarCalcReactionTest extends FlatSpec with Matchers {
     calc(z) := x + y
     calc(u) := v - (w + x)
 
-    reactions( z + y --> z at 0)
+    reactions( z + y --> z at v*u)
   }
 }
