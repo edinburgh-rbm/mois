@@ -73,13 +73,6 @@ trait ReactionNetwork[T] extends Process {
 
   // -- Conversions --
 
-  object MultisetConversion {
-    implicit def multisetToDouble(m: Multiset[Species])(
-      implicit num: Numeric[Base]): Base =
-      (for ((s, n) <- m) yield
-        num.times(num.fromInt(n), s.value)).sum(num)
-  }
-
   // -- Species --
   final class SpeciesSyntax(val v: Species)(implicit ring: Ring[T]) {
     // -- Multiset creation methods --
@@ -120,6 +113,13 @@ trait ReactionNetwork[T] extends Process {
     def + (m: Multiset[Species]) = Reaction(r.lhs, r.rhs + m)
     def + (s: Species) = Reaction(r.lhs, r.rhs + s)
     def * (n: Int) = Reaction(r.lhs, r.rhs * n)
+  }
+
+  implicit def multisetToBase(m: Multiset[Species])(
+    implicit num: Numeric[Base]): Base = 
+  {
+    (for ((s, n) <- m) yield
+      num.times(num.fromInt(n), s.value)).sum(num)
   }
 
   implicit def SpeciesSyntax(s: Species)(implicit r: Ring[T]) = new SpeciesSyntax(s)(r)
