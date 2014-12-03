@@ -27,11 +27,10 @@ import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 
 class NetCdfTest extends FlatSpec with Matchers with BeforeAndAfter {
 
-/*
   after {
     new File("test.nc").delete
   }
- */
+
   class P extends DiscreteProcess[Double] {
     annotate ("rdfs:label", "NetCDF Test Process")
     val x1 = Double("ex:x1")
