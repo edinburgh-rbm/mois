@@ -65,9 +65,6 @@ abstract class ODE extends Process
   /** Object `dt` is used for writing ODEs with syntax: d(v1)/dt = ... */
   object dt
 
-  /** `Var` used to construct derivatives that depend on time. */
-  var t = 0.0
-
   /** The integrator object which can be any implementation compatible
     * with the Apache Commons Math ODE library. Free to override in
     * subclasses. By default we use the Dormand Prince 8,5,3 integrator
@@ -81,15 +78,13 @@ abstract class ODE extends Process
   private val maxStep = 100
   private val absoluteTolerance = 1e-10
   private val relativeTolerance = 1e-10
+  private val simTime = Double("sim:t")
 
   /** Main function implementing the `Process` interface. */
   override def step(time: Double, tau: Double) {
     // construct array of doubles corresponding to the the values of
     // vars which is what the ODE solver will actually use
     val doubleY = vars.map(_.value).toArray
-
-    // set time
-    t = time
 
     // construct the integrator
     val i = integrator()
@@ -107,8 +102,8 @@ abstract class ODE extends Process
     * Indexes into the arrays are as defined by `vars`.
     */
   def computeDerivatives(time: Double, ys: Array[Double], ydots: Array[Double]) {
-    t = time
     //print(s"computing Derivatives ${ys.toList} -> ")
+    simTime := time
     assume(ys.size > 0, "we should have some ys to integrate")
     for (i <- 0 until ydots.size) {
       assume(funs isDefinedAt i, "no derivative defined for " + vars(i))

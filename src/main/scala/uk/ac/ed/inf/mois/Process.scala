@@ -37,6 +37,9 @@ import scala.collection.mutable
 abstract class Process extends ArrayBackedStateBuilder with Annotation {
   lazy val state = buildState
 
+  private val simTime = Double("sim:t")
+  simTime annotate ("rdfs:label", "time")
+
   /** the list of handlers that run after each step */
   val _stepHandlers = mutable.ArrayBuffer.empty[StepHandler]
   lazy val stepHandlers = _stepHandlers.toArray
@@ -86,7 +89,9 @@ abstract class Process extends ArrayBackedStateBuilder with Annotation {
     * @param tau the size of the step (delta-t)
     */
   def apply(t: Double, tau: Double) = {
+    simTime := t
     step(t, tau)
+    simTime := t+tau
     for (sh <- stepHandlers)
       sh.handleStep(t+tau, this)
   }

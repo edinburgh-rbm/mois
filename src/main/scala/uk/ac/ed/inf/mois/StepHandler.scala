@@ -72,7 +72,7 @@ class TsvWriter(fp: java.io.Writer, sep: String = "\t")
     val metas = (for (rig <- rigs) yield ordering(rig)
       .map(i => proc.state.getMeta(rig)(i)).toArray)
       .foldLeft(mutable.ArrayBuffer.empty[VarMeta])((z, a) => z ++ a)
-    fp.write("t" + sep + metas.map(x => x.identifier).mkString(sep) + "\n")
+    fp.write(metas.map(x => x.identifier).mkString(sep) + "\n")
     handleStep(t, proc)
   }
   def handleStep(t: Double, proc: Process) {
@@ -81,7 +81,7 @@ class TsvWriter(fp: java.io.Writer, sep: String = "\t")
     val vars = (for (rig <- rigs) yield ordering(rig)
       .map(i => proc.state.get(rig)(i)).toArray)
       .foldLeft(mutable.ArrayBuffer.empty[Any])((z, a) => z ++ a)
-    fp.write(t.toString + sep + vars.mkString(sep) + "\n")
+    fp.write(vars.mkString(sep) + "\n")
   }
   override def reset(t: Double, proc: Process) {
     fp.write("\n")

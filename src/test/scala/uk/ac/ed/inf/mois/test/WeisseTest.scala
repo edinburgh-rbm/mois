@@ -111,6 +111,7 @@ class WeisseSchedulerTest extends FlatSpec with Matchers {
     println(stateStr(direct.process.state))
     println(stateStr(group.process.state))
  */
+
     val s1: Array[Double] = direct.process.state.get[Double]
     val s2: Array[Double] = group.process.state.get[Double]
     (maxerr(s1, s2) < 0.07) should  be (true)

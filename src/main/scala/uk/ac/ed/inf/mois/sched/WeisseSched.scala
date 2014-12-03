@@ -53,6 +53,7 @@ class WeisseScheduler(
         i += 1
       }
     }
+
     calculateNewTimestep(x0, dx, t, dt, group)
   }
 }
@@ -71,6 +72,14 @@ trait WeisseAdaptiveTimestep extends AdaptiveTimestep {
     x0: Array[Double], dx: Array[Double],
     t: Double, dt: Double, group: ProcessGroup
   ) = {
+    // XXX This is a workaround for the new autonomous form
+    // of time, where it is a first-class variable. we set the
+    // change in time directly here, to zero, so that it does
+    // not perturb the adaptive timestep calculation
+    val timeIdx = 
+      group.state.getMeta[Double] indexOf VarMeta("sim:t", Rig[Double])
+    dx(timeIdx) = 0
+
     // use absolute error for variables near 0 and relative for others
     def estimateError(i: Int): Double = {
       val x0_i = abs(x0(i))
@@ -87,6 +96,8 @@ trait WeisseAdaptiveTimestep extends AdaptiveTimestep {
     // return
     if (err < tolerance) {
       // all good, update group variables
+      // make sure to put the right time
+      dx(timeIdx) = dt
       group.state := x0 + dx
       (t+dt, new_dt)
     } else {

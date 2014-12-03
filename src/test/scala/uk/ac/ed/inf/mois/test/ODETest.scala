@@ -26,6 +26,7 @@ import uk.ac.ed.inf.mois.implicits._
 
 /** Directly calculated ODE system from Dominik's stuff. */
 object sampleODE extends ODE with Math {
+  val t  = Double("sim:t")
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   val x3 = Double("ex:x3")
@@ -40,6 +41,7 @@ object sampleODE extends ODE with Math {
 
 /** Directly calculated ODE system from Dominik's stuff. */
 object sampleODE2 extends ODE with Math {
+  val t  = Double("sim:t")
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   val x3 = Double("ex:x3")

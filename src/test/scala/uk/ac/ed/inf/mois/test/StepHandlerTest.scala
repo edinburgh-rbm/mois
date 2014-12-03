@@ -72,7 +72,7 @@ class TsvWriterTest extends FlatSpec with Matchers {
     p(2, 1)
 
     val expected =
-"""t	ex:x1	ex:x2
+"""sim:t	ex:x1	ex:x2
 0.0	0	0
 1.0	1	2
 2.0	2	4

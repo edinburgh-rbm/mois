@@ -35,13 +35,15 @@ import ucar.ma2
 class NetCdfWriter(filename: String) extends StepHandler {
   private var cdf: nc2.NetcdfFileWriter = null
   private var origin: Array[Int] = null
-  private var time: nc2.Variable = null
   private var _writers = mutable.ArrayBuffer.empty[VarCdfWriter]
-  private val writers = _writers.toArray
+  private lazy val writers = _writers.toArray
 
   def init(t: Double, proc: Process) {
     cdf = create(proc)
     origin = Array.fill[Int](proc.dimensions.size + 1)(0)
+    // do not call handleStep here so as not to perturb the
+    // origin
+    //writers.foldLeft(0)((off, w) => w(origin, off))
     handleStep(t, proc)
   }
 
@@ -59,9 +61,15 @@ class NetCdfWriter(filename: String) extends StepHandler {
     val now = java.util.Calendar.getInstance().getTime().toString
     fp.addGroupAttribute(null, new nc2.Attribute("created", now))
 
-    // add the time dimension, of course
-    val timeDim = fp.addUnlimitedDimension("time")
-    time = fp.addVariable(null, "time", ma2.DataType.DOUBLE, "time")
+    val state = proc.state
+
+    // add the time dimension first, of course, done specially
+    fp.addUnlimitedDimension("sim:t")
+    val timeCdfVar = fp.addVariable(null, "sim:t", ma2.DataType.DOUBLE, "sim:t")
+    val timeMoisVar = state.getVar[Double](VarMeta("sim:t", Rig[Double]))
+    val timeOps = new DoubleToCdf(timeMoisVar)
+    timeOps.addCdfAnnotations(timeCdfVar)
+    _writers += timeOps.dimWriter(fp, timeCdfVar, new ma2.ArrayDouble(Array(1)))
 
     // calculate the size, and make the buffers that we'll need
     val shapeBuf = proc.dimensions.keys.toSeq.sorted
@@ -75,8 +83,6 @@ class NetCdfWriter(filename: String) extends StepHandler {
     val floatData = new ma2.ArrayFloat(shape)
     val doubleData = new ma2.ArrayDouble(shape)
     val booleanData = new ma2.ArrayBoolean(shape)
-
-    val state = proc.state
 
     // add the dimensions
     def addDim(op: NetCdfOps, data: ma2.Array, length: Int) = {
@@ -106,8 +112,9 @@ class NetCdfWriter(filename: String) extends StepHandler {
     }
 
     // add the regular variables
-    val dims = "time " + proc.dimensions.keys.toSeq.sorted.mkString(" ")
-    def notDim(meta: VarMeta) = !(proc.dimensions contains meta)
+    val dims = "sim:t " + proc.dimensions.keys.toSeq.sorted.mkString(" ")
+    def notDim(meta: VarMeta) = 
+      !(proc.dimensions contains meta) && meta.identifier != "sim:t"
     def notDims[T](implicit rig: Rig[T]) = proc.state.getMeta[T].filter(notDim _)
 
     def addVar(op: NetCdfOps, data: ma2.Array) = {
@@ -119,19 +126,22 @@ class NetCdfWriter(filename: String) extends StepHandler {
       .map(m => addVar(proc.state.getVar[Byte](m), byteData))
       .foldLeft(_writers)((z, w) => z += w)
     notDims[Short]
-      .map(m => addVar(proc.state.getVar[Short](m), byteData))
+      .map(m => addVar(proc.state.getVar[Short](m), shortData))
       .foldLeft(_writers)((z, w) => z += w)
     notDims[Int]
-      .map(m => addVar(proc.state.getVar[Int](m), byteData))
+      .map(m => addVar(proc.state.getVar[Int](m), intData))
       .foldLeft(_writers)((z, w) => z += w)
     notDims[Long]
-      .map(m => addVar(proc.state.getVar[Long](m), byteData))
+      .map(m => addVar(proc.state.getVar[Long](m), longData))
       .foldLeft(_writers)((z, w) => z += w)
     notDims[Float]
-      .map(m => addVar(proc.state.getVar[Float](m), byteData))
+      .map(m => addVar(proc.state.getVar[Float](m), floatData))
+      .foldLeft(_writers)((z, w) => z += w)
+    notDims[Double]
+      .map(m => addVar(proc.state.getVar[Double](m), doubleData))
       .foldLeft(_writers)((z, w) => z += w)
     notDims[Boolean]
-      .map(m => addVar(proc.state.getVar[Boolean](m), byteData))
+      .map(m => addVar(proc.state.getVar[Boolean](m), booleanData))
       .foldLeft(_writers)((z, w) => z += w)
 
     // create the file
@@ -144,13 +154,7 @@ class NetCdfWriter(filename: String) extends StepHandler {
    * in batches.
    */
   def handleStep(t: Double, proc: Process) {
-    val ddd = new ma2.ArrayDouble(Array(1))
-    // first do time
-    ddd.setDouble(0, t)
-    cdf.write(time, origin, ddd)
-
-    writers.foldLeft(1)((off, w) => w(origin, off))
-
+    writers.foldLeft(0)((off, w) => w(origin, off))
     origin(0) += 1
   }
 
@@ -192,6 +196,7 @@ abstract class NetCdfOps(i: Var[_]) {
   }
 
   def addCdfAnnotations(cv: nc2.Variable): Unit = {
+    // println(s"annotating ${cv} ${i.meta.annotations.toList}")
     import scala.collection.JavaConverters._
     for ((k, v) <- i.meta.annotations) {
       v match {
@@ -213,7 +218,9 @@ abstract class NetCdfOps(i: Var[_]) {
     val buf = cdfArray(Array(1))
     new VarCdfWriter {
       def apply(origin: Array[Int], offset: Int) = {
-        setData(data, new ma2.Index1D(Array(0)))
+        if (offset > 0) // do not overwrite time at index 0
+          origin(offset) = i.meta.flags.slices
+        setData(buf, buf.getIndex)
         fp.write(cv, Array(origin(offset)), buf)
         offset + 1
       }
