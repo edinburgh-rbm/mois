@@ -33,8 +33,8 @@ class CsvTimeSeries(
   implicit object Format extends DefaultCSVFormat {
     override val delimiter = sep
   }
-  private var reader = CSVReader.open(new File(filename))
-  private val header = {
+  private var reader: CSVReader = null
+  private lazy val header = {
     val row = reader.readNext.get
     row map(i => (i, row indexOf i)) toMap
   }
@@ -43,6 +43,7 @@ class CsvTimeSeries(
 
   override def init(t: Double) {
     super.init(t)
+    initReader
     setters = state.getTypes.foldLeft(List.empty[Setter]) { (ss, t) =>
       ss ++ state.getMeta(t).map { m =>
         val v = state.getVar(m)(t)
@@ -53,6 +54,29 @@ class CsvTimeSeries(
         set _
       }
     }
+  }
+
+  override def reset(t: Double) {
+    super.reset(t)
+    initReader
+  }
+
+  private def initReader {
+    val eatHeader = if (reader != null) {
+      reader.close
+      true
+    } else {
+      false
+    }
+    reader = CSVReader.open(new File(filename))
+
+    prevRow = None
+    prevTime = scala.Double.NegativeInfinity
+    nextRow = None
+    nextTime = scala.Double.NegativeInfinity
+
+    if (eatHeader)
+      reader.readNext
   }
 
   private var prevRow: Option[List[String]] = None

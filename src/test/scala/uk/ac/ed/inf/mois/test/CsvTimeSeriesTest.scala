@@ -68,6 +68,10 @@ class CsvTimeSeriesTest extends FlatSpec with Matchers with BeforeAndAfter {
     check(4.5, 3, 6)
     p(4.5, 1)
     check(5.5, 3, 6)
+
+    p.reset(0)
+    p(2, 1)
+    check(3, 2, 4)
   }
 }
 
