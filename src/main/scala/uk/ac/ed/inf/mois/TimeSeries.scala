@@ -74,14 +74,13 @@ class CsvTimeSeries(
       prevTime = nextTime
     }
 
-    val row = reader.readNext
-    if (row.isDefined) {
-      nextRow = row
-      nextTime = row.get(header("sim:t")).toDouble
+    nextRow = reader.readNext
+    if (nextRow.isDefined) {
+      nextTime = nextRow.get(header("sim:t")).toDouble
     } else {
       nextTime = scala.Double.NaN
     }
-    row.isDefined
+    nextRow.isDefined
   }
 
 }
