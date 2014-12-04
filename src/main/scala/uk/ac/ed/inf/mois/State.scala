@@ -177,6 +177,7 @@ trait StateBuilder {
       // type
       require(bags(rig).metas contains meta, "requested index for wrong type")
     }
+
     createVar[T](meta)
   }
 

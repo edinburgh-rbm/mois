@@ -53,6 +53,8 @@ libraryDependencies += "org.spire-math" %% "spire" % "0.8.2"
 
 libraryDependencies += "edu.ucar" % "netcdf" % "4.3.22"
 
+libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.1.2"
+
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
   if (version.value.trim.endsWith("SNAPSHOT"))

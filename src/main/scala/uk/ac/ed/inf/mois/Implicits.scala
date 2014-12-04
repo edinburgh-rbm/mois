@@ -32,6 +32,10 @@ trait Syntax {
   implicit def dimensionSyntax(p: Process) = new DimensionSyntax(p)
 }
 
+abstract class FromString[T] {
+  def fromString(s: String): T
+}
+
 /** automatic type conversions */
 trait Conversions {
   implicit def varValue[T](v: Var[T]) = v.value
