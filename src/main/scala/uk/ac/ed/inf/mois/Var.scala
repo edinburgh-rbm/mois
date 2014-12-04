@@ -72,6 +72,9 @@ trait Var[T] extends Constraints[T] with Bounds[T] {
   /** Add an [[Annotation]] onto the [[VarMeta]] */
   val annotate = meta.annotate _
 
+  /** rig is a proxy for the type of this variable */
+  val rig = meta.rig.asInstanceOf[Rig[T]]
+
   def value: T
   def update(value: T): Unit
   @inline final def := (value: T) = { update(doClamp(value)); this }
@@ -83,6 +86,12 @@ trait Var[T] extends Constraints[T] with Bounds[T] {
     }
   }
   override def hashCode = meta.identifier.hashCode
+
+  private val _fromString = coerceString(rig)
+  /** brittle conversion from string. only converts, does not set */ 
+  def fromString(s: String): T = _fromString(s)
+  /** brittle update from string, uses [[fromString]] */
+  def updateFromString(s: String) { update(_fromString(s)) }
 
   def isParam = meta.flags.param
   def isDimension = meta.flags.dimension

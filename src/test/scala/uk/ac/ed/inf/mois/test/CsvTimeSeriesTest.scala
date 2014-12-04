@@ -48,19 +48,34 @@ class CsvTimeSeriesTest extends FlatSpec with Matchers with BeforeAndAfter {
   }
 
   class P extends CsvTimeSeries("test.tsv") {
+    val t = Double("sim:t")
     val x1 = Int("ex:x1")
     val x2 = Double("ex:x2")
   }
 
-  "csv timeseries" should "blah" in {
+  "csv timeseries" should "read in and update at the right time" in {
     val p = new P
     p.init(0)
-    println(p.header)
-    println(p.setters.toList)
-    println(s"x1 ${p.x1} x2 ${p.x2}")
+
+    def check(t: Double, x1: Int, x2: Double) {
+      p.t.value should equal (t)
+      p.x1.value should equal (x1)
+      p.x2.value should equal (x2)
+    }
+
+    check(0, 0, 0)
     p(0, 1)
-    println(s"x1 ${p.x1} x2 ${p.x2}")
-    (0) should equal (0)
+    check(1, 0, 0)
+    p(1, 1)
+    check(2, 1, 2)
+    p(2, 0.5)
+    check(2.5, 2, 4)
+    p(2.5, 1)
+    check(3.5, 2, 4)
+    p(3.5, 1)
+    check(4.5, 3, 6)
+    p(4.5, 1)
+    check(5.5, 3, 6)
   }
 }
 

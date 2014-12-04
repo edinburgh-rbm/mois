@@ -24,6 +24,10 @@ import spire.algebra.Rig
 import spire.implicits._
 
 abstract class TimeSeries extends Process {
+  // these things seem to have disappeared from scala.math?
+  val MIN_DOUBLE = java.lang.Double.MIN_VALUE
+  val MAX_DOUBLE = java.lang.Double.MAX_VALUE
+  val NaN_DOUBLE = "NaN".toDouble // Better way?
 }
 
 class CsvTimeSeries(
@@ -33,43 +37,60 @@ class CsvTimeSeries(
   implicit object Format extends DefaultCSVFormat {
     override val delimiter = sep
   }
-  var reader = CSVReader.open(new File(filename))
-  val header = {
+  private var reader = CSVReader.open(new File(filename))
+  private val header = {
     val row = reader.readNext.get
     row map(i => (i, row indexOf i)) toMap
   }
-  type Setter = List[String] => Unit
-  var setters: List[Setter] = null
+  private type Setter = List[String] => Unit
+  private var setters: List[Setter] = null
 
   override def init(t: Double) {
     super.init(t)
     setters = state.getTypes.foldLeft(List.empty[Setter]) { (ss, t) =>
-      println(s"hello ${t}")
       ss ++ state.getMeta(t).map { m =>
-        println(s"vvv ${m}")
         val v = state.getVar(m)(t)
         val idx = header(m.identifier)
-        val fs = fromString(m.rig)
         def set(row: List[String]) {
-          println(s"setting ${v} -> ${row(idx)}")
-          fs(row(idx))
+          v.updateFromString(row(idx))
         }
         set _
       }
     }
-    val row = reader.readNext.get
-    setters.map(s => s(row))
   }
+
+  private var prevRow: Option[List[String]] = None
+  private var prevTime: Double = MIN_DOUBLE
+  private var nextRow: Option[List[String]] = None
+  private var nextTime: Double = MIN_DOUBLE
 
   override def step(t: Double, tau: Double) {
-    val row = reader.readNext.get
-    println(s"XXX ${row}")
-    setters.map(s => s(row))
+    while (t >= nextTime && getRow) {}
+    if (t >= prevTime && prevRow.isDefined) {
+      val row = prevRow.get
+      setters.map(s => s(row))
+    }
   }
+
+  private def getRow = {
+    if (nextRow.isDefined) {
+      prevRow = nextRow
+      prevTime = nextTime
+    }
+
+    val row = reader.readNext
+    if (row.isDefined) {
+      nextRow = row
+      nextTime = row.get(header("sim:t")).toDouble
+    } else {
+      nextTime = NaN_DOUBLE
+    }
+    row.isDefined
+  }
+
 }
 
-
-private[mois] object fromString {
+private[mois] object coerceString {
   def apply[T](rig: Rig[T]): String => T = {
     import scala.Predef.augmentString
     if (rig == Rig[Int]) {
@@ -85,18 +106,16 @@ private[mois] object fromString {
     } else if (rig == Rig[Double]) {
       (toDouble _).asInstanceOf[String => T]
     } else {
-      // FIXME: warning or something here
       def zero(s: String) = {
-        println("ADSADADASASADADSD")
+        // FIXME: proper warning or assert something here
+        println(s"Warning: unknown string conversion in ${rig} for ${s}")
         rig.zero
       }
         (zero _).asInstanceOf[String => T]
     }
   }
-  def toInt(s: String) = {
-    println("intiyyy")
-    augmentString(s).toInt
-  }
+
+  def toInt(s: String) = augmentString(s).toInt
   def toByte(s: String) = augmentString(s).toByte
   def toLong(s: String) = augmentString(s).toLong
   def toShort(s: String) = augmentString(s).toShort
