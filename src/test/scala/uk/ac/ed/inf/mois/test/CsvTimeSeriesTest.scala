@@ -18,20 +18,12 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.{CsvTimeSeries}
-import spire.implicits._
-import uk.ac.ed.inf.mois.implicits._
-
 import java.io.{File, FileWriter}
-import com.github.tototoshi.csv.{DefaultCSVFormat}
-
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 
 class CsvTimeSeriesTest extends FlatSpec with Matchers with BeforeAndAfter {
 
   before {
-    implicit object TSV extends DefaultCSVFormat {
-      override val delimiter = '\t'
-    }
     val fp = new FileWriter(new File("test.tsv"))
     fp.write(
 """sim:t	ex:x1	ex:x2
