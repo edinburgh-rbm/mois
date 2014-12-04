@@ -24,10 +24,6 @@ import spire.algebra.Rig
 import spire.implicits._
 
 abstract class TimeSeries extends Process {
-  // these things seem to have disappeared from scala.math?
-  val MIN_DOUBLE = java.lang.Double.MIN_VALUE
-  val MAX_DOUBLE = java.lang.Double.MAX_VALUE
-  val NaN_DOUBLE = "NaN".toDouble // Better way?
 }
 
 class CsvTimeSeries(
@@ -60,9 +56,9 @@ class CsvTimeSeries(
   }
 
   private var prevRow: Option[List[String]] = None
-  private var prevTime: Double = MIN_DOUBLE
+  private var prevTime: Double = scala.Double.NegativeInfinity
   private var nextRow: Option[List[String]] = None
-  private var nextTime: Double = MIN_DOUBLE
+  private var nextTime: Double = scala.Double.NegativeInfinity
 
   override def step(t: Double, tau: Double) {
     while (t >= nextTime && getRow) {}
@@ -83,42 +79,9 @@ class CsvTimeSeries(
       nextRow = row
       nextTime = row.get(header("sim:t")).toDouble
     } else {
-      nextTime = NaN_DOUBLE
+      nextTime = scala.Double.NaN
     }
     row.isDefined
   }
 
-}
-
-private[mois] object coerceString {
-  def apply[T](rig: Rig[T]): String => T = {
-    import scala.Predef.augmentString
-    if (rig == Rig[Int]) {
-      (toInt _).asInstanceOf[String => T]
-    } else if (rig == Rig[Byte]) {
-      (toByte _).asInstanceOf[String => T]
-    } else if (rig == Rig[Long]) {
-      (toLong _).asInstanceOf[String => T]
-    } else if (rig == Rig[Short]) {
-      (toShort _).asInstanceOf[String => T]
-    } else if (rig == Rig[Float]) {
-      (toFloat _).asInstanceOf[String => T]
-    } else if (rig == Rig[Double]) {
-      (toDouble _).asInstanceOf[String => T]
-    } else {
-      def zero(s: String) = {
-        // FIXME: proper warning or assert something here
-        println(s"Warning: unknown string conversion in ${rig} for ${s}")
-        rig.zero
-      }
-        (zero _).asInstanceOf[String => T]
-    }
-  }
-
-  def toInt(s: String) = augmentString(s).toInt
-  def toByte(s: String) = augmentString(s).toByte
-  def toLong(s: String) = augmentString(s).toLong
-  def toShort(s: String) = augmentString(s).toShort
-  def toFloat(s: String) = augmentString(s).toFloat
-  def toDouble(s: String) = augmentString(s).toDouble
 }
