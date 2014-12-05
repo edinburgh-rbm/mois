@@ -17,29 +17,43 @@
  */
 package uk.ac.ed.inf.mois.test
 
-import uk.ac.ed.inf.mois.{CsvTimeSeries}
+import scala.math.floor
+import uk.ac.ed.inf.mois.{CsvTimeSeries, VarCalc}
 import java.io.{File, FileWriter}
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
+import spire.implicits._
+import uk.ac.ed.inf.mois.implicits._
 
 class CsvTimeSeriesTest extends FlatSpec with Matchers with BeforeAndAfter {
 
   before {
-    val fp = new FileWriter(new File("test.tsv"))
-    fp.write(
+    val fp1 = new FileWriter(new File("csvts_test1.tsv"))
+    fp1.write(
 """sim:t	ex:x1	ex:x2
 0.0	0	0
 1.0	1	2
 2.0	2	4
 3.0	3	6
 """)
-    fp.close
+    fp1.close
+
+    val fp2 = new FileWriter(new File("csvts_test2.tsv"))
+    fp2.write(
+"""sim:h	ex:x1	ex:x2
+0.0	0	0
+1.0	1	2
+2.0	2	4
+3.0	3	6
+""")
+    fp2.close
   }
 
   after {
-    new File("test.tsv").delete
+    new File("csvts_test1.tsv").delete
+    new File("csvts_test2.tsv").delete
   }
 
-  class P extends CsvTimeSeries("test.tsv") {
+  class P extends CsvTimeSeries[Double]("csvts_test1.tsv") {
     val t = Double("sim:t")
     val x1 = Int("ex:x1")
     val x2 = Double("ex:x2")
@@ -73,6 +87,35 @@ class CsvTimeSeriesTest extends FlatSpec with Matchers with BeforeAndAfter {
     p(2, 1)
     check(3, 2, 4)
   }
+
+
+  class H extends CsvTimeSeries[Double](
+    "csvts_test2.tsv", 
+    time="sim:h"
+  ) with VarCalc {
+    val t = Double("sim:t")
+    val h = Double("sim:h")
+    val x2 = Double("ex:x2")
+    calc(h) := floor(t) % 2
+  }
+
+  it should "work with an alternative time variable" in {
+    val p = new H
+    p.init(0)
+
+    def check(h: Double, x2: Double) {
+      p.h.value should equal (h)
+      p.x2.value should equal (x2)
+    }
+
+    check(0, 0)
+    p(0, 1)
+    check(1, 0)
+    p(1, 1)
+    check(0, 2)
+    p(2, 1)
+    check(1, 0)
+    p(3, 1)
+    check(0, 2)
+  }
 }
-
-

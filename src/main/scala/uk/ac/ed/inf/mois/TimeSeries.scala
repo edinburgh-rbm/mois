@@ -18,18 +18,25 @@
 package uk.ac.ed.inf.mois
 
 import scala.language.postfixOps
+import scala.reflect.ClassTag
 import com.github.tototoshi.csv.{CSVReader, DefaultCSVFormat}
 import java.io.File
-import spire.algebra.Rig
+import spire.algebra.{Rig, Order}
+import spire.math.Number
 import spire.implicits._
 
-abstract class TimeSeries extends Process {
+abstract class TimeSeries[T : ClassTag : Order](
+  time: String = "sim:t"
+)(implicit rig: Rig[T]) extends Process {
+  // make sure we have a handle for ``time''
+  protected[mois] val __t = addVar[T](time)
 }
 
-class CsvTimeSeries(
+class CsvTimeSeries[T : ClassTag : Order](
   filename: String,
-  sep: Char = '\t'
-) extends TimeSeries {
+  sep: Char = '\t',
+  time: String = "sim:t"
+)(implicit rig: Rig[T]) extends TimeSeries[T](time) {
   implicit object Format extends DefaultCSVFormat {
     override val delimiter = sep
   }
@@ -41,18 +48,26 @@ class CsvTimeSeries(
   private type Setter = List[String] => Unit
   private var setters: List[Setter] = null
 
+  private val (tMin, tMax, tNaN) = typeExtrema[T](rig)
+  private var prevRow: Option[List[String]] = None
+  private var prevTime = tMin
+  private var nextRow: Option[List[String]] = None
+  private var nextTime = tMin
+
   override def init(t: Double) {
     super.init(t)
     initReader
     setters = state.getTypes.foldLeft(List.empty[Setter]) { (ss, t) =>
-      ss ++ state.getMeta(t).map { m =>
-        val v = state.getVar(m)(t)
-        val idx = header(m.identifier)
-        def set(row: List[String]) {
-          v.updateFromString(row(idx))
+      ss ++ state.getMeta(t)
+        .filter { m => header.contains(m.identifier) }
+        .map { m =>
+          val v = state.getVar(m)(t)
+          val idx = header(m.identifier)
+          def set(row: List[String]) {
+            v.updateFromString(row(idx))
+          }
+          set _
         }
-        set _
-      }
     }
   }
 
@@ -71,22 +86,18 @@ class CsvTimeSeries(
     reader = CSVReader.open(new File(filename))
 
     prevRow = None
-    prevTime = scala.Double.NegativeInfinity
+    prevTime = tMin
     nextRow = None
-    nextTime = scala.Double.NegativeInfinity
+    nextTime = tMin
 
     if (eatHeader)
       reader.readNext
   }
 
-  private var prevRow: Option[List[String]] = None
-  private var prevTime: Double = scala.Double.NegativeInfinity
-  private var nextRow: Option[List[String]] = None
-  private var nextTime: Double = scala.Double.NegativeInfinity
-
   override def step(t: Double, tau: Double) {
-    while (t >= nextTime && getRow) {}
-    if (t >= prevTime && prevRow.isDefined) {
+    if (prevTime > __t.value) reset(0)
+    while (nextTime <= __t.value && getRow) {}
+    if (prevTime <= __t.value && prevRow.isDefined) {
       val row = prevRow.get
       setters.map(s => s(row))
     }
@@ -100,11 +111,10 @@ class CsvTimeSeries(
 
     nextRow = reader.readNext
     if (nextRow.isDefined) {
-      nextTime = nextRow.get(header("sim:t")).toDouble
+      nextTime = __t.fromString(nextRow.get(header(time)))
     } else {
-      nextTime = scala.Double.NaN
+      nextTime = tNaN
     }
     nextRow.isDefined
   }
-
 }

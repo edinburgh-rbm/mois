@@ -52,3 +52,29 @@ private[mois] object coerceString {
   def toFloat(s: String) = augmentString(s).toFloat
   def toDouble(s: String) = augmentString(s).toDouble
 }
+
+private[mois] object typeExtrema {
+  def apply[T](rig: Rig[T]): (T, T, T) = {
+    if (rig == Rig[Int]) {
+      (scala.Int.MinValue, scala.Int.MaxValue, scala.Int.MinValue)
+        .asInstanceOf[(T, T, T)]
+    } else if (rig == Rig[Byte]) {
+      (scala.Byte.MinValue, scala.Byte.MaxValue, scala.Byte.MinValue)
+        .asInstanceOf[(T, T, T)]
+    } else if (rig == Rig[Long]) {
+      (scala.Long.MinValue, scala.Long.MaxValue, scala.Long.MinValue)
+        .asInstanceOf[(T, T, T)]
+    } else if (rig == Rig[Short]) {
+      (scala.Short.MinValue, scala.Short.MaxValue, scala.Short.MinValue)
+        .asInstanceOf[(T, T, T)]
+    } else if (rig == Rig[Float]) {
+      (scala.Float.MinValue, scala.Float.MaxValue, scala.Float.NaN)
+        .asInstanceOf[(T, T, T)]
+    } else if (rig == Rig[Double]) {
+      (scala.Double.MinValue, scala.Double.MaxValue, scala.Double.NaN)
+        .asInstanceOf[(T, T, T)]
+    } else {
+      (rig.zero, rig.zero, rig.zero)
+    }
+  }
+}
