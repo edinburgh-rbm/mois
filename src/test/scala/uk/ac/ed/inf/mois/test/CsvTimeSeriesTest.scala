@@ -39,7 +39,7 @@ class CsvTimeSeriesTest extends FlatSpec with Matchers with BeforeAndAfter {
 
     val fp2 = new FileWriter(new File("csvts_test2.tsv"))
     fp2.write(
-"""sim:h	ex:x1	ex:x2
+"""ex:h	ex:x1	ex:x2
 0.0	0	0
 1.0	1	2
 2.0	2	4
@@ -88,13 +88,12 @@ class CsvTimeSeriesTest extends FlatSpec with Matchers with BeforeAndAfter {
     check(3, 2, 4)
   }
 
-
   class H extends CsvTimeSeries[Double](
     "csvts_test2.tsv", 
-    time="sim:h"
+    time="ex:h"
   ) with VarCalc {
     val t = Double("sim:t")
-    val h = Double("sim:h")
+    val h = Double("ex:h")
     val x2 = Double("ex:x2")
     calc(h) := floor(t) % 2
   }
