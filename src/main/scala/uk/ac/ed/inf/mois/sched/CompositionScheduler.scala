@@ -22,6 +22,7 @@ import uk.ac.ed.inf.mois.{Process, ProcessGroup, Projection, Scheduler}
 
 class CompositionScheduler(step: Double) extends Scheduler {
   protected var projections = mutable.Map.empty[Process, Projection]
+  val fuckyou = projections
   override def init(group: ProcessGroup) {
     for (child <- group.processes) {
       projections(child) = Projection(group.state, child.state)

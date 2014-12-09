@@ -65,8 +65,12 @@ case class ArrayBackedState(
       val theirs: Array[T] = other.get[T]
       val mymeta = meta(rig)
       val theirmeta = other.getMeta(rig)
-      for (i <- 0 until theirmeta.size)
-        theirs(i) = mine(mymeta indexOf theirmeta(i))
+      for (i <- 0 until theirmeta.size) {
+        val idx = mymeta indexOf theirmeta(i)
+        if (idx >= 0) {
+          theirs(i) = mine(idx)
+        }
+      }
     }
   }
 
@@ -78,8 +82,12 @@ case class ArrayBackedState(
       val theirs: Array[T] = other.get[T]
       val mymeta = meta(rig)
       val theirmeta = other.getMeta(rig)
-      for (i <- 0 until theirmeta.size)
-        mine(mymeta indexOf theirmeta(i)) = theirs(i)
+      for (i <- 0 until theirmeta.size) {
+        val idx = mymeta indexOf theirmeta(i)
+        if (idx >= 0) {
+          mine(idx) = theirs(i)
+        }
+      }
     }
   }
 }

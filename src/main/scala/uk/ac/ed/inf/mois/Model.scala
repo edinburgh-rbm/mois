@@ -23,11 +23,16 @@ import scala.util.matching.Regex
 abstract class Model extends ArrayBackedStateBuilder {
 
   val process: Process
+  
 
   def init(t: Double) {
     merge(process)
-    initState(buildState)
+    val state = buildState
+    initState(state)
     process.init(t)
+    // initialise the state with model overrides and initial
+    // conditions
+    process.state.copyFromAll(state)
   }
 
   def run(t: Double, tau: Double, n: Int) {

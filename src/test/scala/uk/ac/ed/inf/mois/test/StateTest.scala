@@ -23,6 +23,8 @@ import spire.algebra.Rig
 import spire.implicits._
 import uk.ac.ed.inf.mois.implicits._
 import uk.ac.ed.inf.mois.{ArrayBackedState, ArrayBackedStateBuilder, State, StateBuilder, VarMeta}
+import uk.ac.ed.inf.mois.{Model, Process, ProcessGroup}
+import uk.ac.ed.inf.mois.sched.{CompositionScheduler}
 
 class StateTest extends FlatSpec with Matchers {
 
@@ -140,5 +142,27 @@ class StateTest extends FlatSpec with Matchers {
 
     s2.x.value should equal (1)
     s3.x.value should equal (1)
+  }
+
+  class DefaultPropagator extends Model {
+    val x = Double("x") default(10)
+    val process = new ProcessGroup {
+      scheduler = new CompositionScheduler(0.1)
+    }
+
+  }
+
+  class DefaultProcess extends Process {
+    val x = Double("x")
+  }
+
+  it should "propagate from the model down to a member of a process group" in {
+    val m = new DefaultPropagator
+    val p = new DefaultProcess
+    m.process += p
+    m.init(0)
+    m.process(0,1)
+    m.x.value should equal (10.0)
+    p.x.value should equal (10.0)
   }
 }
