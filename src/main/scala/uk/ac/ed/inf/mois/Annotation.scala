@@ -38,4 +38,11 @@ trait Annotation {
     prefixes += ns -> uri
     this
   }
+
+  def expandCurie(s: String) = {
+    val sp = s.split(":", 2)
+    if (sp.length == 1) s
+    else if (prefixes contains sp(0)) prefixes(sp(0)) + sp(1)
+    else s
+  }
 }

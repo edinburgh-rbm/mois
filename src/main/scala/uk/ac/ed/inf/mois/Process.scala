@@ -18,6 +18,8 @@
 package uk.ac.ed.inf.mois
 
 import scala.collection.mutable
+import scala.reflect.ClassTag
+import spire.algebra.Rig
 
 /** A `Process` is basically a container of mutable variables
   * ([[State]]) and a function that operates them parametrised
@@ -142,4 +144,13 @@ abstract class Process extends ArrayBackedStateBuilder with Annotation {
 
   def stringPrefix = "Process"
   override def toString = stringPrefix
+
+  // override the addVar to support pulling prefixes out from
+  // the annotation
+  override def addVar[T: ClassTag](
+    ident: String
+  )(implicit rig: Rig[T]): Var[T] = {
+    val expident = expandCurie(ident)
+    super.addVar[T](expident)
+  }
 }
