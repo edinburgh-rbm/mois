@@ -149,7 +149,6 @@ class StateTest extends FlatSpec with Matchers {
     val process = new ProcessGroup {
       scheduler = new CompositionScheduler(0.1)
     }
-
   }
 
   class DefaultProcess extends Process {
@@ -161,6 +160,7 @@ class StateTest extends FlatSpec with Matchers {
     val p = new DefaultProcess
     m.process += p
     m.init(0)
+    m.x.value should equal (10.0)
     m.process(0,1)
     m.x.value should equal (10.0)
     p.x.value should equal (10.0)

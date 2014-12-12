@@ -283,8 +283,6 @@ object MoisMain {
 
     val model = cfg.model.get
     model.init(0)
-    val state = model.buildState
-
     model.rdf(RdfO.model).write(System.out, "TTL")
   }
 

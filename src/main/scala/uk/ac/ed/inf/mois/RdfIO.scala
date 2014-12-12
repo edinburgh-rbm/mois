@@ -102,7 +102,7 @@ object RdfO {
 
       if (a.isInstanceOf[StateBuilder]) {
         val b = a.asInstanceOf[StateBuilder]
-        val state = b.buildState
+        val state = b.getState
         for (r <- state.getTypes)
           for (vm <- state.getMeta(r)) {
             val vuri = m.createResource(maybePrefixed(m, vm.identifier))
