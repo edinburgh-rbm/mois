@@ -69,6 +69,7 @@ class CoupledOscillatorB(w: Double, k: Double) extends ODE {
 }
 
 class CoupledOscillatorGroupModel extends Model {
+  prefix("d", "http://edinburgh-rbm.github.io/mois/tests/")
   val w = -1.0
   val k = 0.5
   val process = new ProcessGroup {

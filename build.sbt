@@ -35,6 +35,9 @@ seq(bintrayResolverSettings:_*)
 resolvers += "ucar-unidata-releases" at
   "https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/"
 
+resolvers += "apache-releases" at
+  "https://repository.apache.org/content/repositories/releases/"
+
 libraryDependencies += "com.googlecode.matrix-toolkits-java" % "mtj" % "1.0.1"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.0" % "test"
@@ -47,13 +50,17 @@ libraryDependencies += "org.json4s" %% "json4s-native" % "3.2.10"
 
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.2.0"
 
-libraryDependencies += "org.jfree" % "jfreechart" % "1.0.14"  exclude("xml-apis", "xml-apis")
+libraryDependencies += "org.jfree" % "jfreechart" % "1.0.19" // exclude("xml-apis", "xml-apis")
 
 libraryDependencies += "org.spire-math" %% "spire" % "0.8.2"
 
 libraryDependencies += "edu.ucar" % "netcdf" % "4.3.22"
 
 libraryDependencies += "com.github.tototoshi" %% "scala-csv" % "1.1.2"
+
+libraryDependencies += "org.apache.jena" % "jena-core" % "2.12.1"
+
+libraryDependencies += "xml-apis" % "xml-apis" % "1.4.01"
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"

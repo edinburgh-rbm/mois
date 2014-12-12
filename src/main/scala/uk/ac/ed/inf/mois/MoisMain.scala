@@ -279,31 +279,13 @@ object MoisMain {
   }
 
   def info(cfg: Config) {
+    import RdfO._
+
     val model = cfg.model.get
     model.init(0)
     val state = model.buildState
-    println("model parameters:")
-    for (r <- state.getTypes)
-      for (v <- state.getMeta(r)) {
-        println(String.format("    %s", v))
-        for ((k, a) <- v.annotations)
-          println(String.format("%24s: %s", k, a.toString))
-    }
 
-    println("process tree:")
-    def prprocess(proc: Process, prefix: String) {
-      for ((k,a) <- model.process.annotations)
-        println(String.format("%s%16s: %s", prefix, k, a.toString))
-/*
-      println(String.format("%s%16s:", prefix, "variables"))
-      for (v <- model.process.state) {
-        println(String.format("%s          %s", prefix, v))
-        for ((k, a) <- v.meta.annotations)
-          println(String.format("%s%32s: %s", prefix, k, a.toString))
-      }
- */
-    }
-    prprocess(model.process, "")
+    model.rdf(RdfO.model).write(System.out, "TTL")
   }
 
   def list(cfg: Config) {

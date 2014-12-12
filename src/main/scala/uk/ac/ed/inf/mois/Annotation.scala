@@ -32,4 +32,10 @@ trait Annotation {
     annotations += k -> v
     this
   }
+
+  val prefixes = mutable.Map.empty[String, String]
+  def prefix(ns: String, uri: String) = {
+    prefixes += ns -> uri
+    this
+  }
 }
