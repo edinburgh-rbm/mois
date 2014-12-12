@@ -150,7 +150,7 @@ abstract class Process extends ArrayBackedStateBuilder with Annotation {
   override def addVar[T: ClassTag](
     ident: String
   )(implicit rig: Rig[T]): Var[T] = {
-    val expident = expandCurie(ident)
+    val expident = expandCurie(ident).intern()
     super.addVar[T](expident)
   }
 }
