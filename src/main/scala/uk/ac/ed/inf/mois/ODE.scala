@@ -38,7 +38,7 @@ class ODEDebugHandler extends sampling.StepHandler {
 }
 
 trait ODESyntax[T] {
-  type Derivative = () => Double
+  type Derivative = () => T
 
   /** Functions defining the derivatives of the variables in `vars`.
     * The two arrays are indexed equally.
