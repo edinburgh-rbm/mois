@@ -21,7 +21,7 @@ import scala.language.implicitConversions
 
 import collection.mutable
 import scala.math.pow
-import uk.ac.ed.inf.mois.{ODE}
+import uk.ac.ed.inf.mois.ode.ODE
 import uk.ac.ed.inf.mois.math.Multiset
 
 /** Base trait for all reaction networks that use concentrations of

@@ -23,7 +23,8 @@ import uk.ac.ed.inf.mois.implicits._
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{Model, ODE, ProcessGroup, State}
+import uk.ac.ed.inf.mois.{Model, ProcessGroup, State}
+import uk.ac.ed.inf.mois.ode.ODE
 import uk.ac.ed.inf.mois.sched.WeisseScheduler
 
 class CoupledOscillator(w: Double, k: Double) extends ODE {

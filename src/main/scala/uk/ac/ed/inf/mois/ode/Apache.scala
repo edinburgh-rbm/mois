@@ -1,5 +1,5 @@
 /*
- *  MOIS: Ordinary Differential Equation Process
+ *  MOIS: Ordinary Differential Equations with Apache Commons Math3
  *  Copyright (C) 2014 University of Edinburgh School of Informatics
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package uk.ac.ed.inf.mois
+package uk.ac.ed.inf.mois.ode
 
 import language.implicitConversions
 
@@ -24,6 +24,8 @@ import org.apache.commons.math3.ode.sampling
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator
 
 import collection.mutable
+
+import uk.ac.ed.inf.mois.{Var, Process}
 
 class ODEDebugHandler extends sampling.StepHandler {
   def init(t0: Double, y0: Array[Double], t: Double) {
@@ -37,47 +39,12 @@ class ODEDebugHandler extends sampling.StepHandler {
   }
 }
 
-trait ODESyntax[T] {
-  type Derivative = () => T
-
-  /** Functions defining the derivatives of the variables in `vars`.
-    * The two arrays are indexed equally.
-    */
-  val funs = mutable.ArrayBuffer.empty[Derivative]
-
-  /** An array with all `Var`s for which to integrate. */
-  val vars = mutable.ArrayBuffer.empty[Var[T]]
-
-  /** A class to define derivatives of `Var`s. */
-  protected class AddODE(val vs: Seq[Var[T]]) {
-
-    /** Adds an ODE definition to the process. */
-    def := (fs: Derivative*): Unit = {
-      require(fs.size == vs.size,
-        "lhs and rhs of ODE system must have same size")
-      for ((v, f) <- vs zip fs) {
-        vars += v
-        funs += f
-      }
-    }
-  }
-  implicit def bynameToFun(f: => T) = () => f
-  implicit def varToFun(f: Var[T]) = () => f.value
-
-  /** Adds an ODE definition to the current `ODE`. */
-  protected def d(vs: Var[T]*) = new AddODE(vs) {
-    def / (d: dt.type) = new AddODE(vs)
-  }
-
-  /** Object `dt` is used for writing ODEs with syntax: d(v1)/dt = ... */
-  object dt
-}
-
 /** A partial implementation of `Process` that uses the Apache Commons
   * Math ODE library to implement its `step` method.
   */
 abstract class ODE extends Process
     with ODESyntax[Double] with ode.FirstOrderDifferentialEquations {
+  type Derivative = () => Double
 
   /** The integrator object which can be any implementation compatible
     * with the Apache Commons Math ODE library. Free to override in

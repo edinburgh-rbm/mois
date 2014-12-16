@@ -20,7 +20,8 @@ package uk.ac.ed.inf.mois.test
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-import uk.ac.ed.inf.mois.{Process, ProcessGroup, ODE}
+import uk.ac.ed.inf.mois.{Process, ProcessGroup}
+import uk.ac.ed.inf.mois.ode.ODE
 import uk.ac.ed.inf.mois.sched.NaiveScheduler
 import spire.implicits._
 import uk.ac.ed.inf.mois.implicits._
