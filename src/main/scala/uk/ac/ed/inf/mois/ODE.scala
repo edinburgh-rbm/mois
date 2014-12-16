@@ -25,6 +25,18 @@ import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator
 
 import collection.mutable
 
+class ODEDebugHandler extends sampling.StepHandler {
+  def init(t0: Double, y0: Array[Double], t: Double) {
+    println(s"ODE Debug init: t0: ${t0} t: ${t} y0: ${y0.toSeq}")
+  }
+  
+  def handleStep(interpolator: sampling.StepInterpolator, isLast: Boolean) {
+    val t = interpolator.getCurrentTime();
+    val y = interpolator.getInterpolatedState();
+    println(s"ODE Debug: ${t}\t${y.toSeq}")
+  }
+}
+
 /** A partial implementation of `Process` that uses the Apache Commons
   * Math ODE library to implement its `step` method.
   */
@@ -82,18 +94,27 @@ abstract class ODE extends Process
 
   /** Main function implementing the `Process` interface. */
   override def step(time: Double, tau: Double) {
+//    println(s"Integrating ${time} -> ${time} + ${tau}")
+
     // construct array of doubles corresponding to the the values of
     // vars which is what the ODE solver will actually use
     val doubleY = vars.map(_.value).toArray
+    assume(doubleY.size > 0, "we should have some ys to integrate")
 
     // construct the integrator
-    val i = integrator()
+    val phi = integrator()
 
     // conduct the integration
-    i.integrate(this, time, doubleY, time+tau, doubleY)
+    phi.integrate(this, time, doubleY, time+tau, doubleY)
+
     // put the results of the integration into the variables
-    for (i <- 0 until vars.size)
+    var i = 0
+    while (i < doubleY.size) {
       vars(i) := doubleY(i)
+      i += 1
+    }
+
+//    println("Integration complete")
   }
 
   /** This is the method that does the actual work. It must be implemented
@@ -103,18 +124,34 @@ abstract class ODE extends Process
     */
   def computeDerivatives(time: Double, ys: Array[Double], ydots: Array[Double]) {
     //print(s"computing Derivatives ${ys.toList} -> ")
+
+    // set the time to the microscopic time-step time
     simTime := time
-    assume(ys.size > 0, "we should have some ys to integrate")
-    for (i <- 0 until ydots.size) {
+
+    var i = 0
+    while (i < ydots.size) {
+      // sanity check the input
       assume(funs isDefinedAt i, "no derivative defined for " + vars(i))
       assume(!ys(i).isNaN, "integration of " + vars(i).meta +
         " gave NaN (not a number)")
+
+      // set the value of the variables so that the functions for
+      // computing the derivatives can use them
       vars(i) := ys(i)
+      // update the value of the ys(i) which will have had constraints
+      // such as nonnegative() applied
+      ys(i) = vars(i).value
+      // now compute the derivatives
       ydots(i) = funs(i)()
+
+      // and sanity check the output
       assume(!ydots(i).isNaN, "integration of " + vars(i).meta +
         " gave NaN (not a number)")
+      i += 1
     }
     //println(s" ${ydots.toList}")
+    //println(s"${simTime}\t${ys.toList}")
+    //assume(false, "xxx")
   }
 
   /** This is required by the ODE solver and gives the dimension of
