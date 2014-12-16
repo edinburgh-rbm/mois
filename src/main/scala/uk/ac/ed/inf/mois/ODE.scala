@@ -37,12 +37,7 @@ class ODEDebugHandler extends sampling.StepHandler {
   }
 }
 
-/** A partial implementation of `Process` that uses the Apache Commons
-  * Math ODE library to implement its `step` method.
-  */
-abstract class ODE extends Process
-    with ode.FirstOrderDifferentialEquations {
-
+trait ODESyntax {
   type Derivative = () => Double
 
   /** Functions defining the derivatives of the variables in `vars`.
@@ -76,6 +71,13 @@ abstract class ODE extends Process
 
   /** Object `dt` is used for writing ODEs with syntax: d(v1)/dt = ... */
   object dt
+}
+
+/** A partial implementation of `Process` that uses the Apache Commons
+  * Math ODE library to implement its `step` method.
+  */
+abstract class ODE extends Process
+    with ODESyntax with ode.FirstOrderDifferentialEquations {
 
   /** The integrator object which can be any implementation compatible
     * with the Apache Commons Math ODE library. Free to override in
