@@ -37,7 +37,7 @@ class ODEDebugHandler extends sampling.StepHandler {
   }
 }
 
-trait ODESyntax {
+trait ODESyntax[T] {
   type Derivative = () => Double
 
   /** Functions defining the derivatives of the variables in `vars`.
@@ -46,10 +46,10 @@ trait ODESyntax {
   val funs = mutable.ArrayBuffer.empty[Derivative]
 
   /** An array with all `Var`s for which to integrate. */
-  val vars = mutable.ArrayBuffer.empty[Var[Double]]
+  val vars = mutable.ArrayBuffer.empty[Var[T]]
 
   /** A class to define derivatives of `Var`s. */
-  protected class AddODE(val vs: Seq[Var[Double]]) {
+  protected class AddODE(val vs: Seq[Var[T]]) {
 
     /** Adds an ODE definition to the process. */
     def := (fs: Derivative*): Unit = {
@@ -61,11 +61,11 @@ trait ODESyntax {
       }
     }
   }
-  implicit def bynameToFun(f: => Double) = () => f
-  implicit def varToFun(f: Var[Double]) = () => f.value
+  implicit def bynameToFun(f: => T) = () => f
+  implicit def varToFun(f: Var[T]) = () => f.value
 
   /** Adds an ODE definition to the current `ODE`. */
-  protected def d(vs: Var[Double]*) = new AddODE(vs) {
+  protected def d(vs: Var[T]*) = new AddODE(vs) {
     def / (d: dt.type) = new AddODE(vs)
   }
 
@@ -77,7 +77,7 @@ trait ODESyntax {
   * Math ODE library to implement its `step` method.
   */
 abstract class ODE extends Process
-    with ODESyntax with ode.FirstOrderDifferentialEquations {
+    with ODESyntax[Double] with ode.FirstOrderDifferentialEquations {
 
   /** The integrator object which can be any implementation compatible
     * with the Apache Commons Math ODE library. Free to override in
