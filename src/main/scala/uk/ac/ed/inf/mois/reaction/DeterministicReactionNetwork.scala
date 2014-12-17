@@ -21,7 +21,7 @@ import scala.language.implicitConversions
 
 import collection.mutable
 import scala.math.pow
-import uk.ac.ed.inf.mois.ode.ODE
+import uk.ac.ed.inf.mois.ode.ODESyntax
 import uk.ac.ed.inf.mois.math.Multiset
 
 /** Base trait for all reaction networks that use concentrations of
@@ -29,7 +29,7 @@ import uk.ac.ed.inf.mois.math.Multiset
   * population-based reaction networks).
   */
 abstract class DeterministicReactionNetwork
-    extends ODE
+    extends ReactionNetwork[Double] with ODESyntax[Double, Double]
        with ConcentrationBasedReactionNetwork[Double]
        with KineticCatalyticReactionNetwork[Double] {
   override def stringPrefix = "DeterministicReactionNetwork"
@@ -46,8 +46,17 @@ abstract class DeterministicReactionNetwork
     def apply(lhs: Multiset[Species], rhs: Multiset[Species]) = new Reaction(lhs, rhs)
   }
 
-  def count(m: Multiset[Species]): Double =
-    (for ((s, n) <- m) yield pow(s.value, n)).product
+  def count(m: Multiset[Species]): Double = {
+    // Optimised version of
+    //
+    //(for ((s, n) <- m) yield pow(s.value, n)).product
+    //
+    var c: Double = 1
+    for ((s, n) <- m) {
+      c = c * pow(s.value, n)
+    }
+    c
+  }
 
   override def step(t: Double, dt: Double) {
     if (vars.size != species.size) {
@@ -55,8 +64,23 @@ abstract class DeterministicReactionNetwork
       vars.clear
       // compute derivates
       for (s <- species) {
-        d(s) := (for (rxn <- rxns if rxn(s) != 0) yield
-          rxn(s) * rxn.rate).sum
+        // Optimised version of
+        //
+        // d(s) := (for (rxn <- rxns if rxn(s) != 0) yield
+        //          rxn(s) * rxn.rate).sum
+        //
+        var i:   Int = 0
+        var sum: Double = 0
+        val reactions = (for (rxn <- rxns if rxn(s) != 0) yield rxn)
+        d(s) := { () =>
+          i = 0; sum = 0
+          while (i < reactions.size) {
+            val r = reactions(i)
+            sum += r(s) * r.rate
+            i += 1
+          }
+          sum
+        }
       }
     }
     super.step(t, dt)

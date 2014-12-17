@@ -56,7 +56,7 @@ trait ReactionNetwork[T] extends Process {
         (this.lhs == that.lhs) && (this.rhs == that.rhs)
       case _ => false
     }
-    def apply(s: Species) = rhs(s) - lhs(s)
+    @inline final def apply(s: Species) = rhs(s) - lhs(s)
   }
 
   // -- Factories --

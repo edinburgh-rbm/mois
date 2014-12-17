@@ -1,13 +1,14 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.Model
+import uk.ac.ed.inf.mois.ode.ApacheODE
 import uk.ac.ed.inf.mois.reaction.DeterministicReactionNetwork
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 import spire.implicits._
 
-class Brusselator extends DeterministicReactionNetwork {
+class Brusselator extends DeterministicReactionNetwork with ApacheODE {
 
   // TODO: Write about this in mois-examples
   val A = Species("A")
