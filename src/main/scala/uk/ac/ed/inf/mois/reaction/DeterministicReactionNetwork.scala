@@ -58,31 +58,26 @@ abstract class DeterministicReactionNetwork
     c
   }
 
-  override def step(t: Double, dt: Double) {
-    if (vars.size != species.size) {
-      funs.clear
-      vars.clear
-      // compute derivates
-      for (s <- species) {
-        // Optimised version of
-        //
-        // d(s) := (for (rxn <- rxns if rxn(s) != 0) yield
-        //          rxn(s) * rxn.rate).sum
-        //
-        var i:   Int = 0
-        var sum: Double = 0
-        val reactions = (for (rxn <- rxns if rxn(s) != 0) yield rxn)
-        d(s) := { () =>
-          i = 0; sum = 0
-          while (i < reactions.size) {
-            val r = reactions(i)
-            sum += r(s) * r.rate
-            i += 1
-          }
-          sum
+  override def init(t: Double) {
+    for (s <- species) {
+      // Optimised version of
+      //
+      // d(s) := (for (rxn <- rxns if rxn(s) != 0) yield
+      //          rxn(s) * rxn.rate).sum
+      //
+      var i:   Int = 0
+      var sum: Double = 0
+      val reactions = (for (rxn <- rxns if rxn(s) != 0) yield rxn)
+      d(s) := { () =>
+        i = 0; sum = 0
+        while (i < reactions.size) {
+          val r = reactions(i)
+          sum += r(s) * r.rate
+          i += 1
         }
+        sum
       }
     }
-    super.step(t, dt)
+    super.init(t)
   }
 }
