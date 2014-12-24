@@ -46,7 +46,7 @@ trait Bounds[T] {
   class UpperBound(val bound: T)(implicit o: Order[T]) extends Bound {
     def apply(x: T) = if (o.lteqv(x, bound)) x else bound
   }
-  def doClamp(x: T): T = {
+  @inline final def doClamp(x: T): T = {
     def clampLower(x: T): T = if (lowerBound.isDefined) lowerBound.get(x) else x
     def clampUpper(x: T): T = if (upperBound.isDefined) upperBound.get(x) else x
     clampUpper(clampLower(x))

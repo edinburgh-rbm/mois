@@ -42,9 +42,8 @@ class ODEDebugHandler extends sampling.StepHandler {
 /** A partial implementation of `Process` that uses the Apache Commons
   * Math ODE library to implement its `step` method.
   */
-abstract class ODE extends Process
-    with ODESyntax[Double] with ode.FirstOrderDifferentialEquations {
-  type Derivative = () => Double
+trait ApacheODE extends Process
+    with ODESyntax[Double, Double] with ode.FirstOrderDifferentialEquations {
 
   /** The integrator object which can be any implementation compatible
     * with the Apache Commons Math ODE library. Free to override in
@@ -63,6 +62,7 @@ abstract class ODE extends Process
 
   /** Main function implementing the `Process` interface. */
   override def step(time: Double, tau: Double) {
+    super.step(time, tau)
 //    println(s"Integrating ${time} -> ${time} + ${tau}")
 
     // construct array of doubles corresponding to the the values of
@@ -116,6 +116,7 @@ abstract class ODE extends Process
       // and sanity check the output
       assume(!ydots(i).isNaN, "integration of " + vars(i).meta +
         " gave NaN (not a number)")
+
       i += 1
     }
     //println(s" ${ydots.toList}")

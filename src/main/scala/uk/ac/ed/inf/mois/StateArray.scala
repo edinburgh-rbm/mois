@@ -102,13 +102,13 @@ case class ArrayBackedState(
   * @param meta is used to find the amht array and offset
   *             into the state
   */
-class Index[T](val meta: VarMeta) extends Var[T] {
+class Index[@specialized T](val meta: VarMeta) extends Var[T] {
 
   private var _state: ArrayBackedState = null
   // RHZ: Why do we need to cache state?
   // WW: because it is a lazily built var
   lazy val state = _state
-  private def array: Array[T] = state.get(rig)
+  private lazy val array: Array[T] = state.get(rig)
   private lazy val index = state.meta(rig) indexOf meta
 
   // RHZ: Why not just expose state_=?

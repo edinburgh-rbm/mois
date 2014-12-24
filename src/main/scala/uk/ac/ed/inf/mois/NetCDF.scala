@@ -154,7 +154,13 @@ class NetCdfWriter(filename: String) extends StepHandler {
    * in batches.
    */
   def handleStep(t: Double, proc: Process) {
-    writers.foldLeft(0)((off, w) => w(origin, off))
+    //writers.foldLeft(0)((off, w) => w(origin, off))
+    var i:   Int = 0
+    var off: Int = 0
+    while (i < writers.size) {
+      off = writers(i)(origin, off)
+      i += 1
+    }
     origin(0) += 1
   }
 

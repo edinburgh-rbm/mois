@@ -21,16 +21,28 @@ import language.implicitConversions
 import scala.collection.mutable
 import uk.ac.ed.inf.mois.Var
 
-trait ODESyntax[T] {
-  type Derivative
+trait ODESyntax[T, V] {
+  type DerivativeValue = V
+  type Derivative = () => DerivativeValue
 
   /** Functions defining the derivatives of the variables in `vars`.
     * The two arrays are indexed equally.
     */
-  val funs = mutable.ArrayBuffer.empty[Derivative]
+  protected[mois] val funs = mutable.ArrayBuffer.empty[Derivative]
 
   /** An array with all `Var`s for which to integrate. */
-  val vars = mutable.ArrayBuffer.empty[Var[T]]
+  protected[mois] val vars = mutable.ArrayBuffer.empty[Var[T]]
+
+  private def addF(v: Var[T], f: Derivative) {
+    vars += v
+    funs += f
+  }
+
+  def derivativeCount = vars.size
+  def clearDerivatives = {
+    funs.clear
+    vars.clear
+  }
 
   /** A class to define derivatives of `Var`s. */
   protected class AddODE(val vs: Seq[Var[T]]) {
@@ -39,13 +51,10 @@ trait ODESyntax[T] {
     def := (fs: Derivative*): Unit = {
       require(fs.size == vs.size,
         "lhs and rhs of ODE system must have same size")
-      for ((v, f) <- vs zip fs) {
-        vars += v
-        funs += f
-      }
+      (vs zip fs) map { case (v, f) => addF(v, f)}
     }
   }
-  implicit def bynameToFun(f: => T) = () => f
+  implicit def bynameToFun(f: => V) = () => f
   implicit def varToFun(f: Var[T]) = () => f.value
 
   /** Adds an ODE definition to the current `ODE`. */
