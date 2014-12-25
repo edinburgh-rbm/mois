@@ -85,6 +85,9 @@ trait Rosenbrock extends Process with ODESyntax[Double, Jet[Double]] {
     }
   }
 
+  // we remember the optimal step size for where we are so
+  // that we don't have to figure it out with each macroscopic
+  // time step
   private var hopt = 0.0
   override def step(t0: Double, tau: Double) {
     val y0 = fromState
@@ -94,29 +97,32 @@ trait Rosenbrock extends Process with ODESyntax[Double, Jet[Double]] {
     var h    = if (hopt == 0.0) tau else min(tau, hopt)
     var done = false
 
-    if (h == 0.0) {
-      h = tau
-    }
-
     while(!done) {
+      // try a rosenbrock step
       val (ynext, err) = rosStep(y, t, h)
-//      println(s"step size: ${h} err: ${err}")
+      // see if the truncation error is acceptable
       val (hnext, rejected) = success(err, h)
-      if (!rejected) {
+//      println(s"step size: ${h} err: ${err}")
+
+      if (!rejected) { // all good, move forward
         y = ynext
         t = t + h
-        if (t >= t0 + tau) {
+        if (t >= t0 + tau) { // finished! save and return
           toState(y)
           done = true
         }
       }
-      hopt = hnext
-      // clamp to the end of our requested interval
+      hopt = hnext // save what we figured out was the optimal 
+                   // step size
+      // don't go past the end of our requested interval
       h = min(hnext, t0 + tau - t)
     }
 //    println(s"done: ${t0} + ${tau} ~ ${t}")
   }
 
+  // the adaptive step-size picker uses some information from
+  // previous time steps, so these are kept here. this is pretty much 
+  // straight out of chapter 17 of NR
   private var hold = 0.0
   private var errold = 0.0
   private var first_step = true
@@ -147,6 +153,7 @@ trait Rosenbrock extends Process with ODESyntax[Double, Jet[Double]] {
     (hnew, reject)
   }
 
+  // The rosenbrock step itself...
   def rosStep(y0: mtl.Matrix, t0: Double, h: Double): (mtl.Matrix, Double) = {
     import rosenbrockConst._
 
@@ -237,6 +244,7 @@ trait Rosenbrock extends Process with ODESyntax[Double, Jet[Double]] {
     (tmp, error(y0, tmp, err))
   }
 
+  // calculate error
   def error(y0: mtl.Matrix, y: mtl.Matrix, yerr: mtl.Matrix): Double = {
     var err: Double = 0.0
     var i = 0
