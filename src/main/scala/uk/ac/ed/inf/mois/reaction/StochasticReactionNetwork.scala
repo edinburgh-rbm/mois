@@ -14,7 +14,7 @@ import uk.ac.ed.inf.mois.math.Multiset
   */
 abstract class StochasticReactionNetwork
     extends PopulationBasedReactionNetwork[Double]
-       with KineticCatalyticReactionNetwork[Double] {
+       with KineticCatalyticReactionNetwork[Double, Double] {
 
   override def stringPrefix = "StochasticReactionNetwork"
 

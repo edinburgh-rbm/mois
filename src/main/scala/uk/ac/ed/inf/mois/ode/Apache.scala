@@ -17,13 +17,14 @@
  */
 package uk.ac.ed.inf.mois.ode
 
-import language.implicitConversions
-
 import org.apache.commons.math3.ode
 import org.apache.commons.math3.ode.sampling
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator
 
 import collection.mutable
+
+import spire.algebra.{Field, NRoot, Ring}
+import spire.implicits._
 
 import uk.ac.ed.inf.mois.{Var, Process}
 
@@ -33,8 +34,8 @@ class ODEDebugHandler extends sampling.StepHandler {
   }
   
   def handleStep(interpolator: sampling.StepInterpolator, isLast: Boolean) {
-    val t = interpolator.getCurrentTime();
-    val y = interpolator.getInterpolatedState();
+    val t = interpolator.getCurrentTime()
+    val y = interpolator.getInterpolatedState()
     println(s"ODE Debug: ${t}\t${y.toSeq}")
   }
 }
@@ -42,8 +43,8 @@ class ODEDebugHandler extends sampling.StepHandler {
 /** A partial implementation of `Process` that uses the Apache Commons
   * Math ODE library to implement its `step` method.
   */
-trait ApacheODE extends Process
-    with ODESyntax[Double, Double] with ode.FirstOrderDifferentialEquations {
+trait Apache extends Process
+    with ODEBase[Double, Double] with ode.FirstOrderDifferentialEquations {
 
   /** The integrator object which can be any implementation compatible
     * with the Apache Commons Math ODE library. Free to override in
@@ -59,6 +60,12 @@ trait ApacheODE extends Process
   private val absoluteTolerance = 1e-10
   private val relativeTolerance = 1e-10
   private val simTime = Double("sim:t")
+
+  def vToD(v: Var[Double]): Double = v.value
+  protected[mois] val _rg = implicitly[Ring[Double]]
+  protected[mois] val _nr = implicitly[NRoot[Double]]
+  protected[mois] val _fd = implicitly[Field[Double]]
+  protected[mois] def _fromInt(i: Int): Double = i.toDouble
 
   /** Main function implementing the `Process` interface. */
   override def step(time: Double, tau: Double) {

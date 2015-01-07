@@ -24,10 +24,10 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{Model, ProcessGroup, State}
-import uk.ac.ed.inf.mois.ode.ODE
+import uk.ac.ed.inf.mois.ode.{ODE, Apache}
 import uk.ac.ed.inf.mois.sched.WeisseScheduler
 
-class CoupledOscillator(w: Double, k: Double) extends ODE {
+class CoupledOscillator(w: Double, k: Double) extends ODE[Double, Double] with Apache {
   annotate("description", "Coupled Oscillator")
 
   val x1 = Double("c:x1")
@@ -47,7 +47,7 @@ class CoupledOscillatorModel extends Model {
   val process = new CoupledOscillator(w, k)
 }
 
-class CoupledOscillatorA(w: Double, k: Double) extends ODE {
+class CoupledOscillatorA(w: Double, k: Double) extends ODE[Double, Double] with Apache {
   annotate("description", "Coupled Oscillator A")
 
   val x1 = Double("d:x1")
@@ -58,7 +58,7 @@ class CoupledOscillatorA(w: Double, k: Double) extends ODE {
   d(x2) := w * (x1 - 100) - k * (x1 - x3)
 }
 
-class CoupledOscillatorB(w: Double, k: Double) extends ODE {
+class CoupledOscillatorB(w: Double, k: Double) extends ODE[Double, Double] with Apache {
   annotate("description", "Coupled Oscillator B")
 
   val x1 = Double("d:x1")

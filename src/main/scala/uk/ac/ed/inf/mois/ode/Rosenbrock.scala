@@ -20,21 +20,31 @@ package uk.ac.ed.inf.mois.ode
 import language.implicitConversions
 import scala.math.{abs, sqrt, max, min}
 import spire.math.{Jet, JetDim}
+import spire.algebra.{Field, NRoot, Ring}
 import spire.implicits._
 import no.uib.cipr.{matrix => mtl}
 import uk.ac.ed.inf.mois.{Process, Var}
 
-trait Rosenbrock extends Process with ODESyntax[Double, Jet[Double]] {
+trait Rosenbrock extends Process with ODEBase[Double, Jet[Double]] {
   implicit def jetDim = JetDim(vars.size)
-  implicit def toJet(v: Var[Double]): Jet[Double] = {
+  implicit def vToD(v: Var[Double]): Jet[Double] = {
     val idx = vars.indexOf(v)
-    v.value + Jet.h[Double](idx)
+    if (idx == -1) {
+      v.value
+    } else {
+      v.value + Jet.h[Double](idx)
+    }
   }
   implicit def toJetF(f: Var[Double]): () => Jet[Double] =
-    (() => toJet(f))
+    (() => vToD(f))
+  protected[mois] lazy val _rg = implicitly[Ring[Jet[Double]]]
+  protected[mois] lazy val _nr = implicitly[NRoot[Jet[Double]]]
+  protected[mois] lazy val _fd = implicitly[Field[Jet[Double]]]
+  protected[mois] def _fromInt(i: Int): Jet[Double] = Jet.fromInt[Double](i)
 
   val t = Double("sim:t")
-  d(t) := (() => 1.0)
+  vars += t
+  funs += (() => 1.0)
 
   val atol = 1e-5
   val rtol = 1e-5
@@ -90,6 +100,7 @@ trait Rosenbrock extends Process with ODESyntax[Double, Jet[Double]] {
   // time step
   private var hopt = 0.0
   override def step(t0: Double, tau: Double) {
+//    println(s"Rosenbrock: ${vars}")
     val y0 = fromState
 
     var y    = y0

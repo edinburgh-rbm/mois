@@ -19,8 +19,7 @@ package uk.ac.ed.inf.mois.reaction
 
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
-import spire.algebra.Ring
-import spire.implicits._
+import spire.algebra.{Field, Ring}
 import uk.ac.ed.inf.mois.math.Multiset
 
 /** A trait for reaction networks that have catalysis. */
@@ -44,8 +43,8 @@ trait CatalyticReactionNetwork[T] extends ReactionNetwork[T] {
 
 
 /** A trait for reaction networks that have catalysis. */
-trait KineticCatalyticReactionNetwork[T]
-    extends KineticReactionNetwork[T]
+trait KineticCatalyticReactionNetwork[T, D]
+    extends KineticReactionNetwork[T, D]
        with CatalyticReactionNetwork[T] {
 
   type Reaction <: UnratedReaction with CatalysableReaction
@@ -55,11 +54,11 @@ trait KineticCatalyticReactionNetwork[T]
     Species(enzyme.meta + "-" + substrates.map(_.meta).mkString("-"))
 
   /** Michaelis-Menten mechanism: E + S <->[k1,k2] ES ->[k3] E + P */
-  case class MM(k1: Double, k2: Double, k3: Double)
+  case class MM(k1: D, k2: D, k3: D)
       extends EnzymeMechanism
 
   /** Quasi-steady-state approximation. */
-  case class QSS(vmax: Double, km: Double)
+  case class QSS(vmax: D, km: D)
       extends EnzymeMechanism
 
   /** Ternary-complex mechanism in random order.  See
@@ -77,11 +76,11 @@ trait KineticCatalyticReactionNetwork[T]
     * @param unbind4 kinetic rate for unbinding of second product.
     */
   case class TCRandom(
-    bind1: Double, unbind1: Double,
-    bind2: Double, unbind2: Double,
-    fwdCat: Double, bwdCat: Double,
-    bind3: Double, unbind3: Double,
-    bind4: Double, unbind4: Double)
+    bind1: D, unbind1: D,
+    bind2: D, unbind2: D,
+    fwdCat: D, bwdCat: D,
+    bind3: D, unbind3: D,
+    bind4: D, unbind4: D)
       extends EnzymeMechanism
 
   // TODO: By giving all the species involved in the reaction as
@@ -100,11 +99,11 @@ trait KineticCatalyticReactionNetwork[T]
     * @param q second product and its binding and unbinding rate.
     */
   case class TCOrdered(
-    a: (Species, (Double, Double)),
-    b: (Species, (Double, Double)),
-    fwdCat: Double, bwdCat: Double,
-    p: (Species, (Double, Double)),
-    q: (Species, (Double, Double)))
+    a: (Species, (D, D)),
+    b: (Species, (D, D)),
+    fwdCat: D, bwdCat: D,
+    p: (Species, (D, D)),
+    q: (Species, (D, D)))
       extends EnzymeMechanism
 
   /** Ping-pong mechanism.  See
@@ -122,12 +121,12 @@ trait KineticCatalyticReactionNetwork[T]
     * @param unbind4 kinetic rate for unbinding of second product.
     */
   case class PP(
-    bind1: Double, unbind1: Double,
-    fwd1: Double, bwd1: Double,
-    bind3: Double, unbind3: Double,
-    bind2: Double, unbind2: Double,
-    fwd2: Double, bwd2: Double,
-    bind4: Double, unbind4: Double)
+    bind1: D, unbind1: D,
+    fwd1: D, bwd1: D,
+    bind3: D, unbind3: D,
+    bind2: D, unbind2: D,
+    fwd2: D, bwd2: D,
+    bind4: D, unbind4: D)
       extends EnzymeMechanism
 
   def check(r: CatalysedReaction[_], size: Int, mech: String) = {
@@ -143,7 +142,7 @@ trait KineticCatalyticReactionNetwork[T]
 
   // -- Expand catalytic reactions into sets of kinetic reactions --
 
-  implicit def mm(r: CatalysedReaction[MM])(implicit ring: Ring[T], ct: ClassTag[T]) = {
+  implicit def mm(r: CatalysedReaction[MM])(implicit field: Field[D], ring: Ring[T], ct: ClassTag[T]) = {
     check(r, 1, "Michaelis-Menten (MM)")
     val (s, _) = r.lhs.head
     val (p, _) = r.rhs.head
@@ -155,14 +154,18 @@ trait KineticCatalyticReactionNetwork[T]
          es --> e + p at k3)
   }
 
-  implicit def qss(r: CatalysedReaction[QSS]) = {
+  implicit def qss(r: CatalysedReaction[QSS])(implicit field: Field[D], ring: Ring[D]) = {
     import r.mechanism.{vmax, km}
     List(r.lhs --> r.rhs `at!`
-      vmax * count(r.lhs) / (km + count(r.lhs)))
+      field.div(
+        field.times(vmax, count(r.lhs)), 
+        ring.plus(km, count(r.lhs))
+      )
+    )
   }
 
   implicit def tcrandom(r: CatalysedReaction[TCRandom])(
-    implicit ring: Ring[T], ct: ClassTag[T]) = {
+    implicit field: Field[D], ring: Ring[T], ct: ClassTag[T]) = {
     check(r, 2, "ternary-complex (TCRandom)")
     val Seq(s1, s2) = r.lhs.multiseq
     val Seq(p1, p2) = r.rhs.multiseq
@@ -195,7 +198,7 @@ trait KineticCatalyticReactionNetwork[T]
   }
 
   implicit def tcordered(r: CatalysedReaction[TCOrdered])(
-    implicit ring: Ring[T], ct: ClassTag[T]) = {
+    implicit field: Field[D], ring: Ring[T], ct: ClassTag[T]) = {
     check(r, 2, "ternary-complex (TCOrdered)")
     import r.mechanism._
     val (s1, (bind1, unbind1)) = a
@@ -226,7 +229,7 @@ trait KineticCatalyticReactionNetwork[T]
   }
 
   implicit def pp(r: CatalysedReaction[PP])(
-    implicit ring: Ring[T], ct: ClassTag[T]) = {
+    implicit field: Field[D], ring: Ring[T], ct: ClassTag[T]) = {
     check(r, 2, "ping-pong (PP)")
     val Seq(s1, s2) = r.lhs.multiseq
     val Seq(p1, p2) = r.rhs.multiseq

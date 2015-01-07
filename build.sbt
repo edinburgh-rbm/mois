@@ -19,11 +19,11 @@ name := "mois"
 
 organization := "uk.ac.ed.inf"
 
-version := "1.99.16-SNAPSHOT"
+version := "1.99.17-SNAPSHOT"
 
 scalaVersion := "2.11.2"
 
-scalacOptions ++= Seq( "-deprecation", "-unchecked", "-feature" )
+scalacOptions ++= Seq( "-deprecation", "-unchecked", "-feature") //, "-Ytyper-debug") // "-Xlog-implicits" )
 
 scalacOptions in Test ++= Seq("-Xcheckinit")
 

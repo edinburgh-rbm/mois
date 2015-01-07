@@ -17,4 +17,6 @@
  */
 package uk.ac.ed.inf.mois.ode
 
-abstract class ODE extends ApacheODE
+import uk.ac.ed.inf.mois.Process
+
+abstract class ODE[T, D] extends Process with ODEBase[T, D] with ODESyntax[T, D]

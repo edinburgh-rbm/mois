@@ -26,9 +26,9 @@ import org.apache.commons.math3.analysis.differentiation.MultivariateDifferentia
 import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction
 import org.apache.commons.math3.analysis.MultivariateVectorFunction
 
-import uk.ac.ed.inf.mois.ode.ODE
+import uk.ac.ed.inf.mois.ode.{Apache, ODE}
 
-abstract class HamiltonianProcess extends ODE {
+abstract class HamiltonianProcess extends ODE[Double, Double] with Apache {
   override def stringPrefix = "Hamiltonian"
 
   type F = () => Double

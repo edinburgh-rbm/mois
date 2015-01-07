@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.reaction.DeterministicReactionNetwork
+import uk.ac.ed.inf.mois.ode.Apache
 import uk.ac.ed.inf.mois.Model
 import scala.language.reflectiveCalls
 import spire.implicits._
@@ -8,7 +9,7 @@ import spire.implicits._
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
-class GbKl extends DeterministicReactionNetwork {
+class GbKl extends DeterministicReactionNetwork[Double, Double] with Apache {
   annotate("description", "Goldbeter-Koshland")
 
   val A = Species("A")

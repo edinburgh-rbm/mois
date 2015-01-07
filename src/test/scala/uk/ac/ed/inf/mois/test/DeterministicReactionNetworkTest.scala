@@ -1,20 +1,24 @@
 package uk.ac.ed.inf.mois.test
 
 import uk.ac.ed.inf.mois.Model
-import uk.ac.ed.inf.mois.ode.ApacheODE
+import uk.ac.ed.inf.mois.ode.Apache
 import uk.ac.ed.inf.mois.reaction.DeterministicReactionNetwork
 
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 import spire.implicits._
 
-class Brusselator extends DeterministicReactionNetwork with ApacheODE {
+class Brusselator extends DeterministicReactionNetwork[Double, Double] with Apache {
 
   // TODO: Write about this in mois-examples
   val A = Species("A")
   val B = Species("B")
   val X = Species("X")
   val Y = Species("Y")
+
+  import uk.ac.ed.inf.mois.math.Multiset
+  val a: Species = B
+  val x : Multiset[Species] = B + X
 
   reactions(
     A --> X + A at 1.0,
@@ -25,7 +29,7 @@ class Brusselator extends DeterministicReactionNetwork with ApacheODE {
 }
 
 // catch type problem discovered by jwk
-class RateAdaptiveReaction extends DeterministicReactionNetwork {
+class RateAdaptiveReaction extends DeterministicReactionNetwork[Double, Double] with Apache {
   val A = Species("A")
   val B = Species("B")
   val k = Double("k")

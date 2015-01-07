@@ -22,7 +22,9 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.Math
-import uk.ac.ed.inf.mois.ode.Rosenbrock
+import uk.ac.ed.inf.mois.ode.{ODE, Rosenbrock}
+import uk.ac.ed.inf.mois.reaction.DeterministicReactionNetwork
+import spire.math.Jet
 import spire.implicits._
 
 /** The prototypical stiff system. The solution with initial
@@ -35,12 +37,25 @@ import spire.implicits._
   * they adjust the time-step for the exp(-1000t) term which
   * DOESN'T MATTER
   */
-class StiffSystem extends Rosenbrock {
+class StiffSystem extends ODE[Double, Jet[Double]] with Rosenbrock {
   val u = Double("u") default(1)
   val v = Double("v")
   d(u) := u*998 +v*1998
   d(v) := u*(-999) - v*1999
 }
+
+class StiffReaction extends DeterministicReactionNetwork[Double, Jet[Double]]
+    with Rosenbrock {
+  val A = Species("A")
+  val B = Species("B")
+  val C = Species("C")
+  reactions(
+    A --> B at 0.04,
+    B + B --> C + B at 3e7,
+    B + C --> A + C at 1e4
+  )
+}
+
 
 class RosenbrockTest extends FlatSpec with Matchers {
 
@@ -49,12 +64,20 @@ class RosenbrockTest extends FlatSpec with Matchers {
   implicit val doubleEquality =
     TolerantNumerics.tolerantDoubleEquality(precision)
 
-  "rosenbrock" should "..." in {
+  "rosenbrock" should "work with normal ODEs" in {
     val p = new StiffSystem
     p.init(0)
-
-    println(p.funs.map(x => x()).toSeq)
-
     p.step(0, 1)
+  }
+
+  it should "also work with reactions" in {
+    val p = new StiffReaction
+    p.init(0)
+    println(p.vars)
+    println(p.funs.map(x => x()).toSeq)
+    p.step(0, 1)
+    println(p.vars)
+    p.step(1, 1000)
+    println(p.vars)
   }
 }

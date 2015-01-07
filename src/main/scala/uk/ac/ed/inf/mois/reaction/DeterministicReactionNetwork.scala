@@ -21,17 +21,17 @@ import scala.language.implicitConversions
 
 import collection.mutable
 import scala.math.pow
-import uk.ac.ed.inf.mois.ode.ODESyntax
+import uk.ac.ed.inf.mois.ode.ODEBase
 import uk.ac.ed.inf.mois.math.Multiset
 
 /** Base trait for all reaction networks that use concentrations of
   * molecules as a measure for species (as opposed to
   * population-based reaction networks).
   */
-abstract class DeterministicReactionNetwork
-    extends ReactionNetwork[Double] with ODESyntax[Double, Double]
-       with ConcentrationBasedReactionNetwork[Double]
-       with KineticCatalyticReactionNetwork[Double] {
+abstract class DeterministicReactionNetwork[T, D]
+    extends ReactionNetwork[T] with ODEBase[T, D]
+       with ConcentrationBasedReactionNetwork[T]
+       with KineticCatalyticReactionNetwork[T, D] {
   override def stringPrefix = "DeterministicReactionNetwork"
 
   val rxns = mutable.ArrayBuffer.empty[KineticReaction]
@@ -46,14 +46,29 @@ abstract class DeterministicReactionNetwork
     def apply(lhs: Multiset[Species], rhs: Multiset[Species]) = new Reaction(lhs, rhs)
   }
 
-  def count(m: Multiset[Species]): Double = {
+  // spire's pow is brain damaged with Jets, this 
+  // is a kludge needed for the Rosenbrock...
+  @inline private def xpow(a: D, b: Int): D = {
+    val b_ = _fromInt(b)
+    var i = 0
+    var result = _fd.one
+    while (i < b) {
+      result = _fd.times(a, result)
+      i += 1
+    }
+    result
+  }
+
+  def count(m: Multiset[Species]): D = {
     // Optimised version of
     //
     //(for ((s, n) <- m) yield pow(s.value, n)).product
     //
-    var c: Double = 1
+    var c: D = _fd.one
     for ((s, n) <- m) {
-      c = c * pow(s.value, n)
+//      println(s"XXXXXXX ${s} ${vToD(s)}")
+//      c = _fd.times(c, _nr.fpow(vToD(s), _fromInt(n)))
+      c = _fd.times(c, xpow(vToD(s), n))
     }
     c
   }
@@ -66,13 +81,16 @@ abstract class DeterministicReactionNetwork
       //          rxn(s) * rxn.rate).sum
       //
       var i:   Int = 0
-      var sum: Double = 0
+      var sum: D = _fd.zero
       val reactions = (for (rxn <- rxns if rxn(s) != 0) yield rxn)
-      d(s) := { () =>
-        i = 0; sum = 0
+      vars += s
+      funs += { () =>
+//        println(s"calculating.... ${s}")
+        i = 0; sum = _fd.zero
         while (i < reactions.size) {
           val r = reactions(i)
-          sum += r(s) * r.rate
+//          println(s"... ${sum} + ${r(s)} * ${r.rate}")
+          sum = _rg.plus(sum, _fd.times(_fromInt(r(s)), r.rate))
           i += 1
         }
         sum

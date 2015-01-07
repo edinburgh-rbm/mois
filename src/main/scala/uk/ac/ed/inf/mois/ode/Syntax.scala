@@ -19,12 +19,12 @@ package uk.ac.ed.inf.mois.ode
 
 import language.implicitConversions
 import scala.collection.mutable
+import spire.algebra.{Field, NRoot, Ring}
 import uk.ac.ed.inf.mois.Var
 
-trait ODESyntax[T, V] {
-  type DerivativeValue = V
+trait ODEBase[T, D] {
+  type DerivativeValue = D
   type Derivative = () => DerivativeValue
-
   /** Functions defining the derivatives of the variables in `vars`.
     * The two arrays are indexed equally.
     */
@@ -33,6 +33,15 @@ trait ODESyntax[T, V] {
   /** An array with all `Var`s for which to integrate. */
   protected[mois] val vars = mutable.ArrayBuffer.empty[Var[T]]
 
+  protected[mois] def vToD(v: Var[T]): D
+
+  protected[mois] val _rg: Ring[D]
+  protected[mois] val _nr: NRoot[D]
+  protected[mois] val _fd: Field[D]
+  protected[mois] def _fromInt(i: Int): D
+}
+
+trait ODESyntax[T, D] extends ODEBase[T, D] {
   private def addF(v: Var[T], f: Derivative) {
     vars += v
     funs += f
@@ -54,7 +63,7 @@ trait ODESyntax[T, V] {
       (vs zip fs) map { case (v, f) => addF(v, f)}
     }
   }
-  implicit def bynameToFun(f: => V) = () => f
+  implicit def bynameToFun(f: => D) = () => f
   implicit def varToFun(f: Var[T]) = () => f.value
 
   /** Adds an ODE definition to the current `ODE`. */

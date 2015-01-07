@@ -21,6 +21,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{Process, VarCalc}
+import uk.ac.ed.inf.mois.ode.Apache
 import uk.ac.ed.inf.mois.reaction.DeterministicReactionNetwork
 import uk.ac.ed.inf.mois.implicits._
 import spire.implicits._
@@ -62,7 +63,7 @@ class VarCalcTest extends FlatSpec with Matchers {
 }
 
 class VarCalcReactionTest extends FlatSpec with Matchers {
-  class R extends DeterministicReactionNetwork with VarCalc {
+  class R extends DeterministicReactionNetwork[Double, Double] with Apache with VarCalc {
     val u = Double("u")
     val v = Species("v")
     val w = Species("w")

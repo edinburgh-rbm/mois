@@ -18,43 +18,46 @@
 package uk.ac.ed.inf.mois.reaction
 
 import spire.math.ConvertableFrom
+import spire.algebra.Field
 import uk.ac.ed.inf.mois.Var
 import uk.ac.ed.inf.mois.math.Multiset
 
-private[mois] trait BaseKineticReactionNetwork[R] extends ReactionNetwork[R] {
+private[mois] trait BaseKineticReactionNetwork[R, D] extends ReactionNetwork[R] {
   trait KineticReaction extends BaseReaction {
-    def rate: Double
+    def rate: D
     override def stringPrefix = "KineticReaction"
     override def toString = stringPrefix +
       "(" + lhs + ", " + rhs + ", " + rate + ")"
   }
 
   trait KineticReactionFactory {
-    def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => Double)
-        : KineticReaction
+    def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => D)
+      (implicit field: Field[D]): KineticReaction
   }
 }
 
-trait MassActionReactionNetwork[R] extends BaseKineticReactionNetwork[R] {
-  def count(m: Multiset[Species]): Double
+trait MassActionReactionNetwork[R, D] extends BaseKineticReactionNetwork[R, D] {
+  def count(m: Multiset[Species]): D
 
   class MassActionReaction(
-    val lhs: Multiset[Species], val rhs: Multiset[Species], val k: () => Double)
-      extends KineticReaction {
+    val lhs: Multiset[Species], 
+    val rhs: Multiset[Species],
+    val k: () => D
+  )(implicit field: Field[D]) extends KineticReaction {
     override def stringPrefix = "MassActionReaction"
-    def rate = count(lhs) * k()
+    def rate = field.times(count(lhs), k())
   }
 
   val MassActionReaction: KineticReactionFactory =
     new KineticReactionFactory {
-      def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => Double) =
+      def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => D)(implicit field: Field[D]) =
         new MassActionReaction(lhs, rhs, k)
     }
 }
 
-trait RateLawReactionNetwork[R] extends BaseKineticReactionNetwork[R] {
+trait RateLawReactionNetwork[R, D] extends BaseKineticReactionNetwork[R, D] {
   class RateLawReaction(
-    val lhs: Multiset[Species], val rhs: Multiset[Species], val k: () => Double)
+    val lhs: Multiset[Species], val rhs: Multiset[Species], val k: () => D)
       extends KineticReaction {
     override def stringPrefix = "RateLawReaction"
     def rate = k()
@@ -62,21 +65,21 @@ trait RateLawReactionNetwork[R] extends BaseKineticReactionNetwork[R] {
 
   val RateLawReaction: KineticReactionFactory =
     new KineticReactionFactory {
-      def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => Double) =
+      def apply(lhs: Multiset[Species], rhs: Multiset[Species], k: () => D)(implicit field: Field[D]) =
         new RateLawReaction(lhs, rhs, k)
     }
 }
 
 /** A trait for reaction networks that have kinetic rates. */
-trait KineticReactionNetwork[R]
-    extends MassActionReactionNetwork[R]
-    with RateLawReactionNetwork[R] {
+trait KineticReactionNetwork[R, D]
+    extends MassActionReactionNetwork[R, D]
+    with RateLawReactionNetwork[R, D] {
 
   type Reaction <: UnratedReaction
 
   trait UnratedReaction extends BaseReaction {
-    def at(k: => Double) = MassActionReaction(lhs, rhs, () => k)
-    def `at!`(k: => Double) = RateLawReaction(lhs, rhs, () => k)
+    def at(k: => D)(implicit field: Field[D]) = MassActionReaction(lhs, rhs, () => k)
+    def `at!`(k: => D)(implicit field: Field[D]) = RateLawReaction(lhs, rhs, () => k)
   }
 
   implicit class DoubleArithmetic(v: Var[R])(

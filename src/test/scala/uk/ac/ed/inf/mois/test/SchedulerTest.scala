@@ -21,7 +21,7 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.{Process, ProcessGroup}
-import uk.ac.ed.inf.mois.ode.ODE
+import uk.ac.ed.inf.mois.ode.{ODE, Apache}
 import uk.ac.ed.inf.mois.sched.NaiveScheduler
 import spire.implicits._
 import uk.ac.ed.inf.mois.implicits._
@@ -48,13 +48,13 @@ class SampleEuler2 extends Process {
 /** Version of same that does not use Euler's method and instead
   * uses whatever the apache commons math suite says is best.
   */
-class SampleApache1 extends ODE {
+class SampleApache1 extends ODE[Double, Double] with Apache {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   d(x1) := -0.3*x1 - 0.4*x2
 }
 
-class SampleApache2 extends ODE {
+class SampleApache2 extends ODE[Double, Double] with Apache {
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
   d(x2) := -0.5*x1 - 0.8*x2

@@ -22,11 +22,11 @@ import org.scalatest.{FlatSpec, Matchers}
 import org.scalactic.TolerantNumerics
 
 import uk.ac.ed.inf.mois.Math
-import uk.ac.ed.inf.mois.ode.ApacheODE
+import uk.ac.ed.inf.mois.ode.{Apache, ODE}
 import uk.ac.ed.inf.mois.implicits._
 
 /** Directly calculated ODE system from Dominik's stuff. */
-object sampleODE extends ApacheODE with Math {
+object sampleODE extends ODE[Double, Double] with Apache with Math {
   val t  = Double("sim:t")
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
@@ -41,7 +41,7 @@ object sampleODE extends ApacheODE with Math {
 }
 
 /** Directly calculated ODE system from Dominik's stuff. */
-object sampleODE2 extends ApacheODE with Math {
+object sampleODE2 extends ODE[Double, Double] with Apache with Math {
   val t  = Double("sim:t")
   val x1 = Double("ex:x1")
   val x2 = Double("ex:x2")
@@ -137,7 +137,7 @@ class ODETest extends FlatSpec with Matchers {
 
   it should "error with fancy syntax incorrectly applied" in {
     intercept[IllegalArgumentException] {
-      class Wrong extends ApacheODE {
+      class Wrong extends ODE[Double, Double] with Apache {
         val x1 = Double("x1")
         val x2 = Double("x2")
 
@@ -155,7 +155,7 @@ class PartialDerivativeTest extends FlatSpec with Matchers {
   implicit val doubleEquality =
     TolerantNumerics.tolerantDoubleEquality(precision)
 
-  class P extends ApacheODE {
+  class P extends ODE[Double, Double] with Apache {
     val x1 = Double("x1")
     val x2 = Double("x2")
 
