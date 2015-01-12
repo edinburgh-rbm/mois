@@ -31,7 +31,7 @@ import spire.implicits._
   * values. [u0, v0] = [1, 0]
   *
   *  u = 2 * exp(-t) - exp(-1000 * t)
-  *  v = -exp(-t) + exp(1000 * t)
+  *  v = -exp(-t) + exp(-1000 * t)
   * 
   * This makes non-stiff integrators have conniptions because
   * they adjust the time-step for the exp(-1000t) term which
@@ -42,6 +42,13 @@ class StiffSystem extends ODE[Double, Jet[Double]] with Rosenbrock {
   val v = Double("v")
   d(u) := u*998 +v*1998
   d(v) := u*(-999) - v*1999
+
+  def solution(t: Double): (Double, Double) = {
+    import scala.math.exp
+    val u = 2.0 * exp(-1.0 * t) - exp(-1000.0 * t)
+    val v = -1.0 * exp(-1.0 * t) + exp(-1000.0 * t)
+    (u, v)
+  }
 }
 
 class StiffReaction extends DeterministicReactionNetwork[Double, Jet[Double]]
@@ -68,6 +75,25 @@ class RosenbrockTest extends FlatSpec with Matchers {
     val p = new StiffSystem
     p.init(0)
     p.step(0, 1)
+
+    val (u1, v1) = p.solution(1)
+    p.u.value should equal (u1)
+    p.v.value should equal (v1)
+
+    p.step(1, 9)
+    val (u10, v10) = p.solution(10)
+    p.u.value should equal (u10)
+    p.v.value should equal (v10)
+
+    p.step(10, 90)
+    val (u100, v100) = p.solution(100)
+    p.u.value should equal (u100)
+    p.v.value should equal (v100)
+
+    p.step(100, 900)
+    val (u1000, v1000) = p.solution(1000)
+    p.u.value should equal (u1000)
+    p.v.value should equal (v1000)
   }
 
   it should "also work with reactions" in {
