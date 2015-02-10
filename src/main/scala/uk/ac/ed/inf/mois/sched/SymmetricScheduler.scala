@@ -21,14 +21,9 @@ import scala.math.min
 import scala.collection.mutable
 import uk.ac.ed.inf.mois.{Process, ProcessGroup, Projection, Scheduler}
 
-class SymmetricScheduler(step: Double) extends Scheduler {
-  protected var projections = mutable.Map.empty[Process, Projection]
-  override def init(group: ProcessGroup) {
-    for (child <- group.processes) {
-      projections(child) = Projection(group.state, child.state)
-    }
-  }
-  def processes(group: ProcessGroup) = group.processes ++ group.processes.reverse
+class SymmetricScheduler(step: Double) extends CompositionScheduler {
+  override def processes(group: ProcessGroup) =
+    group.processes ++ group.processes.reverse
   def apply(t: Double, tau: Double, group: ProcessGroup) = {
     val h = min(tau, step)
     for (child <- processes(group)) {
